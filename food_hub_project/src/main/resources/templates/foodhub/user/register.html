@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{/foodhub/index/headerAndFooter.html}">
+<head>
+  <style>
+        :root {
+            --background-color: #f8f9fa;
+            --surface-color: #ffffff;
+            --accent-color: #6c757d;
+            --accent-hover: color-mix(in srgb, #6c757d, transparent 20%);
+            --text-color: #333;
+        }
+    
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--background-color);
+            margin: 0;
+            padding: 0;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            box-sizing: border-box; /* 모든 요소가 테두리와 패딩을 포함하여 크기를 계산하도록 함 */
+        }
+    
+        .signup-page {
+            background: var(--surface-color);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%; /* 화면 너비에 맞게 */
+            max-width: 500px; /* 최대 너비 설정 */
+            box-sizing: border-box; /* 패딩과 테두리를 포함한 크기 계산 */
+            margin: 0 auto;
+        }
+    
+        .signup-page h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--text-color);
+        }
+    
+        .form-group {
+            margin-bottom: 15px;
+        }
+    
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--text-color);
+        }
+    
+        .form-group input, .form-group select {
+            width: 100%; /* 100% 너비로 설정 */
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box; /* 패딩 포함하여 너비 계산 */
+        }
+    
+        .form-group input[type="radio"] {
+            width: auto;
+            margin-right: 5px;
+        }
+    
+        .form-actions {
+            text-align: center;
+        }
+    
+        .form-actions button {
+            padding: 10px 20px;
+            border: none;
+            background-color: var(--accent-color);
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+    
+        .form-actions button:hover {
+            background-color: var(--accent-hover);
+        }
+    
+        .hidden {
+            display: none;
+        }
+    
+        .check-button {
+            margin-top: 5px;
+            padding: 5px 10px;
+            border: none;
+            background-color: var(--accent-color);
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+    
+        .check-button:hover {
+            background-color: var(--accent-hover);
+        }
+    
+        .inline-checkbox {
+            display: inline-block;
+            align-items: center; /* 수평 및 수직 가운데 정렬 */
+            margin-left: 10px;
+            vertical-align: middle; /* 체크박스를 중간 정렬 */
+            margin-top: 10px; /* 체크박스를 살짝 아래로 내림 */
+        }
+
+        #emailOptIn {
+            vertical-align: middle; /* 체크박스를 텍스트와 동일한 수평 위치로 조정 */
+        }
+ </style>
+<script th:src="@{/jquery/jquery-3.7.1.min.js}"></script>
+<script>
+	$().ready(function() {
+
+			let isPassId = false;
+			let isPassNickname = false;
+			let isPassEmail = false;
+			let isPassPasswd = false;
+
+			$("#isValidId").click(function() {
+
+				let userId = $("#userId").val();
+				if (userId == "") {
+					$("#userIdMessage")
+							.html(
+									"<span style='color:red;'>아이디를 입력하세요.</span>");
+					return;
+				}
+
+				$.ajax({
+					type : "post",
+					url : "/foodhub/user/validId",
+					data : {
+						"userId" : userId
+					},
+					success : function(
+							isValidId) {
+
+						if (isValidId == "y") {
+							$(
+									"#userIdMessage")
+									.html(
+											"<span style='color:green;'>사용가능한 아이디입니다.</span>");
+							isPassId = true;
+						} else {
+							$(
+									"#userIdMessage")
+									.html(
+											"<span style='color:red;'>중복된 아이디입니다.</span>");
+							isPassId = false;
+						}
+
+					}
+
+				});
+
+			});
+
+			$("#isValidNickname").click(function() {
+
+					let nickname = $("#nickname").val();
+					if (nickname == "") {
+						$("#nicknameMessage")
+								.html(
+										"<span style='color:red;'>닉네임을 입력하세요.</span>");
+						return;
+					}
+
+					$.ajax({
+
+						type : "post",
+						url : "/foodhub/user/validNickname",
+						data : {
+							"nickname" : nickname
+						},
+						success : function(
+								isValidNickname) {
+
+							if (isValidNickname == "y") {
+								$(
+										"#nicknameMessage")
+										.html(
+												"<span style='color:green;'>사용가능한 닉네임입니다.</span>");
+								isPassNickname = true;
+							} else {
+								$(
+										"#nicknameMessage")
+										.html(
+												"<span style='color:red;'>중복된 닉네임입니다.</span>");
+								isPassNickname = false;
+							}
+
+						}
+
+					});
+
+				});
+
+			$("#isValidEmail").click(function() {
+
+				let email = $("#email").val();
+				let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+				if (email == "") {
+					$("#emailMessage")
+							.html(
+									"<span style='color:red;'>이메일을 입력하세요.</span>");
+					return;
+				}
+
+				if (!emailPattern.test(email)) {
+					$("#emailMessage")
+							.html(
+									"<span style='color:red;'>올바른 이메일 형식이 아닙니다.</span>");
+					return;
+				}
+				$.ajax({
+					type : "post",
+					url : "/foodhub/user/validEmail",
+					data : {
+						"email" : email
+					},
+					success : function(
+							isValidEmail) {
+
+						if (isValidEmail == "y") {
+							$(
+									"#emailMessage")
+									.html(
+											"<span style='color:green;'>사용가능한 이메일 입니다.</span>");
+							isPassEmail = true;
+						} else {
+							$(
+									"#emailMessage")
+									.html(
+											"<span style='color:red;'>중복된 이메일입니다.</span>");
+							isPassEmail = false;
+						}
+
+					}
+
+				});
+
+			});
+
+		$("#confirmPasswd").keyup(function() {
+
+			let passwd = $("#passwd").val();
+			let confirmPasswd = $(
+					"#confirmPasswd").val();
+
+			if (passwd == confirmPasswd) {
+				$("#passwordMessage")
+						.html(
+								"<span style='color:green;'>패스워드가 일치합니다.</span>");
+				isPassPasswd = true;
+			} else {
+				$("#passwordMessage")
+						.html(
+								"<span style='color:red;'>패스워드가 일치하지 않습니다.</span>");
+				isPassPasswd = false;
+			}
+
+		});
+
+		$("input[name='membershipType']").change(
+				function() {
+					if ($("#membership[value='BUSSI']").is(
+							":checked")) {
+						$("#foundingYearGroup").removeClass(
+								"hidden"); // 창업년도 표시
+					} else {
+						$("#foundingYearGroup").addClass(
+								"hidden"); // 창업년도 숨김
+					}
+				});
+
+		$("input[name='membershipType']").change(
+				function() {
+					if ($("input[name='membershipType']:checked")
+							.val() === "BUSSI") {
+						$("#foundingYearGroup").removeClass(
+								"hidden"); // 창업년도 표시
+						$("#businessTypeGroup").removeClass(
+								"hidden"); // 업종 입력란 표시
+					} else {
+						$("#foundingYearGroup").addClass(
+								"hidden"); // 창업년도 숨김
+						$("#businessTypeGroup").addClass(
+								"hidden"); // 업종 입력란 숨김
+					}
+				});
+
+			// 초기 로딩 시 일반회원이 기본으로 선택되어 업종 입력란 숨김
+			if ($("input[name='membershipType']:checked").val() === "COMMON") {
+				$("#businessTypeGroup").addClass("hidden");
+				$("#foundingYearGroup").addClass("hidden");
+			}
+
+		$("registerForm").submit(function() {
+
+			if (!isPassId) {
+				alert("아이디를 확인해주세요.");
+				$("#userId").focus();
+				return false;
+			}
+			if (!isPassNickname) {
+				alert("닉네임을 확인해주세요.");
+				$("#nickname").focus();
+				return false;
+			}
+
+			if (!isPassPasswd) {
+				alert("패스워드를 확인해주세요.");
+				$("#confirmPasswd").focus();
+				return false;
+			}
+			if (!isPassEmail) {
+				alert("이메일을 확인해주세요.");
+				$("#email").focus();
+				return false;
+			}
+		    if (!$("#smsYn").is(":checked")) {
+		        $("<input>").attr("type", "hidden").attr("name", "smsYn").attr("value", "N").appendTo("#registerForm");
+		    }
+		    if (!$("#emailYn").is(":checked")) {
+		        $("<input>").attr("type", "hidden").attr("name", "emailYn").attr("value", "N").appendTo("#registerForm");
+		    }
+
+
+		});
+
+});
+</script>
+</head>
+ <div layout:fragment="content">
+ 
+ <div class="signup-page">
+ <h1>회원가입</h1>
+  <form id="registerForm" method="post">
+	<div class="form-group">
+		<label for="userId">아이디</label> <input type="text" id="userId"
+			name="userId" required>
+		<button type="button" class="check-button" id="isValidId"
+			onclick="checkUsername()">중복확인</button>
+		<span id="userIdMessage"></span>
+	</div>
+
+	<div class="form-group">
+		<label for="nickname">닉네임</label> <input type="text" id="nickname"
+			name="nickname" required>
+		<button type="button" class="check-button" id="isValidNickname"
+			onclick="checkNickname()">중복확인</button>
+		<span id="nicknameMessage"></span>
+	</div>
+
+	<div class="form-group">
+		<label for="passwd">비밀번호</label> <input type="password" id="passwd"
+			name="passwd" required>
+	</div>
+
+	<div class="form-group">
+		<label for="confirmPasswd">비밀번호 재확인</label> <input type="password"
+			id="confirmPasswd" name="confirmPasswd" required> <br>
+		<span id="passwordMessage"></span>
+	</div>
+
+	<div class="form-group">
+		<label for="email">이메일</label>
+		<div style="display: flex; align-items: center;">
+			<input type="email" id="email" name="email"
+				placeholder="example@example.com" required style="flex: 1;">
+			<button type="button" class="check-button" id="isValidEmail"
+				onclick="checkEmail()" style="margin-left: 10px;">중복확인</button>
+
+			<p class="inline-checkbox" style="margin-left: 10px;">
+				<input type="checkbox" id="emailYn" name="emailYn" value="Y" checked>
+			<hr>
+			이메일 수신 동의
+			</p>
+		</div>
+		<span id="emailMessage"></span>
+	</div>
+
+	<div class="form-group">
+		<label for="phone">휴대폰 번호</label>
+		<div style="display: flex; align-items: center;">
+			<input type="tel" id="tel" name="tel" placeholder="010-1234-5678"
+				required style="flex: 1;">
+
+			<p class="inline-checkbox" style="margin-left: 10px;">
+					<input type="checkbox" id="smsYn" name="smsYn" value="Y" checked>
+				<hr>
+				SMS 수신 동의
+				</p>
+			</div>
+			<span id="phoneMessage"></span>
+		</div>
+
+		<div class="form-group">
+			<label>성별</label> 
+			<input type="radio" name="gender" value="M" required> <span>남성</span> 
+				<input type="radio" name="gender" value="F"> <span>여성</span>
+		</div>
+
+		<div class="form-group">
+			<label for="birthday">생일</label> <input type="date" id="birthday"
+				name="birthday" required>
+		</div>
+
+		<div class="form-group">
+			<label>회원 유형</label> <input type="radio" id="membershipType"
+				name="membershipType" value="COMMON" checked> <span>일반회원</span>
+			<input type="radio" id="membershipType" name="membershipType" value="BUSSI">
+			<span>사업자 회원</span>
+		</div>
+
+		<div class="form-group hidden" id="foundingYearGroup">
+			<label for="foundingYear">창업년도</label> <input type="date"
+				id="foundingAt" name="foundingAt">
+		</div>
+
+		<div class="form-group hidden" id="businessTypeGroup">
+			<label for="businessType">업종</label> <input type="text"
+				id="businessType" name="businessType"
+				placeholder="예: 한식당, 패밀리레스토랑, 카페">
+		</div>
+
+		<div class="form-actions">
+			<button type="submit">회원가입</button>
+		</div>
+	</form>
+</div>
+
+ </div>
+
+
+
+
+</body>
+</html>
