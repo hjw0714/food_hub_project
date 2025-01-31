@@ -1,11 +1,14 @@
 package com.application.foodhub.user;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
@@ -69,6 +72,37 @@ public class UserServiceImpl implements UserService{
 		}
 		
 		return false;
+	}
+
+	@Override
+	public UserDTO getUserDetail(String userId) {
+		return userDAO.getUserDetail(userId);
+	}
+
+	@Override
+	public void updateUser(MultipartFile uploadProfile, UserDTO userDTO) throws IllegalStateException, IOException {
+		if (!uploadProfile.isEmpty()) {
+			new File(fileRepositoryPath + userDTO.getProfileUUID()).delete();
+			
+			String originalFilename = uploadProfile.getOriginalFilename();
+			userDTO.setProfileOriginal(originalFilename);
+			
+			String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+			
+			String uploadFile = UUID.randomUUID() + extension;
+			userDTO.setProfileUUID(uploadFile);
+			
+			uploadProfile.transferTo(new File(fileRepositoryPath + uploadFile));
+		}
+		userDAO.updateUser(userDTO);
+	}
+	@Override
+	@Transactional
+	public void deleteUser(String userId) {
+		
+		String deleteProfile = userDAO.getDeleteUserProfile(userId);
+		new File(fileRepositoryPath + deleteProfile).delete();
+		userDAO.deleteUser(userId);
 	}
 
 }

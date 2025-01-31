@@ -9,4 +9,8 @@ public interface UserDAO {
 	public String checkValidNickname (String nickname);
 	public String checkValidEmail (String email);
 	public String getEncodedPasswd(String userId);
+	public UserDTO getUserDetail(String userId);
+	public void updateUser(UserDTO userDTO);
+	public void deleteUser(String userId);
+	public String getDeleteUserProfile(String userId);
 }

@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{/foodhub/index/headerAndFooter.html}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modify Profile - Food Hub</title>
+
+    <!-- Favicons -->
+    <link th:href="@{/assets/img/favicon.png}" rel="icon">
+    <link th:href="@{/assets/img/apple-touch-icon.png}" rel="apple-touch-icon">
+
+    <!-- Fonts -->
+    <link th:href="@{https://fonts.googleapis.com}" rel="preconnect">
+    <link th:href="@{https://fonts.gstatic.com}" rel="preconnect" crossorigin>
+    <link th:href="@{https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700;1,800&display=swap}" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/assets/vendor/bootstrap-icons/bootstrap-icons.css}" rel="stylesheet">
+    <link th:href="@{/assets/vendor/aos/aos.css}" rel="stylesheet">
+    <link th:href="@{/assets/vendor/swiper/swiper-bundle.min.css}" rel="stylesheet">
+
+    <!-- Main CSS File -->
+    <link th:href="@{/assets/css/main.css}" rel="stylesheet">
+
+    <!-- =======================================================
+    * Template Name: Food Hub
+    * Template URL: https://bootstrapmade.com/Food Hub-bootstrap-blog-template/
+    * Updated: Aug 08 2024 with Bootstrap v5.3.3
+    * Author: BootstrapMade.com
+    * License: https://bootstrapmade.com/license/
+    ======================================================== -->
+    
+    <style>
+        .hidden { display: none; }
+
+        :root {
+            --background-color: #f8f9fa;
+            --surface-color: #ffffff;
+            --accent-color: #6c757d;
+            --accent-hover: color-mix(in srgb, #6c757d, transparent 20%);
+            --text-color: #333;
+            --font-size: 16px;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--background-color);
+            margin: 0;
+            padding: 0;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;  /* 모든 요소가 테두리와 패딩을 포함하여 크기를 계산하도록 함 */
+        }
+
+        .profile-edit {
+            background: var(--surface-color);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            box-sizing: border-box;
+            margin: 0 auto;
+        }
+
+        .profile-edit h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--text-color);
+        }
+
+        .profile-edit .profile-photo {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-edit .profile-photo img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 2px solid var(--accent-color);
+            object-fit: cover;
+        }
+
+        .profile-edit .profile-photo input {
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        .profile-edit .form-group {
+            margin-bottom: 20px;
+        }
+
+        .profile-edit label {
+            font-size: var(--font-size);
+            color: var(--text-color);
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .profile-edit input[type="text"],
+        .profile-edit input[type="tel"],
+        .profile-edit input[type="date"],
+        .profile-edit input[type="email"],
+        .profile-edit select {
+            width: 100%;
+            padding: 8px;
+            font-size: var(--font-size);
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .profile-edit .btn {
+            padding: 10px 20px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            transition: 0.3s;
+        }
+
+        .profile-edit .btn:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .profile-edit .actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .profile-edit .actions button {
+            padding: 8px 16px;
+            font-size: 14px;
+            border: none;
+            background-color: var(--accent-color);
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .profile-edit .actions button:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .form-group .btn-small {
+            display: inline-block;
+            padding: 6px 12px;
+            font-size: 14px;
+            background-color: #f8f9fa;
+            color: var(--accent-color);
+            border: 1px solid var(--accent-color);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .form-group .btn-small:hover {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .form-group .input-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group .input-container input {
+            width: calc(100% - 120px);
+        }
+
+        .form-group .input-container .btn-small {
+            width: 100px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 5px;  /* 체크박스와 텍스트 사이의 간격을 줄임 */
+            margin-top: 10px; /* 휴대폰 번호 입력란과 체크박스 사이 간격을 조정 */
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            margin-right: 5px;  /* 체크박스와 텍스트 사이의 간격을 줄임 */
+        }
+
+        .actions button {
+            width: 48%;  /* 각 버튼을 48% 크기로 설정 */
+        }
+
+        .actions .save-btn {
+            margin-right: 4%;  /* 저장 버튼과 취소 버튼 사이의 간격을 더 넓게 조정 */
+        }
+    </style>
+</head>
+<body>
+
+<div layout:fragment="content">
+
+    <div class="profile-edit">
+        <h1>프로필 수정</h1>
+
+        <div class="profile-photo">
+            <img id="profile-photo" th:src="@{https://via.placeholder.com/120}" alt="프로필 사진">
+            <input type="file" id="photo-upload" accept="image/*">
+        </div>
+
+        <div class="form-group">
+            <label for="userId" >아이디</label>
+            <input type="text" id="userId" th:value="${userDTO.userId}" disabled>
+        </div>
+
+        <div class="form-group">
+            <label for="nickname">닉네임</label>
+            <div class="input-container">
+                <input type="text" id="nickname" th:value="${userDTO.nickname}">
+                <button id="check-nickname" class="btn-small" type="button">중복 확인</button>
+			</div>
+    	</div>
+
+	    <div class="form-group">
+	        <label for="email">이메일</label>
+	        <div class="input-container">
+	            <input type="email" id="email" th:value="${userDTO.email}">
+	            <button id="check-email" class="btn-small" type="button">중복 확인</button>
+	        </div>
+	        <div class="checkbox-group">
+	            <input type="checkbox" id="emailYn" th:checked="${userDTO.emailYn == 'Y'}">
+	            <span for="emailYn">이메일 수신 동의</span>
+	        </div>
+	    </div>
+	
+	    <div class="form-group">
+	        <label for="phone">휴대폰 번호</label>
+	        <div class="input-container">
+	            <input type="tel" id="phone" th:value="${userDTO.tel}">
+	        </div>
+	        <div class="checkbox-group">
+	            <input type="checkbox" id="smsYn" th:checked="${userDTO.smsYn == 'Y'}">
+	            <span for="smsYn">SMS 수신 동의</span>
+	        </div>
+	    </div>
+	
+	    <div class="form-group">
+	        <label for="birthdate">생일</label>
+	        <input type="date" id="birthdate" th:value="${userDTO.birthday}">
+	    </div>
+	
+       <div class="form-group">
+            <label>회원 유형</label>
+            <input type="radio" id="common" name="membershipType" value="COMMON" th:checked="${userDTO.membershipType == 'COMMON'}">
+            <span>일반회원</span>
+            <input type="radio" id="bussi" name="membershipType" value="BUSSI" th:checked="${userDTO.membershipType == 'BUSSI'}">
+            <span>사업자 회원</span>
+        </div>
+
+        <div class="form-group" id="foundingYearGroup" th:classappend="${userDTO.membershipType == 'BUSSI'} ? '' : 'hidden'">
+            <label for="foundingAt">창업년도</label>
+            <input type="date" id="foundingAt" name="foundingAt">
+        </div>
+
+        <div class="form-group" id="businessTypeGroup" th:classappend="${userDTO.membershipType == 'BUSSI'} ? '' : 'hidden'">
+            <label for="businessType">업종</label>
+            <input type="text" id="businessType" name="businessType" placeholder="예: 한식당, 패밀리레스토랑, 카페">
+        </div>
+    </div>
+</div>
+
+        <div class="actions">
+            <button class="btn save-btn" id="save-btn" type="button">저장</button>
+            <button class="btn" id="cancel-btn" type="button">취소</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 프로필 사진 변경 기능
+    const photoUpload = document.getElementById('photo-upload');
+    const profilePhoto = document.getElementById('profile-photo');
+
+    photoUpload.addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                profilePhoto.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // 닉네임 중복 확인 버튼
+    const checkNicknameButton = document.getElementById('check-nickname');
+    checkNicknameButton.addEventListener('click', function() {
+        const nickname = document.getElementById('nickname').value;
+        if (nickname === "닉네임") {
+            alert("중복된 닉네임입니다.");
+        } else {
+            alert("사용 가능한 닉네임입니다.");
+        }
+    });
+
+    // 이메일 중복 확인 버튼
+    const checkEmailButton = document.getElementById('check-email');
+    checkEmailButton.addEventListener('click', function() {
+        const email = document.getElementById('email').value;
+        if (email === "example@example.com") {
+            alert("중복된 이메일입니다.");
+        } else {
+            alert("사용 가능한 이메일입니다.");
+        }
+    });
+    
+    document.addEventListener("DOMContentLoaded", function() {
+        const commonRadio = document.getElementById('common');
+        const bussiRadio = document.getElementById('bussi');
+        const foundingYearGroup = document.getElementById('foundingYearGroup');
+        const businessTypeGroup = document.getElementById('businessTypeGroup');
+
+        function toggleFields() {
+            if (bussiRadio.checked) {
+                foundingYearGroup.classList.remove('hidden');
+                businessTypeGroup.classList.remove('hidden');
+            } else {
+                foundingYearGroup.classList.add('hidden');
+                businessTypeGroup.classList.add('hidden');
+            }
+        }
+
+        commonRadio.addEventListener('change', toggleFields);
+        bussiRadio.addEventListener('change', toggleFields);
+        toggleFields(); // 초기 설정
+    });
+
+    // 저장 버튼 기능
+    const saveButton = document.getElementById('save-btn');
+    saveButton.addEventListener('click', function() {
+        alert("프로필이 저장되었습니다.");
+    });
+
+    // 취소 버튼 기능
+    const cancelButton = document.getElementById('cancel-btn');
+    cancelButton.addEventListener('click', function() {
+        if (confirm("수정된 내용이 취소됩니다. 정말로 취소하시겠습니까?")) {
+            location.reload();
+        }
+    });
+</script>
+</body>
+</html>

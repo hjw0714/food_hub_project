@@ -27,7 +27,7 @@
 		VALUES (
 			#{userId},
 			#{profileOriginal},
-			#{profileUuid},
+			#{profileUUID},
 			#{nickname},
 			#{email},
 			#{tel},
@@ -68,5 +68,17 @@
 		FROM 	USER
 		WHERE	USER_ID = #{userId}
 	</select>
-	
+	<select id="getUserDetail" parameterType="String" resultType="UserDTO">
+		SELECT	*
+		FROM	USER
+		WHERE 	USER_ID = #{userId}
+	</select>
+	<update id="updateUser" parameterType="UserDTO">
+		UPDATE	USER
+		SET		PROFILE_ORIGINAL_NAME = #{profileOriginalName},
+				PROFILE_UUID 		  = #{profileUUID},
+				EMAIL 				  = #{email}, 
+				UPDATE_AT 			  = NOW() 
+		WHERE	USER_ID = #{userId}
+	</update>
 </mapper>
