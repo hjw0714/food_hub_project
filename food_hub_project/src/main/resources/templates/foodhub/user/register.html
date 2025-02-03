@@ -113,7 +113,6 @@
             vertical-align: middle; /* 체크박스를 텍스트와 동일한 수평 위치로 조정 */
         }
  </style>
-<script th:src="@{/jquery/jquery-3.7.1.min.js}"></script>
 <script>
 	$().ready(function() {
 
@@ -126,9 +125,7 @@
 
 				let userId = $("#userId").val();
 				if (userId == "") {
-					$("#userIdMessage")
-							.html(
-									"<span style='color:red;'>아이디를 입력하세요.</span>");
+					$("#userIdMessage").html("<span style='color:red;'>아이디를 입력하세요.</span>");
 					return;
 				}
 
@@ -142,16 +139,10 @@
 							isValidId) {
 
 						if (isValidId == "y") {
-							$(
-									"#userIdMessage")
-									.html(
-											"<span style='color:green;'>사용가능한 아이디입니다.</span>");
+							$("#userIdMessage").html("<span style='color:green;'>사용가능한 아이디입니다.</span>");
 							isPassId = true;
 						} else {
-							$(
-									"#userIdMessage")
-									.html(
-											"<span style='color:red;'>중복된 아이디입니다.</span>");
+							$("#userIdMessage").html("<span style='color:red;'>중복된 아이디입니다.</span>");
 							isPassId = false;
 						}
 
@@ -165,9 +156,7 @@
 
 					let nickname = $("#nickname").val();
 					if (nickname == "") {
-						$("#nicknameMessage")
-								.html(
-										"<span style='color:red;'>닉네임을 입력하세요.</span>");
+						$("#nicknameMessage").html("<span style='color:red;'>닉네임을 입력하세요.</span>");
 						return;
 					}
 
@@ -182,16 +171,10 @@
 								isValidNickname) {
 
 							if (isValidNickname == "y") {
-								$(
-										"#nicknameMessage")
-										.html(
-												"<span style='color:green;'>사용가능한 닉네임입니다.</span>");
+								$("#nicknameMessage").html("<span style='color:green;'>사용가능한 닉네임입니다.</span>");
 								isPassNickname = true;
 							} else {
-								$(
-										"#nicknameMessage")
-										.html(
-												"<span style='color:red;'>중복된 닉네임입니다.</span>");
+								$("#nicknameMessage").html("<span style='color:red;'>중복된 닉네임입니다.</span>");
 								isPassNickname = false;
 							}
 
@@ -207,16 +190,12 @@
 				let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 				if (email == "") {
-					$("#emailMessage")
-							.html(
-									"<span style='color:red;'>이메일을 입력하세요.</span>");
+					$("#emailMessage").html("<span style='color:red;'>이메일을 입력하세요.</span>");
 					return;
 				}
 
 				if (!emailPattern.test(email)) {
-					$("#emailMessage")
-							.html(
-									"<span style='color:red;'>올바른 이메일 형식이 아닙니다.</span>");
+					$("#emailMessage").html("<span style='color:red;'>올바른 이메일 형식이 아닙니다.</span>");
 					return;
 				}
 				$.ajax({
@@ -229,16 +208,10 @@
 							isValidEmail) {
 
 						if (isValidEmail == "y") {
-							$(
-									"#emailMessage")
-									.html(
-											"<span style='color:green;'>사용가능한 이메일 입니다.</span>");
+							$("#emailMessage").html("<span style='color:green;'>사용가능한 이메일 입니다.</span>");
 							isPassEmail = true;
 						} else {
-							$(
-									"#emailMessage")
-									.html(
-											"<span style='color:red;'>중복된 이메일입니다.</span>");
+							$("#emailMessage").html("<span style='color:red;'>중복된 이메일입니다.</span>");
 							isPassEmail = false;
 						}
 
@@ -255,14 +228,10 @@
 					"#confirmPasswd").val();
 
 			if (passwd == confirmPasswd) {
-				$("#passwordMessage")
-						.html(
-								"<span style='color:green;'>패스워드가 일치합니다.</span>");
+				$("#passwordMessage").html("<span style='color:green;'>패스워드가 일치합니다.</span>");
 				isPassPasswd = true;
 			} else {
-				$("#passwordMessage")
-						.html(
-								"<span style='color:red;'>패스워드가 일치하지 않습니다.</span>");
+				$("#passwordMessage").html("<span style='color:red;'>패스워드가 일치하지 않습니다.</span>");
 				isPassPasswd = false;
 			}
 
@@ -270,29 +239,21 @@
 
 		$("input[name='membershipType']").change(
 				function() {
-					if ($("#membership[value='BUSSI']").is(
-							":checked")) {
-						$("#foundingYearGroup").removeClass(
-								"hidden"); // 창업년도 표시
+					if ($("#membership[value='BUSSI']").is(":checked")) {
+						$("#foundingYearGroup").removeClass("hidden"); // 창업년도 표시
 					} else {
-						$("#foundingYearGroup").addClass(
-								"hidden"); // 창업년도 숨김
+						$("#foundingYearGroup").addClass("hidden"); // 창업년도 숨김
 					}
 				});
 
 		$("input[name='membershipType']").change(
 				function() {
-					if ($("input[name='membershipType']:checked")
-							.val() === "BUSSI") {
-						$("#foundingYearGroup").removeClass(
-								"hidden"); // 창업년도 표시
-						$("#businessTypeGroup").removeClass(
-								"hidden"); // 업종 입력란 표시
+					if ($("input[name='membershipType']:checked").val() === "BUSSI") {
+						$("#foundingYearGroup").removeClass("hidden"); // 창업년도 표시
+						$("#businessTypeGroup").removeClass("hidden"); // 업종 입력란 표시
 					} else {
-						$("#foundingYearGroup").addClass(
-								"hidden"); // 창업년도 숨김
-						$("#businessTypeGroup").addClass(
-								"hidden"); // 업종 입력란 숨김
+						$("#foundingYearGroup").addClass("hidden"); // 창업년도 숨김
+						$("#businessTypeGroup").addClass("hidden"); // 업종 입력란 숨김
 					}
 				});
 
