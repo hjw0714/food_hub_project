@@ -99,15 +99,16 @@ public class UserController {
 		
 		return "foodhub/user/myPage";
 	}
+
+	    
+	    
 	@GetMapping("/modifyPage")
 	public String modifyPage(HttpServletRequest request, Model model) {
 	    HttpSession session = request.getSession();
 	    String userId = (String) session.getAttribute("userId");
-
 	    if (userId != null) {
-	        model.addAttribute("userDTO", userService.getUserDetail(userId));
+	    	model.addAttribute("userDTO", userService.getUserDetail(userId));
 	    }
-
 	    return "foodhub/user/modifyPage";
 	}
 		
