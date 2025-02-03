@@ -57,7 +57,7 @@
             </ul>
           </li>
           <li class="dropdown">
-            <a href="informativePostList.html"><span>외식업 정보</span></a>
+            <a th:href="@{/post/informativePostList}"><span>외식업 정보</span></a>
             <ul>
               <li><a href="#">나의 성공 스토리</a></li>
               <li><a href="#">정책 정보</a></li>
@@ -66,27 +66,25 @@
             </ul>
           </li>
           <li class="dropdown">
-            <a href="authPostList.html"><span>협력업체 & 광고주 게시판</span></a>
+            <a href="#"><span>협력업체 & 광고주 게시판</span></a>
             <ul>
                 <li><a href="#">협력업체 및 광고배너 신청하기</a></li>
-                <li><a href="coopPostList.html"><span>협력업체 둘러보기</span></a></li>
-                <li><a href="coopPostList.html"><span>광고 둘러보기</span></a></li>
+                <li><a th:href="@{/post/coopPostList}"><span>협력업체 둘러보기</span></a></li>
             </ul>
           </li>
           <li class="dropdown">
             <a href="supportPostList.html"><span>매장 운영 지원</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
             <ul>
-              <li><a href="storePromoPostList.html"><span>매장홍보</span></a></li>
-              <li><a href="jobBoardPostList.html"><span>직원 & 알바 채용공고</span></a></li>
-              <li><a href="salePostList.html"><span>중고장구 판매</span></a></li>
+              <li><a th:href="@{/post/storePromoPostList}"><span>매장홍보</span></a></li>
+              <li><a th:href="@{/post/jobBoardPostList}"><span>직원 & 알바 채용공고</span></a></li>
+              <li><a th:href="@{/post/salePostList}"><span>중고장구 판매</span></a></li>
               <li><a href="salePostList.html"><span>함께 공동구매해요</span></a></li>
             </ul>
             <li class="dropdown">
               <a href="#"><span>유저 게시판</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
               <ul>
-                <li><a href="FreeBoardPostList.html"><span>자유게시판</span></a></li>
-                <li><a href="QnAPostList.html"><span>질문게시판</span></a></li>
-                <li><a href="QnAPostList.html"><span>나만의 레시피</span></a>
+                <li><a th:href="@{/post/FreeBoardPostList}"><span>자유게시판</span></a></li>
+                <li><a th:href="@{/post/QnAPostList}"><span>질문게시판</span></a></li>
               </li>
               </ul>
               <li class="dropdown">
@@ -112,11 +110,11 @@
         <div th:unless="${session.userId == null}">
        
       <div class="d-flex justify-content-start align-items-center">
-		    <a href="/foodhub/user/logout" class="login-btn d-flex align-items-center">
-		        <i class="bi bi-person-circle me-1"></i> 로그아웃
-		    </a>
 		    <a href="/foodhub/user/myPage" class="login-btn d-flex align-items-center ms-3">
 		        <i class="bi bi-person-circle me-1"></i> 마이페이지
+		    </a>
+		    <a href="/foodhub/user/logout" class="login-btn d-flex align-items-center">
+		        <i></i> 로그아웃
 		    </a>
 		</div>
       </div>
@@ -132,7 +130,7 @@
     <div class="container footer-top">
       <div class="row gy-4">
         <div class="col-lg-4 col-md-6 footer-about">
-          <a href="index.html" class="logo d-flex align-items-center">
+          <a th:href="@{/foodhub}" class="logo d-flex align-items-center">
             <span class="sitename">Food Hub</span>
           </a>
           <div class="footer-contact pt-3">
@@ -141,12 +139,7 @@
             <p class="mt-3"><strong>Phone:</strong> <span>+1 5589 55488 55</span></p>
             <p><strong>Email:</strong> <span>info@example.com</span></p>
           </div>
-          <div class="social-links d-flex mt-4">
-            <a href=""><i class="bi bi-twitter-x"></i></a>
-            <a href=""><i class="bi bi-facebook"></i></a>
-            <a href=""><i class="bi bi-instagram"></i></a>
-            <a href=""><i class="bi bi-linkedin"></i></a>
-          </div>
+         
         </div>
       </div>
     </div>

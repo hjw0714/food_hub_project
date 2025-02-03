@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{/foodhub/index/headerAndFooter.html}">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>중고장구 판매/나눔 게시판</title>
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="assets/css/main.css" rel="stylesheet">
+
+
+  <style>
+    .comment-box {
+      background-color: #f8f9fa;
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 20px;
+    }
+
+    .comment-header {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .comment-footer {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+    }
+
+    .comment-footer a {
+      color: #6c757d;
+      text-decoration: none;
+    }
+
+    .profile-img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+
+    .post-navigation a {
+      margin: 0 5px;
+    }
+  </style>
+</head>
+
+<body class="board-page">
+
+<div layout:fragment="content">
+
+ <main class="main">
+
+    <section id="board" class="board section">
+      <div class="container">
+        <div class="board-header mb-4">
+          <h2 class="mb-3">중고장비판매</h2>
+          <p>사용하지 않는 요식업 장비와 도구를 사고팔거나 나누는 공간입니다.</p>
+          <a th:href="@{/post/createPost}" class="btn btn-primary mb-4">새 글 작성</a>
+        </div>
+      
+        <div class="board-list">
+          <div class="list-group">
+            <a href="../postDetail.html" class="list-group-item list-group-item-action">
+              <h5 class="mb-1">[판매] 중형 냉장고, 90% 새 제품 (150,000원)</h5>
+              <small class="text-muted">작성자: 김판매 | 2025-01-16 | 댓글: 5</small>
+            </a>
+      
+            <a href="../postDetail.html" class="list-group-item list-group-item-action">
+              <h5 class="mb-1">[나눔] 오래된 식당용 의자 10개 나눔합니다.</h5>
+              <small class="text-muted">작성자: 박나눔 | 2025-01-15 | 댓글: 3</small>
+            </a>
+      
+            <a href="../postDetail.html" class="list-group-item list-group-item-action">
+              <h5 class="mb-1">[판매] 스테인리스 조리대 1.5m, 상태 양호 (80,000원)</h5>
+              <small class="text-muted">작성자: 이판매 | 2025-01-14 | 댓글: 7</small>
+            </a>
+      
+            <a href="../postDetail.html" class="list-group-item list-group-item-action">
+              <h5 class="mb-1">[나눔] 무료 가져가세요! 소형 튀김기 1대</h5>
+              <small class="text-muted">작성자: 최나눔 | 2025-01-13 | 댓글: 2</small>
+            </a>
+      
+            <a href="../postDetail.html" class="list-group-item list-group-item-action">
+              <h5 class="mb-1">[판매] 4구 가스레인지, 사용 6개월 (100,000원)</h5>
+              <small class="text-muted">작성자: 정판매 | 2025-01-12 | 댓글: 6</small>
+            </a>
+          </div>
+        </div>
+      </div>
+      
+
+        <div class="pagination d-flex justify-content-center mt-4">
+          <nav aria-label="Page navigation">
+            <ul class="pagination">
+              <li class="page-item"><a class="page-link" href="#">이전</a></li>
+              <li class="page-item"><a class="page-link" href="#">1</a></li>
+              <li class="page-item"><a class="page-link" href="#">2</a></li>
+              <li class="page-item"><a class="page-link" href="#">3</a></li>
+              <li class="page-item"><a class="page-link" href="#">다음</a></li>
+            </ul>
+          </nav>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+ 
+</div>
+
+  
+  
+
+</body>
+
+</html>

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{/foodhub/index/headerAndFooter.html}">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>게시글 상세보기</title>
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="assets/css/main.css" rel="stylesheet">
+
+  <style>
+    /* 댓글 스타일 */
+    .comment-box {
+      background-color: #f8f9fa;
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+    }
+  
+    .comment-header {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+  
+    .comment-footer {
+      display: flex;
+      justify-content: flex-end; /* 버튼들을 오른쪽 끝으로 정렬 */
+      font-size: 0.9rem;
+      align-items: center;
+    }
+  
+    .comment-footer a,
+    .comment-footer .like-button,
+    .comment-footer .report-button {
+      margin-left: 15px; /* 버튼 사이 간격 */
+    }
+  
+    .profile-img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+  
+    .like-button {
+      color: #007bff;
+      cursor: pointer;
+    }
+  
+    .like-count {
+      margin-left: 5px;
+    }
+  
+    /* 답글 스타일 */
+    .reply-comment-box {
+      margin-left: 30px; /* 답글 들여쓰기 */
+      background-color: #f1f3f5; /* 답글 배경 색상 */
+      display: block; /* 기본 block 레이아웃으로 변경 */
+    }
+  
+    /* 신고 버튼 스타일 */
+    .report-button {
+      color: #dc3545;
+      cursor: pointer;
+    }
+
+    #bookmarkButton {
+      background-color: #ffc107; /* 노란색 */
+      color: white;
+      border: none;
+      display: flex;
+      align-items: center;
+      margin-left: auto; /* 오른쪽 끝으로 위치 */
+    }
+
+    #bookmarkButton i {
+      margin-right: 5px; /* 아이콘과 텍스트 간격 */
+    }
+
+    #bookmarkButton:hover {
+      background-color: #e0a800; /* 호버 시 색상 */
+    }
+  </style>
+  
+  
+</head>
+
+<body class="single-post-page">
+
+<div layout:fragment="content">
+
+ <main class="main">
+
+    <section id="post-detail" class="post-detail section">
+      <div class="container">
+        <div class="post-header mb-4">
+          <h2 class="mb-3">[질문] 식재료 납품 업체 추천 부탁드립니다!</h2>
+          <div class="d-flex align-items-center mb-2">
+            <img src="assets/img/profile-default.jpg" alt="프로필 이미지" class="profile-img">
+            <span class="text-muted">작성자: 홍길동</span>
+          </div>
+          <div class="details">
+            <span class="text-muted">작성일: 2025-01-17</span>
+            <span class="text-muted">조회수: <span id="viewCount">0</span></span>
+            <span class="text-muted">추천수: <span id="likeCount">0</span></span>
+          </div>
+        </div>
+
+        <div class="post-body mb-4">
+          <p>여기에 게시글 원문이 들어갑니다.</p>
+        </div>
+
+        <div class="post-footer d-flex justify-content-between mb-5">
+          <button id="likeButton" class="btn btn-outline-success"><i class="bi bi-hand-thumbs-up"></i> 추천</button>
+          <button id="reportButton" class="btn btn-outline-danger"><i class="bi bi-flag"></i> 신고</button>
+        </div>
+        
+        <div class="d-flex justify-content-center post-navigation mb-4">
+          <a href="previous-post.html" class="btn btn-outline-secondary">이전글</a>
+          <a th:href="@{/post/FreeBoardPostList}" class="btn btn-outline-secondary">전체 게시판</a>
+          <a href="next-post.html" class="btn btn-outline-secondary">다음글</a>
+        </div>
+        <!-- 북마크 버튼을 오른쪽 끝에 배치 -->
+        <button id="bookmarkButton" class="btn btn-warning ms-auto d-block"><i class="bi bi-bookmark"></i> 북마크</button>
+        
+
+        <hr>
+
+        <section id="comments" class="comments section">
+          <h3 class="mb-4">댓글</h3>
+        
+          <div class="comment-box">
+            <div class="comment-header">김철수</div>
+            <div class="comment-body">좋은 정보 감사합니다!</div>
+            <div class="comment-footer">
+              <span class="text-muted">2025-01-17 14:35</span>
+              <a href="#">답글</a>
+              <span class="like-button" onclick="updateCommentLikeCount(this)">
+                <i class="bi bi-hand-thumbs-up"></i> 좋아요
+              </span>
+              <span class="like-count">0</span>
+              <span class="report-button" onclick="reportComment(this)">
+                <i class="bi bi-flag"></i> 신고
+              </span>
+            </div>
+        
+            <!-- 답글 예시 추가 -->
+            <div class="reply-comment-box">
+              <div class="comment-header">이영수</div>
+              <div class="comment-body">저도 감사합니다! 유용한 정보네요.</div>
+              <div class="comment-footer">
+                <span class="text-muted">2025-01-17 15:00</span>
+                <span class="like-button" onclick="updateCommentLikeCount(this)">
+                  <i class="bi bi-hand-thumbs-up"></i> 좋아요
+                </span>
+                <span class="like-count">0</span>
+                <span class="report-button" onclick="reportComment(this)">
+                  <i class="bi bi-flag"></i> 신고
+                </span>
+              </div>
+            </div>
+          </div>
+        
+          <div class="comment-box">
+            <div class="comment-header">이영수</div>
+            <div class="comment-body">정말 유용한 정보네요. 감사합니다!</div>
+            <div class="comment-footer">
+              <span class="text-muted">2025-01-17 15:00</span>
+              <a href="#">답글</a>
+              <span class="like-button" onclick="updateCommentLikeCount(this)">
+                <i class="bi bi-hand-thumbs-up"></i> 좋아요
+              </span>
+              <span class="like-count">0</span>
+              <span class="report-button" onclick="reportComment(this)">
+                <i class="bi bi-flag"></i> 신고
+              </span>
+            </div>
+          </div>
+        
+          <div class="comment-box">
+            <div class="comment-header">박지현</div>
+            <div class="comment-body">댓글을 달 수 있어 좋네요!</div>
+            <div class="comment-footer">
+              <span class="text-muted">2025-01-17 15:30</span>
+              <a href="#">답글</a>
+              <span class="like-button" onclick="updateCommentLikeCount(this)">
+                <i class="bi bi-hand-thumbs-up"></i> 좋아요
+              </span>
+              <span class="like-count">0</span>
+              <span class="report-button" onclick="reportComment(this)">
+                <i class="bi bi-flag"></i> 신고
+              </span>
+            </div>
+          </div>
+        
+          <form id="commentForm" class="mt-4">
+            <div class="form-group mb-3">
+              <label for="commentContent" class="form-label">댓글 작성</label>
+              <textarea id="commentContent" class="form-control" rows="3" placeholder="댓글을 입력하세요" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">댓글 등록</button>
+          </form>
+        </section>
+      </div>
+    </section>
+
+    <script>
+      // 조회수 로직
+      function updateViewCount() {
+        const viewCountElement = document.getElementById('viewCount');
+        let viewCount = parseInt(localStorage.getItem('postViewCount')) || 0;
+        viewCount++;
+        localStorage.setItem('postViewCount', viewCount);
+        viewCountElement.textContent = viewCount;
+      }
+
+      // 추천수 로직
+      function updateLikeCount() {
+        const likeButton = document.getElementById('likeButton');
+        const likeCountElement = document.getElementById('likeCount');
+        let likeCount = parseInt(localStorage.getItem('postLikeCount')) || 0;
+
+        likeButton.addEventListener('click', () => {
+          likeCount++;
+          localStorage.setItem('postLikeCount', likeCount);
+          likeCountElement.textContent = likeCount;
+        });
+      }
+
+      // 댓글 좋아요 버튼 로직
+      function updateCommentLikeCount(button) {
+        const likeCountSpan = button.nextElementSibling;
+        let likeCount = parseInt(likeCountSpan.textContent);
+        likeCount++;
+        likeCountSpan.textContent = likeCount;
+      }
+
+      // 댓글 신고 버튼 로직
+      function reportComment(button) {
+        alert("댓글이 신고되었습니다.");
+      }
+
+      // 신고 버튼 로직
+      const reportButton = document.getElementById('reportButton');
+      reportButton.addEventListener('click', () => {
+        alert("게시글이 신고되었습니다.");
+      });
+
+      // 페이지 로드 시 조회수 및 추천수 업데이트
+      document.addEventListener('DOMContentLoaded', () => {
+        updateViewCount();
+        updateLikeCount();
+      });
+
+      // 댓글 작성 로직
+      const commentForm = document.getElementById('commentForm');
+      commentForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const commentContent = document.getElementById('commentContent').value;
+        if (commentContent.trim() !== '') {
+          alert("댓글이 등록되었습니다.");
+          document.getElementById('commentContent').value = '';
+        }
+      });
+    </script>
+  </main>
+
+</div>
+  
+</body>
+
+</html>

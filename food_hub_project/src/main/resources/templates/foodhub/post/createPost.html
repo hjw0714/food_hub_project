@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{/foodhub/index/headerAndFooter.html}">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Single Post - ZenBlog Bootstrap Template</title>
+  <script src="//cdn.ckeditor.com/4.22.1/full/ckeditor.js"></script>
+<style>
+    .cke_notification {
+        display: none !important;  /* 경고 메시지 숨김 */
+    }
+</style>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+
+  <!-- Favicons -->
+  <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="assets/css/main.css" rel="stylesheet">
+
+  <!-- =======================================================
+  * Template Name: ZenBlog
+  * Template URL: https://bootstrapmade.com/zenblog-bootstrap-blog-template/
+  * Updated: Aug 08 2024 with Bootstrap v5.3.3
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+</head>
+
+<body class="single-post-page">
+
+  
+<div layout:fragment="content">
+
+<main class="main">
+
+  <section id="write-post" class="write-post section">
+      <div class="container">
+        <h2 class="text-center mb-4">게시글 작성</h2>
+        <form id="postForm">
+          <div class="form-group mb-4">
+            <label for="postTitle" class="form-label">제목</label>
+            <input type="text" id="postTitle" name="title" class="form-control" placeholder="제목을 입력하세요" required>
+          </div>
+    
+          <div class="form-group mb-4">
+            <label for="postCategory" class="form-label">카테고리</label>
+            <select id="postCategory" name="category" class="form-control" required>
+              <option value="">카테고리를 선택하세요</option>
+              <option value="news">뉴스</option>
+              <option value="tips">팁</option>
+              <option value="discussion">토론</option>
+            </select>
+          </div>
+    
+          <div class="form-group mb-4">
+            <label for="postContent" class="form-label">내용</label>
+            <textarea id="postContent" name="content" class="form-control" rows="10" placeholder="내용을 입력하세요" required></textarea>
+            <script>CKEDITOR.replace("content");</script>
+        </div>
+
+       <div class="form-group mb-4">
+          <label for="postFile" class="form-label">첨부 파일</label>
+          <input type="file" id="postFile" name="file[]" class="form-control" multiple>
+        </div>
+
+  
+        <div class="text-center">
+          <button type="submit" class="btn btn-primary">등록</button>
+          <button type="button" class="btn btn-secondary" onclick="cancelPost()">취소</button>
+        </div>
+      </form>
+    </div>
+  </section>
+  
+  <script>
+    function cancelPost() {
+      if (confirm("게시글 작성을 취소하시겠습니까?")) {
+        // 취소 동작 (예: 이전 페이지로 이동)
+        window.history.back();
+      }
+    }
+  
+    const postForm = document.getElementById('postForm');
+    postForm.addEventListener('submit', (event) => {
+      event.preventDefault(); // 기본 폼 제출 방지
+      alert("게시글이 성공적으로 등록되었습니다!");
+      // 서버로 데이터를 전송하는 로직 추가
+    });
+  </script>
+</div>
+
+
+
+
+</body>
+</html>
