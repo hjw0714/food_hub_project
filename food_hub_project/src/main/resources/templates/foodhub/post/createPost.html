@@ -6,41 +6,49 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>Single Post - ZenBlog Bootstrap Template</title>
+  <title>Create Post</title>
   <script src="//cdn.ckeditor.com/4.22.1/full/ckeditor.js"></script>
 <style>
     .cke_notification {
         display: none !important;  /* 경고 메시지 숨김 */
     }
 </style>
-  <meta name="description" content="">
-  <meta name="keywords" content="">
+<script>
+	$().ready(function () {
+	    // 처음에는 말머리 선택 블록 숨기기
+	    $(".subCategoryContainer").hide();
+	
+	    $("#categoryNm").change(function () {
+	        let categoryNm = $("#categoryNm").val();
+	        
+	        if (categoryNm === "") {
+	            // 아무 카테고리도 선택되지 않았을 때 말머리 블록 숨기기
+	            $(".subCategoryContainer").hide();
+	        } else {
+	            // 카테고리 선택 시 말머리 블록 표시
+	            $(".subCategoryContainer").show();
+	
+	            // 말머리 select의 name 속성 변경
+	            $("#subCateId").attr("name", categoryNm);
+	
+	            // 모든 옵션 숨기기
+	            $("#subCateId option").hide();
+	
+	            // 공통 선택 안내 옵션은 항상 보이게 설정
+	            $("#subCateId option[value='']").show();
+	
+	            // 선택된 카테고리에 맞는 옵션만 보이게 설정
+	            $("#subCateId option[data-category='" + categoryNm + "']").show();
+	
+	            // 기본값으로 초기화
+	            $("#subCateId").val("");
+	        }
+	    });
+	});
 
-  <!-- Favicons -->
-  <link href="assets/img/favicon.png" rel="icon">
-  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+</script>
 
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com" rel="preconnect">
-  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
-
-  <!-- Vendor CSS Files -->
-  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
-  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
-
-  <!-- Main CSS File -->
-  <link href="assets/css/main.css" rel="stylesheet">
-
-  <!-- =======================================================
-  * Template Name: ZenBlog
-  * Template URL: https://bootstrapmade.com/zenblog-bootstrap-blog-template/
-  * Updated: Aug 08 2024 with Bootstrap v5.3.3
-  * Author: BootstrapMade.com
-  * License: https://bootstrapmade.com/license/
-  ======================================================== -->
+ 
 </head>
 
 <body class="single-post-page">
@@ -60,18 +68,70 @@
           </div>
     
           <div class="form-group mb-4">
-            <label for="postCategory" class="form-label">카테고리</label>
-            <select id="postCategory" name="category" class="form-control" required>
-              <option value="">카테고리를 선택하세요</option>
-              <option value="news">뉴스</option>
-              <option value="tips">팁</option>
-              <option value="discussion">토론</option>
+            <label>게시판 카테고리</label>
+            <select id="categoryNm" name="categoryNm" class="form-control" required>
+              <option value="">게시판을 선택하세요</option>
+              <option value="informativePostList">외식업정보게시판</option>
+              <option value="FreeBoardPostList">자유게시판</option>
+              <option value="jobBoardPostList">알바공고게시판</option>
+              <option value="QnAPostList">질문게시판</option>
+              <option value="salePostList">중고장비거래게시판</option>
+              <option value="storePromoPostList">매장홍보게시판</option>
+              <option value="coopPostList">협력업체게시판</option>
             </select>
           </div>
+          
+		  <div class="subCategoryContainer">
+	    	<label>말머리</label>
+	   		 <select id="subCateId" name="" class="form-control" required>
+	        	<option value="">말머리를 선택하세요</option>
+	
+		        <!-- Free Board -->
+		        <option value="1" data-category="FreeBoardPostList">잡담</option>          	<!-- casualTalk -->
+		        <option value="2" data-category="FreeBoardPostList">일상이야기</option>  	<!-- dailyChat -->
+		        <option value="3" data-category="FreeBoardPostList">질문</option>       	<!-- casualQuestion -->
+		
+		        <!-- Informative Board -->
+		        <option value="4" data-category="informativePostList">업계뉴스</option>       <!-- industryNews -->
+		        <option value="5" data-category="informativePostList">업체소식</option>       <!-- businessUpdates -->
+		        <option value="6" data-category="informativePostList">트렌드</option>         <!-- trends -->
+		        <option value="7" data-category="informativePostList">업계분석</option>       <!-- analysis -->
+		        <option value="8" data-category="informativePostList">새로운 맛집</option>    <!-- newRestaurants -->
+		
+		        <!-- Job Board -->
+		        <option value="9" data-category="jobBoardPostList">직원 구인</option>        <!-- staffRecruitment -->
+		        <option value="10" data-category="jobBoardPostList">알바 구인</option>       <!-- partTimeRecruitment -->
+		        <option value="11" data-category="jobBoardPostList">구직</option>            <!-- jobSeeking -->
+		
+		        <!-- QnA Board -->
+		        <option value="12" data-category="QnAPostList">업계 질문</option>       <!-- industryQuestions -->
+		        <option value="13" data-category="QnAPostList">자유 질문</option>       <!-- questions -->
+		        <option value="14" data-category="QnAPostList">도움 요청</option>       <!-- helpNeeded -->
+		        <option value="15" data-category="QnAPostList">팁을 구합니다</option>   <!-- seekingAdvice -->
+		
+		        <!-- Sale Board -->
+		        <option value="16" data-category="salePostList">판매</option>         <!-- sale -->
+		        <option value="17" data-category="salePostList">나눔</option>         <!-- free -->
+		        <option value="18" data-category="salePostList">교환</option>         <!-- exchange -->
+		        <option value="19" data-category="salePostList">구매희망</option>     <!-- wanted -->
+		
+		        <!-- Store Promotion -->
+		        <option value="20" data-category="storePromoPostList">매장 소개</option>    <!-- storeIntroductions -->
+		        <option value="21" data-category="storePromoPostList">신규 오픈</option>    <!-- newStoreOpenings -->
+		        <option value="22" data-category="storePromoPostList">이벤트</option>      <!-- events -->
+		        <option value="23" data-category="storePromoPostList">맛집 추천</option>    <!-- recommendedRestaurants -->
+		
+		        <!-- Cooperation Board -->
+		        <option value="24" data-category="coopPostList">업체 소개</option>     <!-- introduction -->
+		        <option value="25" data-category="coopPostList">협력 요청</option>     <!-- partnershipRequest -->
+		    </select>
+		</div>
+			  
+        <br/>
     
           <div class="form-group mb-4">
-            <label for="postContent" class="form-label">내용</label>
-            <textarea id="postContent" name="content" class="form-control" rows="10" placeholder="내용을 입력하세요" required></textarea>
+            <label>내용</label>
+            <textarea id="content" name="content" class="form-control" rows="10" placeholder="내용을 입력하세요" required></textarea>
             <script>CKEDITOR.replace("content");</script>
         </div>
 
@@ -88,6 +148,7 @@
       </form>
     </div>
   </section>
+</main>
   
   <script>
     function cancelPost() {
@@ -104,10 +165,8 @@
       // 서버로 데이터를 전송하는 로직 추가
     });
   </script>
+ 
 </div>
-
-
-
 
 </body>
 </html>
