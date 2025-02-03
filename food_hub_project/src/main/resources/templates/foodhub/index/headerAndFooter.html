@@ -40,85 +40,86 @@
 <body class="index-page">
 
   <header id="header" class="header d-flex align-items-center sticky-top">
-    <div class="container position-relative d-flex align-items-center justify-content-between">
+	<div class="container position-relative d-flex align-items-center justify-content-between">
 
-      <a th:href="@{/foodhub}" class="logo d-flex align-items-center me-auto me-xl-0">
-        <!-- Uncomment the line below if you also wish to use an image logo -->
-        <!-- <img src="/assets/img/logo.png" alt=""> -->
-        <h1 class="sitename">Food Hub</h1>
-      </a>
+		<a th:href="@{/foodhub}" class="logo d-flex align-items-center me-auto me-xl-0">
+        	<!-- Uncomment the line below if you also wish to use an image logo -->
+        	<!-- <img src="/assets/img/logo.png" alt=""> -->
+        	<h1 class="sitename">Food Hub</h1>
+      	</a>
 
-      <nav id="navmenu" class="navmenu">
-        <ul>
-          <li class="dropdown">
-            <a href="authPostList.html"><span>베스트 & 통합</span></a>
-            <ul>
-                <li><a href="#">베스트 게시판</a></li>
-                <li><a href="coopPostList.html"><span>통합 게시판</span></a></li>
-            </ul>
-          </li>
-          <li class="dropdown">
-            <a th:href="@{/post/informativePostList}"><span>외식업 정보</span></a>
-            <ul>
-              <li><a href="#">나의 성공 스토리</a></li>
-              <li><a href="#">정책 정보</a></li>
-              <li><a href="#">트렌드 리포트</a></li>
-              <li><a href="#">푸드 테크</a></li>
-            </ul>
-          </li>
-          <li class="dropdown">
-            <a href="#"><span>협력업체 & 광고주 게시판</span></a>
-            <ul>
-                <li><a href="#">협력업체 및 광고배너 신청하기</a></li>
-                <li><a th:href="@{/post/coopPostList}"><span>협력업체 둘러보기</span></a></li>
-            </ul>
-          </li>
-          <li class="dropdown">
-            <a href="supportPostList.html"><span>매장 운영 지원</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-            <ul>
-              <li><a th:href="@{/post/storePromoPostList}"><span>매장홍보</span></a></li>
-              <li><a th:href="@{/post/jobBoardPostList}"><span>직원 & 알바 채용공고</span></a></li>
-              <li><a th:href="@{/post/salePostList}"><span>중고장구 판매</span></a></li>
-              <li><a href="salePostList.html"><span>함께 공동구매해요</span></a></li>
-            </ul>
-            <li class="dropdown">
-              <a href="#"><span>유저 게시판</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-              <ul>
-                <li><a th:href="@{/post/FreeBoardPostList}"><span>자유게시판</span></a></li>
-                <li><a th:href="@{/post/QnAPostList}"><span>질문게시판</span></a></li>
-              </li>
-              </ul>
-              <li class="dropdown">
-                <a href="supportPostList.html"><span>혜택 및 이벤트</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-                <ul>
-                  <li><a href="storePromoPostList.html"><span>Food Hub이벤트</span></a></li>
-                  <li><a href="jobBoardPostList.html"><span>가게 이벤트</span></a></li>
-                  <li><a href="salePostList.html"><span>할인 쿠폰 공유</span></a></li>
-                  <li><a href="salePostList.html"><span>체험단 모집</span></a></li>
-                  <li><a href="salePostList.html"><span>협력 이벤트</span></a></li>
-                </ul>
-        </ul>
-        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
-      </nav>
+      	<nav id="navmenu" class="navmenu">
+        	<ul>
+          		<li class="dropdown">
+            		<a href="authPostList.html"><span>베스트 & 통합</span></a>
+            		<ul>
+                		<li><a href="#">베스트 게시판</a></li>
+                		<li><a href="coopPostList.html"><span>통합 게시판</span></a></li>
+            		</ul>
+          		</li>
+          		<li class="dropdown">
+            		<a th:href="@{/post/informativePostList}"><span>외식업 정보</span></a>
+            		<ul>
+              			<li><a href="#">나의 성공 스토리</a></li>
+              			<li><a href="#">정책 정보</a></li>
+              			<li><a href="#">트렌드 리포트</a></li>
+              			<li><a href="#">푸드 테크</a></li>
+            		</ul>
+          		</li>
+          		<li class="dropdown">
+            		<a href="#"><span>협력업체 & 광고주 게시판</span></a>
+            		<ul>
+                		<li><a href="#">협력업체 및 광고배너 신청하기</a></li>
+                		<li><a th:href="@{/post/coopPostList}"><span>협력업체 둘러보기</span></a></li>
+            		</ul>
+          		</li>
+          		<li class="dropdown">
+            		<a href="supportPostList.html"><span>매장 운영 지원</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+            		<ul>
+	              		<li><a th:href="@{/post/storePromoPostList}"><span>매장홍보</span></a></li>
+	              		<li><a th:href="@{/post/jobBoardPostList}"><span>직원 & 알바 채용공고</span></a></li>
+	              		<li><a th:href="@{/post/salePostList}"><span>중고장구 판매</span></a></li>
+	              		<li><a href="salePostList.html"><span>함께 공동구매해요</span></a></li>
+            		</ul>
+            	<li class="dropdown">
+              		<a href="#"><span>유저 게시판</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+              		<ul>
+                		<li><a th:href="@{/post/FreeBoardPostList}"><span>자유게시판</span></a></li>
+                		<li><a th:href="@{/post/QnAPostList}"><span>질문게시판</span></a></li>
+                    </ul>
+                </li>
+              	<li class="dropdown">
+                	<a href="supportPostList.html"><span>혜택 및 이벤트</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+                	<ul>
+                  		<li><a href="storePromoPostList.html"><span>Food Hub이벤트</span></a></li>
+                  		<li><a href="jobBoardPostList.html"><span>가게 이벤트</span></a></li>
+                  		<li><a href="salePostList.html"><span>할인 쿠폰 공유</span></a></li>
+                  		<li><a href="salePostList.html"><span>체험단 모집</span></a></li>
+                  		<li><a href="salePostList.html"><span>협력 이벤트</span></a></li>
+                	</ul>
+               	</li>
+        	</ul>
+        	<i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+      	</nav>
       
       
-      <div class="header-user d-flex align-items-center">
-        <div th:if="${session.userId == null}">
-        <a href="/foodhub/user/login" class="login-btn d-flex align-items-center">
-          <i class="bi bi-person-circle me-1"></i> 로그인
-        </a>
-        </div>
-        <div th:unless="${session.userId == null}">
-       
-      <div class="d-flex justify-content-start align-items-center">
-		    <a href="/foodhub/user/myPage" class="login-btn d-flex align-items-center ms-3">
-		        <i class="bi bi-person-circle me-1"></i> 마이페이지
-		    </a>
-		    <a href="/foodhub/user/logout" class="login-btn d-flex align-items-center">
-		        <i></i> 로그아웃
-		    </a>
-		</div>
-      </div>
+      	<div class="header-user d-flex align-items-center">
+        	<div th:if="${session.userId == null}">
+        		<a href="/foodhub/user/login" class="login-btn d-flex align-items-center">
+          			<i class="bi bi-person-circle me-1"></i> 로그인
+        		</a>
+        	</div>
+        	<div th:unless="${session.userId == null}">
+      			<div class="d-flex justify-content-start align-items-center">
+		    		<a href="/foodhub/user/myPage" class="login-btn d-flex align-items-center ms-3">
+		        		<i class="bi bi-person-circle me-1"></i> 마이페이지
+		    		</a>
+		    		<a href="/foodhub/user/logout" class="login-btn d-flex align-items-center">
+		        		<i></i> 로그아웃
+		    		</a>
+				</div>
+      		</div>
+    	</div>
     </div>
   </header>
 
