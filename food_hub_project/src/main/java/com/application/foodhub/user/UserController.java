@@ -2,6 +2,7 @@ package com.application.foodhub.user;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -157,28 +158,94 @@ public class UserController {
 	}
 	
 	@GetMapping("/deleteUser")
-	public String deleteUser() {
-		return "foodhub/user/deleteUser";
-	}
-	
+	   public String deleteUser() {
+	      return "foodhub/user/deleteUser";
+    }
+	   
 	@PostMapping("/deleteUser")
-	@ResponseBody
+    @ResponseBody
 	public String deleteUser(HttpServletRequest request) {
-		
+  
 		HttpSession session = request.getSession();
 		userService.deleteUser((String)session.getAttribute("userId"));
+
 		session.invalidate();
 		
 		String jsScript ="""
 				<script>
 					alert('탈퇴되었습니다.');
-					location.href = 'foodhub/index/index';
+					location.href = '/foodhub';
 				</script>
 				""";
+
 		return jsScript;
+	} 
+	
+	@GetMapping("/findId")
+	public String findId() {
+		return "foodhub/user/findId";
 	}
 	
+	@PostMapping("/findId")
+	@ResponseBody
+	public String findId(@RequestBody Map<String, String> requestData) {
+	    String email = requestData.get("email");
+	    String tel = requestData.get("tel");
+	    return userService.findId(email, tel);
+	}
 	
+	@GetMapping("/findPassword")
+	public String findPassword() {
+		return "foodhub/user/findPassword";
+	}
 	
+	@PostMapping("/findPassword")
+	@ResponseBody
+	public String findPassword(@RequestBody Map<String, String> requestData) {
+		String userId = requestData.get("userId");
+	    String email = requestData.get("email");
+	    String tel = requestData.get("tel");
+	    return userService.findPasswd(userId, email, tel);
+	}
 	
+
+	@PostMapping("/resetPassword")
+	@ResponseBody
+	public String resetPassword(@RequestParam("newPassword") String newPassword, 
+	                            @RequestParam("userId") String userId) { 
+		
+	    userService.resetPassword(newPassword, userId);
+
+	    String jsScript = """
+	        <script>
+	            alert('비밀번호가 변경되었습니다.');
+	            location.href = '/foodhub/user/login';
+	        </script>
+	    """;
+
+	    return jsScript;
+	}
+	
+	@GetMapping("/changePassword")
+	public String changePassword() {
+		return "foodhub/user/changePassword";
+	}
+	
+	@PostMapping("/changePassword")
+	@ResponseBody
+	public String changePassword(@RequestParam("newPassword") String newPassword, 
+	                            @RequestParam("userId") String userId) { 
+		
+	    userService.resetPassword(newPassword, userId);
+
+	    String jsScript = """
+	        <script>
+	            alert('비밀번호가 변경되었습니다.');
+	            location.href = '/foodhub/user/myPage';
+	        </script>
+	    """;
+
+	    return jsScript;
+	}
+
 }

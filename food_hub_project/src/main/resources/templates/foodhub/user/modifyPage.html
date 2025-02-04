@@ -380,12 +380,14 @@
 	        </div>
 	        <span id="emailMessage"></span>
 	        <div class="checkbox-group">
-    <!-- 기본적으로 "N"을 넘기도록 hidden input 설정 -->
+ 			<!-- 기본적으로 "N"을 넘기도록 hidden input 설정 -->
 			    <input type="hidden" name="emailYn_hidden" value="N">
 			    <input type="checkbox" name="emailYn" id="emailYn" value="Y" th:checked="${userDTO.emailYn == 'Y'}">
 			    <label for="emailYn">이메일 수신 동의</label>
 			</div>
+
 			</div>
+
 	
 	    <div class="form-group">
 	        <label for="phone">휴대폰 번호</label>
@@ -427,9 +429,12 @@
             <button class="btn save-btn" id="save-btn" type="submit">저장</button>
            <button class="btn" id="cancel-btn" type="button">취소</button>
         </div>
-	</div>
-	</div>>
-	    </form>
+        
+    </div>
+    </div>
+    </form>
+</div>
+
 </body>
 </html>
     

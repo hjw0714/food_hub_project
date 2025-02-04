@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{/foodhub/index/headerAndFooter.html}">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Delete User - Food Hub</title>
+
+<script>
+
+  function confirmDeletion() {
+    const isChecked = document.getElementById('agreeTerms').checked;
+    if (!isChecked) {
+      alert('회원탈퇴 안내에 동의해야 탈퇴가 가능합니다.');
+      return;
+    }
+
+    if (confirm('정말로 회원탈퇴를 진행하시겠습니까? 이 작업은 되돌릴 수 없습니다.')) {
+		document.getElementById("deleteAccountForm").submit();
+    }
+  }
+  
+</script>
+  
+</head>
+
+<body class="single-post-page">
+
+<div layout:fragment="content">
+
+<main class="main">
+
+  	<!-- 회원탈퇴 Section -->
+	<section id="delete-account" class="delete-account section">
+	  <div class="container my-5">
+	    <h2 class="text-center mb-4">회원탈퇴</h2>
+	    <p class="text-center text-danger mb-4">회원탈퇴 시 모든 정보가 삭제되며 복구할 수 없습니다. 신중히 선택하세요.</p>
+	    <form id="deleteAccountForm" class="text-center" th:action="@{/foodhub/user/deleteUser}" method="post">
+	      <div class="d-inline-flex align-items-center mb-3">
+	        <input type="checkbox" id="agreeTerms" required style="margin: 0; width: 20px; height: 20px;">
+	        <label for="agreeTerms" class="ms-2" style="margin: 0; font-size: 16px;">회원탈퇴 안내를 확인했으며, 이에 동의합니다.</label>
+	      </div>
+	      <br>
+	      <button type="button" class="btn btn-danger" onclick="confirmDeletion()">회원탈퇴</button>
+	    </form>
+	  </div>
+	</section>
+
+</main>
+
+</div>
+
+</body>
+
+
+</html>

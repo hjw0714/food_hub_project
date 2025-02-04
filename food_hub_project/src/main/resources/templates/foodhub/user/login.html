@@ -108,8 +108,8 @@
         <input type="password" id="passwd" name="passwd" class="form-control" placeholder="비밀번호" required>
         <span id="failMsg" ></span>
         <div class="links">
-          <a href="find_account.html">아이디 찾기</a>
-          <a href="find_passwd.html">비밀번호 찾기</a>
+          <a th:href="@{/foodhub/user/findId}">아이디 찾기</a>
+          <a th:href="@{/foodhub/user/findPassword}">비밀번호 찾기</a>
           <a href="/foodhub/user/register">회원가입</a>
         </div>
         <button type="submit" class="btn btn-primary w-100 mt-3" id="loginBtn">로그인</button>

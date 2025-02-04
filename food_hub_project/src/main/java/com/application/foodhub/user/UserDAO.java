@@ -1,5 +1,7 @@
 package com.application.foodhub.user;
 
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
@@ -11,6 +13,11 @@ public interface UserDAO {
 	public String getEncodedPasswd(String userId);
 	public UserDTO getUserDetail(String userId);
 	public void updateUser(UserDTO userDTO);
-	public void deleteUser(String userId);
 	public String getDeleteUserProfile(String userId);
+	public void deleteUser(String userId);
+
+	public String findId(Map<String, Object> params);
+	public String findPasswd(Map<String, Object> params);
+	public void resetPassword(UserDTO userDTO);
+
 }
