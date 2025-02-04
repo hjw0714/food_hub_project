@@ -8,9 +8,12 @@ import lombok.Data;
 
 @Data
 public class PostDTO {
-    private Long postId;
+    private Long postId = null;
     private String userId;
     private Long categoryId;
+    private Long subCateId;
+    private String cateNm;
+    private String subCateNm;
     private String title;
     private String content;
     private Long viewCnt;
@@ -19,4 +22,5 @@ public class PostDTO {
     private Date createdAt;
     @DateTimeFormat(pattern="yyyy-MM-dd-hh-mm")
     private Date updatedAt;
+    
 }

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.application.foodhub.fileUpload.FileUploadDAO">
+
+ 	<!-- ✅ 파일 업로드 (INSERT) -->
+    <insert id="insertFileUpload">
+        INSERT INTO FILE_UPLOAD 
+        			(POST_ID, FILE_UUID, FILE_NAME, FILE_PATH ,UPLOAD_DATE)
+        VALUES  
+        			(#{postId}, #{fileUUID}, #{fileName}, #{filePath} , NOW())
+    </insert>
+
+    <!-- ✅ 특정 게시글의 파일 목록 조회 (SELECT) -->
+    <select id="findFilesByPostId" resultType="com.application.foodhub.fileUpload.FileUploadDTO">
+        SELECT 	*	 
+        FROM 	FILE_UPLOAD 
+        WHERE 	POST_ID = #{postId}
+    </select>
+    
+    <!-- ✅ 파일 업데이트 (UPDATE) -->
+    <update id="updateFileUpload">
+        UPDATE FILE_UPLOAD
+        SET FILE_NAME = #{fileName}, FILE_UUID = #{fileUUID}, FILE_PATH = #{filePath}
+        WHERE FILE_ID = #{fileId}
+    </update>
+    
+    <!-- 특정 게시글 파일 하나 삭제 -->
+    <delete id="deleteFileById">
+    	DELETE FROM FILE_UPLOAD WHERE FILE_ID = #{fileId}
+	</delete>
+    
+    <!-- 특정 게시물 모든 파일 삭제 -->
+    <delete id="deleteFilesByPostId">
+    	DELETE FROM FILE_UPLOAD WHERE POST_ID = #{postId}
+	</delete>
+</mapper>

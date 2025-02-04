@@ -41,7 +41,10 @@ CREATE TABLE POST_CATEGORY (
 CREATE TABLE POST (
     POST_ID 			BIGINT PRIMARY KEY AUTO_INCREMENT ,  								-- 게시글 아이디
     USER_ID 			VARCHAR(255) NOT NULL,              								-- 유저 아이디
-    CATEGORY_ID 		BIGINT NOT NULL,                 									-- 카테고리 아이디 추가
+    CATEGORY_ID 		BIGINT NOT NULL,         -- 카테고리 아이디 추가
+   SUB_CATE_ID			BIGINT NOT NULL,													-- 말머리 아이디 추가 
+    CATEGORY_NM 		VARCHAR(255) NOT NULL,												-- 카테고리 이름 
+    SUB_CATE_NM 		VARCHAR(255) NOT NULL,												-- 말머리 이름
     TITLE 				VARCHAR(255) NOT NULL,                 								-- 제목
     CONTENT 			VARCHAR(3000) NOT NULL,              								-- 본문
     VIEW_CNT 			BIGINT NOT NULL DEFAULT 0,          								-- 조회수

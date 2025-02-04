@@ -10,7 +10,7 @@ import lombok.Data;
 public class FileUploadDTO {
     private Long fileId;
     private Long postId;
-    private String fileUuid;
+    private String fileUUID;
     private String fileName;
     private String filePath;
     @DateTimeFormat(pattern="yyyy-MM-dd-hh-mm")
