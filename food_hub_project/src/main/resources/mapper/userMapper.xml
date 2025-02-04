@@ -75,7 +75,7 @@
 	</select>
 	<update id="updateUser" parameterType="UserDTO">
 		UPDATE	USER
-		SET		PROFILE_ORIGINAL = #{profileOriginal},
+		SET		PROFILE_ORIGINAL 	  = #{profileOriginal},
 				PROFILE_UUID 		  = #{profileUUID},
 				NICKNAME			  = #{nickname},
 				TEL					  = #{tel},
@@ -90,6 +90,7 @@
 	</update>
 	
 	<!-- (회원탈퇴)회원탈퇴할 유저프로필 정보 조회 -->
+
     <select id="getDeleteUserProfile" resultType="String">
       SELECT PROFILE_UUID
       FROM   USER
@@ -126,4 +127,5 @@
 		WHERE	USER_ID = #{userId}
     </update>
     
+
 </mapper>
