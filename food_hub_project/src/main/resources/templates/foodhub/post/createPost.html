@@ -1,172 +1,123 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	  layout:decorate="~{/foodhub/index/headerAndFooter.html}">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/foodhub/index/headerAndFooter.html}">
 
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
   <title>Create Post</title>
   <script src="//cdn.ckeditor.com/4.22.1/full/ckeditor.js"></script>
-<style>
+  <style>
     .cke_notification {
-        display: none !important;  /* 경고 메시지 숨김 */
+        display: none !important; /* 경고 메시지 숨김 */
     }
-</style>
-<script>
-	$().ready(function () {
-	    // 처음에는 말머리 선택 블록 숨기기
-	    $(".subCategoryContainer").hide();
-	
-	    $("#categoryNm").change(function () {
-	        let categoryNm = $("#categoryNm").val();
-	        
-	        if (categoryNm === "") {
-	            // 아무 카테고리도 선택되지 않았을 때 말머리 블록 숨기기
-	            $(".subCategoryContainer").hide();
-	        } else {
-	            // 카테고리 선택 시 말머리 블록 표시
-	            $(".subCategoryContainer").show();
-	
-	            // 말머리 select의 name 속성 변경
-	            $("#subCateId").attr("name", categoryNm);
-	
-	            // 모든 옵션 숨기기
-	            $("#subCateId option").hide();
-	
-	            // 공통 선택 안내 옵션은 항상 보이게 설정
-	            $("#subCateId option[value='']").show();
-	
-	            // 선택된 카테고리에 맞는 옵션만 보이게 설정
-	            $("#subCateId option[data-category='" + categoryNm + "']").show();
-	
-	            // 기본값으로 초기화
-	            $("#subCateId").val("");
-	        }
-	    });
-	});
-
-</script>
-
- 
+  </style>
+  <script>
+    $(document).ready(function () {
+        $(".subCategoryContainer").hide();
+        
+        $("#categoryId").change(function () {
+            let categoryId = $("#categoryId").val();
+            
+            if (!categoryId) {
+                $(".subCategoryContainer").hide();
+                $("#subCateId").val("");
+            } else {
+                $(".subCategoryContainer").show();
+                $("#subCateId option").hide();
+                $("#subCateId option[value='']").show();
+                $("#subCateId option[data-category='" + categoryId + "']").show();
+                $("#subCateId").val("");
+            }
+        });
+    });
+  </script>
 </head>
 
 <body class="single-post-page">
-
-  
 <div layout:fragment="content">
-
-<main class="main">
-
-  <section id="write-post" class="write-post section">
+  <main class="main">
+    <section id="write-post" class="write-post section">
       <div class="container">
         <h2 class="text-center mb-4">게시글 작성</h2>
-        <form id="postForm">
+        <form id="postForm" th:action="@{/post/createPost}" method="post" enctype="multipart/form-data">
+          <input type="hidden" name="postId" th:value="${postId}" />
+          <input type="hidden" name="userId" th:value="${session.userId}" />
           <div class="form-group mb-4">
             <label for="postTitle" class="form-label">제목</label>
             <input type="text" id="postTitle" name="title" class="form-control" placeholder="제목을 입력하세요" required>
           </div>
-    
           <div class="form-group mb-4">
             <label>게시판 카테고리</label>
-            <select id="categoryNm" name="categoryNm" class="form-control" required>
+            <input type="hidden" id="categoryNm" name="categoryNm" value="1">
+            <select id="categoryId" name="categoryId" class="form-control" required>
               <option value="">게시판을 선택하세요</option>
-              <option value="informativePostList">외식업정보게시판</option>
-              <option value="FreeBoardPostList">자유게시판</option>
-              <option value="jobBoardPostList">알바공고게시판</option>
-              <option value="QnAPostList">질문게시판</option>
-              <option value="salePostList">중고장비거래게시판</option>
-              <option value="storePromoPostList">매장홍보게시판</option>
-              <option value="coopPostList">협력업체게시판</option>
+              <option value="1">외식업정보게시판</option>
+              <option value="2">자유게시판</option>
+              <option value="3">알바공고게시판</option>
+              <option value="4">질문게시판</option>
+              <option value="5">중고장비거래게시판</option>
+              <option value="6">매장홍보게시판</option>
+              <option value="7">협력업체게시판</option>
             </select>
           </div>
-          
-		  <div class="subCategoryContainer">
-	    	<label>말머리</label>
-	   		 <select id="subCateId" name="" class="form-control" required>
-	        	<option value="">말머리를 선택하세요</option>
-	
-		        <!-- Free Board -->
-		        <option value="1" data-category="FreeBoardPostList">잡담</option>          	<!-- casualTalk -->
-		        <option value="2" data-category="FreeBoardPostList">일상이야기</option>  	<!-- dailyChat -->
-		        <option value="3" data-category="FreeBoardPostList">질문</option>       	<!-- casualQuestion -->
-		
-		        <!-- Informative Board -->
-		        <option value="4" data-category="informativePostList">업계뉴스</option>       <!-- industryNews -->
-		        <option value="5" data-category="informativePostList">업체소식</option>       <!-- businessUpdates -->
-		        <option value="6" data-category="informativePostList">트렌드</option>         <!-- trends -->
-		        <option value="7" data-category="informativePostList">업계분석</option>       <!-- analysis -->
-		        <option value="8" data-category="informativePostList">새로운 맛집</option>    <!-- newRestaurants -->
-		
-		        <!-- Job Board -->
-		        <option value="9" data-category="jobBoardPostList">직원 구인</option>        <!-- staffRecruitment -->
-		        <option value="10" data-category="jobBoardPostList">알바 구인</option>       <!-- partTimeRecruitment -->
-		        <option value="11" data-category="jobBoardPostList">구직</option>            <!-- jobSeeking -->
-		
-		        <!-- QnA Board -->
-		        <option value="12" data-category="QnAPostList">업계 질문</option>       <!-- industryQuestions -->
-		        <option value="13" data-category="QnAPostList">자유 질문</option>       <!-- questions -->
-		        <option value="14" data-category="QnAPostList">도움 요청</option>       <!-- helpNeeded -->
-		        <option value="15" data-category="QnAPostList">팁을 구합니다</option>   <!-- seekingAdvice -->
-		
-		        <!-- Sale Board -->
-		        <option value="16" data-category="salePostList">판매</option>         <!-- sale -->
-		        <option value="17" data-category="salePostList">나눔</option>         <!-- free -->
-		        <option value="18" data-category="salePostList">교환</option>         <!-- exchange -->
-		        <option value="19" data-category="salePostList">구매희망</option>     <!-- wanted -->
-		
-		        <!-- Store Promotion -->
-		        <option value="20" data-category="storePromoPostList">매장 소개</option>    <!-- storeIntroductions -->
-		        <option value="21" data-category="storePromoPostList">신규 오픈</option>    <!-- newStoreOpenings -->
-		        <option value="22" data-category="storePromoPostList">이벤트</option>      <!-- events -->
-		        <option value="23" data-category="storePromoPostList">맛집 추천</option>    <!-- recommendedRestaurants -->
-		
-		        <!-- Cooperation Board -->
-		        <option value="24" data-category="coopPostList">업체 소개</option>     <!-- introduction -->
-		        <option value="25" data-category="coopPostList">협력 요청</option>     <!-- partnershipRequest -->
-		    </select>
-		</div>
-			  
-        <br/>
-    
+          <div class="subCategoryContainer">
+            <label>말머리</label>
+            <input type="hidden" id="subCateNm" name="subCateNm"  value="1">
+            <select id="subCateId" name="subCateId" class="form-control" required>
+              <option value="">말머리를 선택하세요</option>
+              <option value="1" data-category="2">잡담</option>
+              <option value="2" data-category="2">일상이야기</option>
+              <option value="3" data-category="2">질문</option>
+              <option value="4" data-category="1">업계뉴스</option>
+              <option value="5" data-category="1">업체소식</option>
+              <option value="6" data-category="1">트렌드</option>
+              <option value="7" data-category="1">업계분석</option>
+              <option value="8" data-category="1">새로운 맛집</option>
+              <option value="9" data-category="3">직원 구인</option>
+              <option value="10" data-category="3">알바 구인</option>
+              <option value="11" data-category="3">구직</option>
+              <option value="12" data-category="4">업계 질문</option>
+              <option value="13" data-category="4">자유 질문</option>
+              <option value="14" data-category="4">도움 요청</option>
+              <option value="15" data-category="4">팁을 구합니다</option>
+              <option value="16" data-category="5">판매</option>
+              <option value="17" data-category="5">나눔</option>
+              <option value="18" data-category="5">교환</option>
+              <option value="19" data-category="5">구매희망</option>
+              <option value="20" data-category="6">매장 소개</option>
+              <option value="21" data-category="6">신규 오픈</option>
+              <option value="22" data-category="6">이벤트</option>
+              <option value="23" data-category="6">맛집 추천</option>
+              <option value="24" data-category="7">업체 소개</option>
+              <option value="25" data-category="7">협력 요청</option>
+            </select>
+          </div>
           <div class="form-group mb-4">
             <label>내용</label>
             <textarea id="content" name="content" class="form-control" rows="10" placeholder="내용을 입력하세요" required></textarea>
             <script>CKEDITOR.replace("content");</script>
-        </div>
-
-       <div class="form-group mb-4">
-          <label for="postFile" class="form-label">첨부 파일</label>
-          <input type="file" id="postFile" name="file[]" class="form-control" multiple>
-        </div>
-
-  
-        <div class="text-center">
-          <button type="submit" class="btn btn-primary">등록</button>
-          <button type="button" class="btn btn-secondary" onclick="cancelPost()">취소</button>
-        </div>
-      </form>
-    </div>
-  </section>
-</main>
-  
+          </div>
+          <div class="form-group mb-4">
+            <label for="postFile" class="form-label">첨부 파일</label>
+            <input type="file" id="postFile" name="file[]" class="form-control" multiple>
+          </div>
+          <div class="text-center">
+            <button type="submit" class="btn btn-primary">등록</button>
+            <button type="button" class="btn btn-secondary" onclick="cancelPost()">취소</button>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
   <script>
     function cancelPost() {
       if (confirm("게시글 작성을 취소하시겠습니까?")) {
-        // 취소 동작 (예: 이전 페이지로 이동)
         window.history.back();
       }
     }
-  
-    const postForm = document.getElementById('postForm');
-    postForm.addEventListener('submit', (event) => {
-      event.preventDefault(); // 기본 폼 제출 방지
-      alert("게시글이 성공적으로 등록되었습니다!");
-      // 서버로 데이터를 전송하는 로직 추가
-    });
   </script>
- 
 </div>
-
 </body>
 </html>
