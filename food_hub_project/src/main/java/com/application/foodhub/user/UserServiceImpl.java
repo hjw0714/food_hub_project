@@ -94,8 +94,10 @@ public class UserServiceImpl implements UserService{
 			
 			uploadProfile.transferTo(new File(fileRepositoryPath + uploadFile));
 		}
+		System.out.println(userDTO);
 		userDAO.updateUser(userDTO);
 	}
+	
 	@Override
 	@Transactional
 	public void deleteUser(String userId) {

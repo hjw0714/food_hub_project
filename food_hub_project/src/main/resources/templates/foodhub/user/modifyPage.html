@@ -180,7 +180,123 @@
     </style>
     
     <script>
-	    $().ready(function () {	    	
+	    $().ready(function () {	 
+	    	
+	    	let isPassNickname = false;
+	    	let isPassEmail = false;
+
+	    	let prevNickname = $("#nickname").val().trim();
+	    	let prevEmail = $("#email").val().trim();
+
+	    	$("#isValidNickname").click(function() {
+	    	    let nickname = $("#nickname").val().trim(); 
+
+	    	    if (nickname === prevNickname) { 
+	    	        isPassNickname = true; 
+	    	        $("#nicknameMessage").html("<span style='color:green;'>현재 사용 중인 닉네임입니다.</span>");
+	    	        return;
+	    	    }
+
+	    	    if (nickname === "") {
+	    	        $("#nicknameMessage").html("<span style='color:red;'>닉네임을 입력하세요.</span>");
+	    	        isPassNickname = false;
+	    	        return;
+	    	    }
+
+	    	    $.ajax({
+	    	        type: "POST",
+	    	        url: "/foodhub/user/validNickname",
+	    	        data: { "nickname": nickname },
+	    	        beforeSend: function() {
+	    	            $("#isValidNickname").prop("disabled", true);
+	    	        },
+	    	        success: function(response) {
+	    	            if (response === "y") {
+	    	                $("#nicknameMessage").html("<span style='color:green;'>사용가능한 닉네임입니다.</span>");
+	    	                isPassNickname = true;
+	    	            } else {
+	    	                $("#nicknameMessage").html("<span style='color:red;'>중복된 닉네임입니다.</span>");
+	    	                isPassNickname = false;
+	    	            }
+	    	        },
+	    	        error: function() {
+	    	            $("#nicknameMessage").html("<span style='color:red;'>서버 오류가 발생했습니다.</span>");
+	    	        },
+	    	        complete: function() {
+	    	            $("#isValidNickname").prop("disabled", false);
+	    	        }
+	    	    });
+	    	});
+
+	    	$("#isValidEmail").click(function() {
+	    	    let email = $("#email").val().trim();
+
+	    	    if (email === prevEmail) { 
+	    	        isPassEmail = true; 
+	    	        $("#emailMessage").html("<span style='color:green;'>현재 사용 중인 이메일입니다.</span>");
+	    	        return;
+	    	    }
+
+	    	    let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+	    	    if (email === "") {
+	    	        $("#emailMessage").html("<span style='color:red;'>이메일을 입력하세요.</span>");
+	    	        isPassEmail = false;
+	    	        return;
+	    	    }
+
+	    	    if (!emailPattern.test(email)) {
+	    	        $("#emailMessage").html("<span style='color:red;'>올바른 이메일 형식이 아닙니다.</span>");
+	    	        isPassEmail = false;
+	    	        return;
+	    	    }
+
+	    	    $.ajax({
+	    	        type: "POST",
+	    	        url: "/foodhub/user/validEmail",
+	    	        data: { "email": email },
+	    	        beforeSend: function() {
+	    	            $("#isValidEmail").prop("disabled", true);
+	    	        },
+	    	        success: function(response) {
+	    	            if (response === "y") {
+	    	                $("#emailMessage").html("<span style='color:green;'>사용가능한 이메일입니다.</span>");
+	    	                isPassEmail = true;
+	    	            } else {
+	    	                $("#emailMessage").html("<span style='color:red;'>중복된 이메일입니다.</span>");
+	    	                isPassEmail = false;
+	    	            }
+	    	        },
+	    	        error: function() {
+	    	            $("#emailMessage").html("<span style='color:red;'>서버 오류가 발생했습니다.</span>");
+	    	        },
+	    	        complete: function() {
+	    	            $("#isValidEmail").prop("disabled", false);
+	    	        }
+	    	    });
+	    	});
+
+	    	$("#modifyForm").submit(function(event) {
+	    	    let nickname = $("#nickname").val().trim();
+	    	    let email = $("#email").val().trim();
+
+	    	    if (nickname !== prevNickname && !isPassNickname) {
+	    	        $("#nickname").focus();
+	    	        alert("닉네임 중복 확인을 해주세요.");
+	    	        event.preventDefault(); 
+	    	        return;
+	    	    }
+
+	    	    if (email !== prevEmail && !isPassEmail) {
+	    	        $("#email").focus();
+	    	        alert("이메일 중복 확인을 해주세요.");
+	    	        event.preventDefault();
+	    	        return;
+	    	    }
+	    	});
+
+	 
+
+	    	
 	    	let membershipType = $("[name='membershipType']:checked").val(); // text()로 가져오기
 	    	if (membershipType == "COMMON") {
 	            $("#foundingYearGroup").hide();  // 창업일 숨김
@@ -198,26 +314,37 @@
     	        if (membershipType == "COMMON") {
     	            $("#foundingYearGroup").hide();  // 창업일 숨김
     	            $("#businessTypeGroup").hide();
+    	            
+
     	        } else {
     	            $("#foundingYearGroup").show();  // 창업일 표시
     	            $("#businessTypeGroup").show();
     	        }
-	    		
+	    	
+    	       
 	    	});
-	        
+	  
+	  
+ 		    $("#cancel-btn").click(function() {
+	        location.href = "/foodhub/user/myPage";
 	    });
+	 
+	    });
+	   
+	    
+	    
     </script>
 </head>
 <body>
 
 <div layout:fragment="content">
-
+	<form th:action="@{/foodhub/user/updateUser}" th:object="${userDTO}"  id="modifyForm" method="post" enctype="multipart/form-data"> 
     <div class="profile-edit">
         <h1>프로필 수정</h1>
 
         <div class="profile-photo">
-            <img id="profile-photo" th:src="@{https://via.placeholder.com/120}" alt="프로필 사진">
-            <input type="file" id="photo-upload" accept="image/*">
+            <img id="profile-photo" th:src="@{/foodhub/user/thumbnails(fileName=${userDTO.profileUUID})}" alt="프로필 사진">
+            <input type="file" name="uploadProfile" id="photo-upload" accept="image/*">
         </div>
 
         <div class="form-group">
@@ -228,37 +355,41 @@
         <div class="form-group">
             <label for="nickname">닉네임</label>
             <div class="input-container">
-                <input type="text" id="nickname" th:value="${userDTO.nickname}">
-                <button id="check-nickname" class="btn-small" type="button">중복 확인</button>
+                <input type="text" name="nickname" id="nickname" th:value="${userDTO.nickname}">
+                <button id="isValidNickname" class="btn-small" type="button">중복 확인</button>
 			</div>
+			<span id="nicknameMessage"></span>
     	</div>
 
 	    <div class="form-group">
 	        <label for="email">이메일</label>
 	        <div class="input-container">
-	            <input type="email" id="email" th:value="${userDTO.email}">
-	            <button id="check-email" class="btn-small" type="button">중복 확인</button>
+	            <input type="email" name="email" id="email" th:value="${userDTO.email}">
+	            <button id="isValidEmail" class="btn-small" type="button">중복 확인</button>
 	        </div>
+	        <span id="emailMessage"></span>
 	        <div class="checkbox-group">
-	            <input type="checkbox" id="emailYn" th:checked="${userDTO.emailYn == 'Y'}">
-	            <span for="emailYn">이메일 수신 동의</span>
-	        </div>
-	    </div>
+    <!-- 기본적으로 "N"을 넘기도록 hidden input 설정 -->
+			    <input type="hidden" name="emailYn_hidden" value="N">
+			    <input type="checkbox" name="emailYn" id="emailYn" value="Y" th:checked="${userDTO.emailYn == 'Y'}">
+			    <label for="emailYn">이메일 수신 동의</label>
+			</div>
 	
 	    <div class="form-group">
 	        <label for="phone">휴대폰 번호</label>
 	        <div class="input-container">
-	            <input type="tel" id="phone" th:value="${userDTO.tel}">
+	            <input type="tel" name="tel" id="phone" th:value="${userDTO.tel}">
 	        </div>
-	        <div class="checkbox-group">
-	            <input type="checkbox" id="smsYn" th:checked="${userDTO.smsYn == 'Y'}">
-	            <span for="smsYn">SMS 수신 동의</span>
-	        </div>
-	    </div>
+	       <div class="checkbox-group">
+    <!-- 기본적으로 "N"을 넘기도록 hidden input 설정 -->
+			    <input type="hidden" name="smsYn_hidden" value="N">
+			    <input type="checkbox" name="smsYn" id="smsYn" value="Y" th:checked="${userDTO.smsYn == 'Y'}">
+			    <label for="smsYn">SMS 수신 동의</label>
+			</div>
 	
 	    <div class="form-group">
 	        <label for="birthdate">생일</label>
-	        <input type="date" id="birthdate" th:value="${userDTO.birthday}">
+	        <input type="date" name="birthday" id="birthday" th:value="${userDTO.birthday}">
 	    </div>
 	
        <div class="form-group">
@@ -280,11 +411,13 @@
         </div>
         
           <div class="actions">
-            <button class="btn save-btn" id="save-btn" type="button">저장</button>
-            <button class="btn" id="cancel-btn" type="button">취소</button>
+          	<input type="hidden" th:field="*{userId}" />
+            <button class="btn save-btn" id="save-btn" type="submit">저장</button>
+           <button class="btn" id="cancel-btn" type="button">취소</button>
         </div>
         
     </div>
+    </form>
 </div>
 </body>
 </html>
