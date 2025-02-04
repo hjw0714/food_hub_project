@@ -2,6 +2,8 @@ package com.application.foodhub.user;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,14 +100,71 @@ public class UserServiceImpl implements UserService{
 		userDAO.updateUser(userDTO);
 	}
 	
+    @Override
+    @Transactional
+    public void deleteUser(String userId) {
+      
+	  String deleteProfile = userDAO.getDeleteUserProfile(userId);
+	  new File(fileRepositoryPath + deleteProfile).delete();
+	  userDAO.deleteUser(userId);
+    }
+
 	@Override
-	@Transactional
-	public void deleteUser(String userId) {
+	public String findId(String email, String tel) {
 		
+		Map<String, Object> params = new HashMap<>();
+		params.put("email", email);
+	    params.put("tel", tel);
+	    
+		String userId = userDAO.findId(params);
+				   
+		if (userId == null) {
+			userId = "notFound";
+		}
+		return userId;
+	}
+
+	@Override
+	public String findPasswd(String userId, String email, String tel) {
+		
+		Map<String, Object> params = new HashMap<>();
+		
+		params.put("userId", userId);
+		params.put("email", email);
+	    params.put("tel", tel);
+	    
+		String userPasswd = userDAO.findPasswd(params);
+				   
+		if (userPasswd == null) {
+			userPasswd = "notFound";
+		}
+		
+		return userPasswd;
+	}
+
+	
+	@Override
+	public void resetPassword(String newPassword, String userId) {  
+		
+
+//	    System.out.println(newPassword);
+//	    System.out.println(userId);
+//	    System.out.println(passwordEncoder.encode(newPassword));
+
+	    UserDTO userDTO = new UserDTO();
+	    userDTO.setUserId(userId);  
+	    userDTO.setPasswd(passwordEncoder.encode(newPassword));  
+
+	    //System.out.println("변경된 비밀번호: " + userDTO.getPasswd());  //  확인용 출력
+
+	    userDAO.resetPassword(userDTO);
+
 		String deleteProfile = userDAO.getDeleteUserProfile(userId);
 		new File(fileRepositoryPath + deleteProfile).delete();
 		userDAO.deleteUser(userId);
 		
+
 	}
+
 
 }
