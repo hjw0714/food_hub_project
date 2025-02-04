@@ -172,7 +172,7 @@ public class UserController {
 		String jsScript ="""
 				<script>
 					alert('탈퇴되었습니다.');
-					location.href = 'foodhub/index/index';
+					location.href = '/foodhub';
 				</script>
 				""";
 		return jsScript;

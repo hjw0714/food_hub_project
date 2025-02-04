@@ -105,6 +105,7 @@ public class UserServiceImpl implements UserService{
 		String deleteProfile = userDAO.getDeleteUserProfile(userId);
 		new File(fileRepositoryPath + deleteProfile).delete();
 		userDAO.deleteUser(userId);
+		
 	}
 
 }

@@ -11,6 +11,6 @@ public interface UserDAO {
 	public String getEncodedPasswd(String userId);
 	public UserDTO getUserDetail(String userId);
 	public void updateUser(UserDTO userDTO);
-	public void deleteUser(String userId);
 	public String getDeleteUserProfile(String userId);
+	public void deleteUser(String userId);
 }
