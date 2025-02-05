@@ -3,7 +3,7 @@
 
 <mapper namespace="com.application.foodhub.post.PostDAO">
 
-<resultMap id="postMap" type="hashmap" >
+<resultMap id="postMap" type="hashmap">
 		<result column="POST_ID"  	   	property="postId"/>
 		<result column="TITLE" 	   		property="title"/>
 		<result column="CATEGORY_NM"	property="cateNm"/>
@@ -14,7 +14,7 @@
 		<result column="USER_ID"       	property="userId"/>
 		<result column="NICKNAME"     	property="nickname"/>
 		<result column="PROFILE_UUID"  	property="profileUUID"/>
-	</resultMap>
+</resultMap>
 
 <insert id="createPost" parameterType="PostDTO" useGeneratedKeys="true" keyProperty="postId">
     INSERT INTO POST (
@@ -90,28 +90,33 @@
 	</update>
 	
 	<select id="getPostList" resultMap="postMap">
-		SELECT P.POST_ID 		AS POST_ID,
-			   P.TITLE			AS TITLE,
-			   P.VIEW_CNT		AS VIEW_CNT,
-			   P.CREATED_AT		AS CREATED_AT,
-			   U.NICKNAME		AS NICKNAME,
-			   U.PROFILE_UUID 	AS PROFILE_UUID
-		FROM   POST P
-		JOIN   USER U
-		  ON   P.USER_ID = U.USER_ID
-	</select>
+	    SELECT	  P.POST_ID AS POST_ID,
+			      P.TITLE AS TITLE,
+			      P.CREATED_AT AS CREATED_AT,
+			      P.VIEW_CNT AS VIEW_CNT,
+			      U.NICKNAME AS NICKNAME,
+			      S.SUB_CATE_NM AS SUB_CATE_NM
+	    FROM 	  POST P
+	    JOIN      USER U 
+	    ON 		  P.USER_ID = U.USER_ID
+	    JOIN 	  SUB_CATEGORY S 
+	    ON 		  P.SUB_CATE_ID = S.SUB_CATE_ID
+	    ORDER BY  P.CREATED_AT DESC
+	    LIMIT #{pageSize} OFFSET #{offset}
+	  </select>
+
 	
 	<!--  1개의 게시글 상세조회 -->
 	<select id="getPostDetail" parameterType="long" resultMap="postMap">
 		SELECT P.POST_ID 		AS POST_ID,
 			   P.SUB_CATE_NM 	AS SUB_CATE_NM,
 			   P.TITLE			AS TITLE,
-			   U.PROFILE_UUID 	AS PROFILE_UUID
+			   U.PROFILE_UUID 	AS PROFILE_UUID,
 			   U.USER_ID		AS USER_ID,
 			   U.NICKNAME		AS NICKNAME,
 			   P.CREATED_AT		AS CREATED_AT,
 			   P.VIEW_CNT		AS VIEW_CNT,
-			   P.CONTENT		AS CONTENT,
+			   P.CONTENT		AS CONTENT
 		FROM   POST P
 		JOIN   USER U
 		  ON   P.USER_ID = U.USER_ID
@@ -131,16 +136,14 @@
 	    LIMIT #{pageSize} OFFSET #{startRow}
 	</select>
 	
-	  <!-- mypage에 내가 작성한 글 제목 출력 -->
-   	<select id="myPostList" parameterType="String" resultType="map">
-       SELECT  P.POST_ID AS POST_ID, 
-             P.TITLE     AS TITLE
-       FROM   POST P
-       JOIN   USER U
-       ON      P.USER_ID = U.USER_ID
-       WHERE    P.USER_ID = #{userId}
-  	 </select>
-
-
+	<!-- mypage에 내가 작성한 글 제목 출력 -->
+   	<select id="myPostList" parameterType="String" resultMap="postMap">
+	    SELECT  P.POST_ID   AS POST_ID, 
+	            P.TITLE     AS TITLE
+	    FROM    POST P
+	    JOIN    USER U
+	    ON      P.USER_ID = U.USER_ID
+	    WHERE   P.USER_ID = #{userId}
+	</select>
 
 </mapper>

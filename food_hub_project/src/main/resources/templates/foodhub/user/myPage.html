@@ -145,6 +145,30 @@
         .actions a:last-child {
             margin-left: auto; /* 마지막 버튼을 오른쪽으로 밀기 */
         }
+        
+        .pagination {
+		    display: flex;
+		    justify-content: center; /* 중앙 정렬 */
+		    align-items: center;
+		    gap: 10px; /* 버튼 간격 조절 */
+		    margin-top: 10px;
+		}
+		
+		.pagination button {
+		    padding: 6px 12px; /* 기존보다 작은 패딩 */
+		    border: none;
+		    background-color: var(--accent-color);
+		    color: white;
+		    border-radius: 5px;
+		    cursor: pointer;
+		    font-size: 14px; /* 기존보다 작은 글씨 크기 */
+		    transition: 0.3s;
+		}
+		
+		.pagination button:hover {
+		    background-color: var(--accent-hover);
+		}
+        
     </style>
     <script>
 	    $().ready(function () {
@@ -225,19 +249,33 @@
         </div>
 
         <!-- 나의 게시글 리스트 -->
-        <div class="section">
-            <h2>나의 게시글 리스트</h2>
-           	<ul>
-			    <li th:each="post, postList : ${myPostList}">
-			        <div style="display: flex; align-items: center;">
-			            <span th:text="${postList.count} + '.'" style="margin-right: 8px;"></span>
-			            <a href="#" th:text="${post.TITLE}"></a>
-			        </div>
-			    </li>
-			</ul>
-        </div>
-        
-       
+       <div class="section">
+		    <h2>나의 게시글 리스트</h2>
+		    <ul>
+		        <li th:each="post, postList : ${myPostList}">
+		            <div style="display: flex; align-items: center;">
+		                <span th:text="${(currentPage - 1) * 5 + postList.count} + '.'" style="margin-right: 8px;"></span>
+		                <a th:href="@{/foodhub/post/postDetail(postId=${post.postId})}" th:text="${post.title}"></a>
+		            </div>
+		        </li>
+		    </ul>
+		
+		    <!-- 페이징 버튼 -->
+		    <div class="pagination">
+			    <button th:if="${currentPage > 1}"
+			            th:onclick="'location.href=\'/foodhub/user/myPage?postPage=' + @{${currentPage - 1}} + '\''">
+			        이전
+			    </button>
+			
+			    <span th:text="|${currentPage} / ${totalPages}|" style="font-size: 16px; font-weight: bold;"></span>
+			
+			    <button th:if="${currentPage < totalPages}"
+			            th:onclick="'location.href=\'/foodhub/user/myPage?postPage=' + @{${currentPage + 1}} + '\''">
+			        다음
+			    </button>
+			</div>
+		</div>
+			       
 
         <!-- 나의 댓글 리스트 -->
         <div class="section">
