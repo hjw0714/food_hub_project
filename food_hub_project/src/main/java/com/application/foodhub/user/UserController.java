@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.annotation.RequestScope;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.application.foodhub.post.PostService;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
@@ -34,6 +36,9 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 	
+	 @Autowired
+	   private PostService postService;
+	
 	@GetMapping("/login")	// 로그인
 	public String login() {
 		return "foodhub/user/login";
@@ -44,11 +49,17 @@ public class UserController {
 	public String login(@RequestBody UserDTO userDTO , HttpServletRequest request) {
 		String isValidUser = "n";
 		if (userService.login(userDTO)) {
-			HttpSession session = request.getSession();
-			session.setAttribute("userId", userDTO.getUserId());
-			
-			isValidUser = "y";
-		}
+	        HttpSession session = request.getSession();
+	        session.setAttribute("userId", userDTO.getUserId());
+
+	        // 🔹 닉네임을 DB에서 가져와서 세션에 저장
+	        String nickname = userService.findNicknameByUserId(userDTO.getUserId());
+	        session.setAttribute("nickname", nickname);
+
+	        System.out.println("로그인 성공 - UserId: " + userDTO.getUserId() + ", 닉네임: " + nickname);
+
+	        isValidUser = "y";
+	    }
 		return isValidUser;
 	}
 	
@@ -89,17 +100,17 @@ public class UserController {
 		}
 	
 	@GetMapping("/myPage")
-	public String myPage(Model model , HttpServletRequest request) {
-		HttpSession session = request.getSession();
-		String userId = (String)session.getAttribute("userId");
-		
-		model.addAttribute("userDTO" , userService.getUserDetail(userId)); 	// 유저 정보
-//		model.addAttribute("myBookmarkList" , bookmarkService.myBookmark(userId));	// 유저 북마크 리스트
-//		model.addAttribute("myPostList" , postService.myPostList(userId));		// 유저 게시글 리스트
-//		model.addAttribute("myCommentList" , commentService.myCommentList(userId)); // 유저 댓글 리스트
-		
-		return "foodhub/user/myPage";
-	}
+	   public String myPage(Model model , HttpServletRequest request) {
+	      HttpSession session = request.getSession();
+	      String userId = (String)session.getAttribute("userId");
+	      
+	      model.addAttribute("userDTO" , userService.getUserDetail(userId));    // 유저 정보
+//	      model.addAttribute("myBookmarkList" , bookmarkService.myBookmark(userId));   // 유저 북마크 리스트
+	      model.addAttribute("myPostList" , postService.myPostList(userId));      // 유저 게시글 리스트
+//	      model.addAttribute("myCommentList" , commentService.myCommentList(userId)); // 유저 댓글 리스트
+	      
+	      return "foodhub/user/myPage";
+	   }
 
 	    
 	    
@@ -123,18 +134,27 @@ public class UserController {
 	}
 	
 	@PostMapping("/updateUser")
-	@ResponseBody
-	public String updateUser(@RequestParam("uploadProfile") MultipartFile uploadProfile , @ModelAttribute UserDTO userDTO) throws IllegalStateException, IOException {
-		userService.updateUser(uploadProfile , userDTO);
-		
-		String jsScript = """
-				<script>
-					alert('수정 되었습니다.');
-					location.href = '/foodhub/user/myPage';
-				</script>""";
-		
-		return jsScript;
-	}
+	   @ResponseBody
+	   public String updateUser(
+	           @RequestParam(value = "uploadProfile", required = false) MultipartFile uploadProfile,
+	           @RequestParam("existingProfileImage") String existingProfileImage,
+	           @ModelAttribute UserDTO userDTO) throws IllegalStateException, IOException {
+
+	       // 새 이미지가 업로드되지 않았으면 기존 프로필 이미지 유지
+	       if (uploadProfile == null || uploadProfile.isEmpty()) {
+	           userDTO.setProfileUUID(existingProfileImage);
+	       }
+
+	       userService.updateUser(uploadProfile, userDTO);
+
+	       String jsScript = """
+	               <script>
+	                   alert('수정 되었습니다.');
+	                   location.href = '/foodhub/user/myPage';
+	               </script>""";
+
+	       return jsScript;
+	   }
 	
 	@GetMapping("/logout") // localhost/user/signOut 요청시 매핑
 	@ResponseBody
@@ -168,14 +188,16 @@ public class UserController {
   
 		HttpSession session = request.getSession();
 		userService.deleteUser((String)session.getAttribute("userId"));
-		    session.invalidate();
-		  
-		    String jsScript ="""
-		    <script>
-		       alert('탈퇴되었습니다.');
-		       location.href = '/foodhub';
-		    </script>
-		    """;
+
+		session.invalidate();
+		
+		String jsScript ="""
+				<script>
+					alert('탈퇴되었습니다.');
+					location.href = '/foodhub';
+				</script>
+				""";
+
 		return jsScript;
 	} 
 	
@@ -221,7 +243,6 @@ public class UserController {
 	        </script>
 	    """;
 
-	    
 	    return jsScript;
 	}
 	

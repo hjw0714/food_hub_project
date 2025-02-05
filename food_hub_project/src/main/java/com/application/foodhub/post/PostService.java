@@ -18,6 +18,8 @@ public interface PostService {
 
 	public Map<String, Object> getPostDetail(long postId, boolean isIncreaseReadCnt);
 
-	public Page<PostDTO> getAllPosts(PageRequest of);
+	 public Page<PostDTO> getAllPosts(PageRequest pageRequest);
+
+	 public List<Map<String, Object>> myPostList(String userId);
 
 }

@@ -18,4 +18,5 @@ public interface UserDAO {
 	public String findId(Map<String, Object> params);
 	public String findPasswd(Map<String, Object> params);
 	public void resetPassword(UserDTO userDTO);
+	public String findNicknameByUserId(String userId);
 }

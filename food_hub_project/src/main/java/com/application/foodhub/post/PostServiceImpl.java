@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -45,12 +46,26 @@ public class PostServiceImpl implements PostService {
 		return postDTO.getPostId();
 	}
 
-	@Override
-	public Page<PostDTO> getAllPosts(PageRequest of) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	 @Override
+	    public Page<PostDTO> getAllPosts(PageRequest pageRequest) {
+	        int pageSize = pageRequest.getPageSize();
+	        int startRow = pageRequest.getPageNumber() * pageSize;
 
+	        // ✅ MyBatis에서 페이징된 게시글 목록 가져오기
+	        List<PostDTO> postList = postDAO.getAllPosts(startRow, pageSize);
+
+	        // ✅ 전체 게시글 개수 가져오기
+	        long totalPosts = postDAO.getAllPostCnt();
+
+	        // ✅ PageImpl을 사용하여 Page<PostDTO> 객체 생성
+	        return new PageImpl<>(postList, pageRequest, totalPosts);
+	    }
+
+	   @Override
+	   public List<Map<String, Object>> myPostList(String userId) {
+	       return postDAO.myPostList(userId);
+	   } 
+	 
 //	@Override
 //	public Page<PostDTO> getAllPosts(PageRequest pageRequest) {
 //	    // 데이터베이스에서 페이징된 게시글 가져오기

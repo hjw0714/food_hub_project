@@ -82,23 +82,38 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public void updateUser(MultipartFile uploadProfile, UserDTO userDTO) throws IllegalStateException, IOException {
-		if (!uploadProfile.isEmpty()) {
-			new File(fileRepositoryPath + userDTO.getProfileUUID()).delete();
-			
-			String originalFilename = uploadProfile.getOriginalFilename();
-			userDTO.setProfileOriginal(originalFilename);
-			
-			String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
-			
-			String uploadFile = UUID.randomUUID() + extension;
-			userDTO.setProfileUUID(uploadFile);
-			
-			uploadProfile.transferTo(new File(fileRepositoryPath + uploadFile));
-		}
-		System.out.println(userDTO);
-		userDAO.updateUser(userDTO);
-	}
+	   public void updateUser(MultipartFile uploadProfile, UserDTO userDTO) throws IllegalStateException, IOException {
+	       // 기존 프로필 사진 유지
+	       if (uploadProfile == null || uploadProfile.isEmpty()) {
+	           UserDTO existingUser = userDAO.getUserDetail(userDTO.getUserId());
+	           userDTO.setProfileUUID(existingUser.getProfileUUID());
+	           userDTO.setProfileOriginal(existingUser.getProfileOriginal());
+	       } else {
+	           // 기존 파일 삭제
+	           if (userDTO.getProfileUUID() != null) {
+	               new File(fileRepositoryPath + userDTO.getProfileUUID()).delete();
+	           }
+
+	           // 새로운 파일 저장
+	           String originalFilename = uploadProfile.getOriginalFilename();
+	           userDTO.setProfileOriginal(originalFilename);
+
+	           String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+	           String uploadFile = UUID.randomUUID() + extension;
+	           userDTO.setProfileUUID(uploadFile);
+
+	           uploadProfile.transferTo(new File(fileRepositoryPath + uploadFile));
+	       }
+	       
+	       // 일반 회원으로 변경 시 창업일과 업종 null 처리
+	       if ("COMMON".equals(userDTO.getMembershipType())) {  
+	           userDTO.setFoundingAt(null); // 창업일 null
+	           userDTO.setBusinessType(null);  // 업종 null
+	       } 
+
+	       // 사용자 정보 업데이트
+	       userDAO.updateUser(userDTO);
+	   }
 	
     @Override
     @Transactional
@@ -159,5 +174,9 @@ public class UserServiceImpl implements UserService{
 	    userDAO.resetPassword(userDTO);
 	}
 
+	@Override
+    public String findNicknameByUserId(String userId) {
+        return userDAO.findNicknameByUserId(userId); // ✅ DAO를 통해 닉네임 조회
+    }
 
 }

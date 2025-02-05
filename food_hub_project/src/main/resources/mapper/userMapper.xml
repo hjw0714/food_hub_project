@@ -73,6 +73,14 @@
 		FROM	USER
 		WHERE 	USER_ID = #{userId}
 	</select>
+	
+	<select id="findNicknameByUserId" parameterType="string" resultType="string">
+    	SELECT NICKNAME 
+    	FROM USER 
+    	WHERE USER_ID = #{userId}
+	</select>
+	
+	
 	<update id="updateUser" parameterType="UserDTO">
 		UPDATE	USER
 		SET		PROFILE_ORIGINAL = #{profileOriginal},

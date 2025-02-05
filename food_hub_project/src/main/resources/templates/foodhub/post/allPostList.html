@@ -80,8 +80,8 @@
               <a class="page-link" th:href="@{/board(page=${pageNum})}" th:text="${pageNum}"
                  th:classappend="${pageNum == currentPage} ? 'active' : ''"></a>
             </li>
-            <li class="page-item" th:if="${currentPage < (totalPages != null ? totalPages : 1)}">
-              <a class="page-link" th:href="@{/board(page=${currentPage + 1})}">다음</a>
+            <li class="page-item" th:if="${currentPage < totalPages}">
+             <a th:href="@{/board(page=${(currentPage != null ? currentPage + 1 : 2)})}">다음</a>
             </li>
           </ul>
         </div>
