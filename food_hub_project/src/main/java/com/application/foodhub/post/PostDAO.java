@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
@@ -22,7 +23,11 @@ public interface PostDAO {
 
 	public void updateReadCnt(long postId);
 
-	public Page<PostDTO> getAllPosts(PageRequest pageRequest);
+	public List<PostDTO> getAllPosts(@Param("startRow") int startRow, @Param("pageSize") int pageSize);
 
 	public Object countLikesByPostId(Long postId);
+
+	public List<Map<String, Object>> myPostList(String userId);
+	
+	
 }

@@ -237,6 +237,7 @@
 	    	            $("#isValidNickname").prop("disabled", false);
 	    	        }
 	    	    });
+	    	    
 	    	});
 
 	    	$("#isValidEmail").click(function() {
@@ -331,107 +332,106 @@
     	            $("#foundingYearGroup").show();  // 창업일 표시
     	            $("#businessTypeGroup").show();
     	        }
-	    	
-    	       
 	    	});
 	  
 	  
  		    $("#cancel-btn").click(function() {
 	        location.href = "/foodhub/user/myPage";
-	    });
+	    	});
 	 
 	    });
 	   
-	    
-	    
     </script>
 </head>
 <body>
 
 <div layout:fragment="content">
 	<form th:action="@{/foodhub/user/updateUser}" th:object="${userDTO}"  id="modifyForm" method="post" enctype="multipart/form-data"> 
-    <div class="profile-edit">
-        <h1>프로필 수정</h1>
-
-        <div class="profile-photo">
-            <img id="profile-photo" th:src="@{/foodhub/user/thumbnails(fileName=${userDTO.profileUUID})}" alt="프로필 사진">
-            <input type="file" name="uploadProfile" id="photo-upload" accept="image/*">
-        </div>
-
-        <div class="form-group">
-            <label for="userId" >아이디</label>
-            <input type="text" id="userId" th:value="${userDTO.userId}" disabled>
-        </div>
-
-        <div class="form-group">
-            <label for="nickname">닉네임</label>
-            <div class="input-container">
-                <input type="text" name="nickname" id="nickname" th:value="${userDTO.nickname}">
-                <button id="isValidNickname" class="btn-small" type="button">중복 확인</button>
-			</div>
-			<span id="nicknameMessage"></span>
-    	</div>
-
-	    <div class="form-group">
-	        <label for="email">이메일</label>
-	        <div class="input-container">
-	            <input type="email" name="email" id="email" th:value="${userDTO.email}">
-	            <button id="isValidEmail" class="btn-small" type="button">중복 확인</button>
-	        </div>
-	        <span id="emailMessage"></span>
-	        <div class="checkbox-group">
- 			<!-- 기본적으로 "N"을 넘기도록 hidden input 설정 -->
-			    <input type="hidden" name="emailYn_hidden" value="N">
-			    <input type="checkbox" name="emailYn" id="emailYn" value="Y" th:checked="${userDTO.emailYn == 'Y'}">
-			    <label for="emailYn">이메일 수신 동의</label>
-			</div>
-
-			</div>
-
+	    <div class="profile-edit">
+	        <h1>프로필 수정</h1>
 	
-	    <div class="form-group">
-	        <label for="phone">휴대폰 번호</label>
-	        <div class="input-container">
-	            <input type="tel" name="tel" id="phone" th:value="${userDTO.tel}">
+	        <div class="profile-photo">
+	            <img id="profile-photo" th:src="@{/foodhub/user/thumbnails(fileName=${userDTO.profileUUID})}" alt="프로필 사진">
+	            
+	            <!-- 기존 프로필 이미지 경로를 유지하기 위한 hidden input 추가 -->
+	    		<input type="hidden" name="existingProfileImage" th:value="${userDTO.profileUUID}" />
+	            
+	            <input type="file" name="uploadProfile" id="photo-upload" accept="image/*">
 	        </div>
-	       <div class="checkbox-group">
-    <!-- 기본적으로 "N"을 넘기도록 hidden input 설정 -->
-			    <input type="hidden" name="smsYn_hidden" value="N">
-			    <input type="checkbox" name="smsYn" id="smsYn" value="Y" th:checked="${userDTO.smsYn == 'Y'}">
-			    <label for="smsYn">SMS 수신 동의</label>
+	
+	        <div class="form-group">
+	            <label for="userId" >아이디</label>
+	            <input type="text" id="userId" th:value="${userDTO.userId}" disabled>
+	        </div>
+	
+	        <div class="form-group">
+	            <label for="nickname">닉네임</label>
+	            <div class="input-container">
+	                <input type="text" name="nickname" id="nickname" th:value="${userDTO.nickname}">
+	                <button id="isValidNickname" class="btn-small" type="button">중복 확인</button>
+				</div>
+				<span id="nicknameMessage"></span>
+	    	</div>
+	
+		    <div class="form-group">
+		        <label for="email">이메일</label>
+		        <div class="input-container">
+		            <input type="email" name="email" id="email" th:value="${userDTO.email}">
+		            <button id="isValidEmail" class="btn-small" type="button">중복 확인</button>
+		        </div>
+		        <span id="emailMessage"></span>
+		        <div class="checkbox-group">
+	 			<!-- 기본적으로 "N"을 넘기도록 hidden input 설정 -->
+				    <input type="hidden" name="emailYn_hidden" value="N">
+				    <input type="checkbox" name="emailYn" id="emailYn" value="Y" th:checked="${userDTO.emailYn == 'Y'}">
+				    <label for="emailYn">이메일 수신 동의</label>
+				</div>
+	
 			</div>
 	
-	    <div class="form-group">
-	        <label for="birthdate">생일</label>
-	        <input type="date" name="birthday" id="birthday" th:value="${userDTO.birthday}">
+		    <div class="form-group">
+		        <label for="phone">휴대폰 번호</label>
+		        <div class="input-container">
+		            <input type="tel" name="tel" id="phone" th:value="${userDTO.tel}">
+		       	</div>
+		       	<div class="checkbox-group">
+	    			<!-- 기본적으로 "N"을 넘기도록 hidden input 설정 -->
+				    <input type="hidden" name="smsYn_hidden" value="N">
+				    <input type="checkbox" name="smsYn" id="smsYn" value="Y" th:checked="${userDTO.smsYn == 'Y'}">
+				    <label for="smsYn">SMS 수신 동의</label>
+				</div>
+			</div>
+			
+		    <div class="form-group">
+		        <label for="birthdate">생일</label>
+		        <input type="date" name="birthday" id="birthday" th:value="${userDTO.birthday}">
+		    </div>
+		
+	       <div class="form-group">
+	            <label>회원 유형</label>
+	            <input type="radio" id="common" name="membershipType" value="COMMON" th:checked="${userDTO.membershipType == 'COMMON'}">
+	            <span>일반회원</span>
+	            <input type="radio" id="bussi" name="membershipType" value="BUSSI" th:checked="${userDTO.membershipType == 'BUSSI'}">
+	            <span>사업자 회원</span>
+	        </div>
+	
+	        <div class="form-group" id="foundingYearGroup">
+	            <label for="foundingAt">창업년도</label>
+	            <input type="date" id="foundingAt" name="foundingAt" th:value="${userDTO.foundingAt}">
+	        </div>
+	
+	        <div class="form-group" id="businessTypeGroup">
+	            <label for="">업종</label>
+	            <input type="text" id="businessType" name="businessType" th:value="${userDTO.businessType}">
+	        </div>
+	        
+	        <div class="actions">
+	          	<input type="hidden" th:field="*{userId}" />
+	            <button class="btn save-btn" id="save-btn" type="submit">저장</button>
+	            <button class="btn" id="cancel-btn" type="button">취소</button>
+	        </div>
+	        
 	    </div>
-	
-       <div class="form-group">
-            <label>회원 유형</label>
-            <input type="radio" id="common" name="membershipType" value="COMMON" th:checked="${userDTO.membershipType == 'COMMON'}">
-            <span>일반회원</span>
-            <input type="radio" id="bussi" name="membershipType" value="BUSSI" th:checked="${userDTO.membershipType == 'BUSSI'}">
-            <span>사업자 회원</span>
-        </div>
-
-        <div class="form-group" id="foundingYearGroup">
-            <label for="foundingAt">창업년도</label>
-            <input type="date" id="foundingAt" name="foundingAt" th:value="${userDTO.foundingAt}">
-        </div>
-
-        <div class="form-group" id="businessTypeGroup">
-            <label for="">업종</label>
-            <input type="text" id="businessType" name="businessType" th:value="${userDTO.businessType}">
-        </div>
-        
-          <div class="actions">
-          	<input type="hidden" th:field="*{userId}" />
-            <button class="btn save-btn" id="save-btn" type="submit">저장</button>
-           <button class="btn" id="cancel-btn" type="button">취소</button>
-        </div>
-        
-    </div>
-    </div>
     </form>
 </div>
 

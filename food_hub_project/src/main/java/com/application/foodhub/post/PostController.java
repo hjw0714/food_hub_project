@@ -117,7 +117,8 @@ public class PostController {
 		String userId = (String) session.getAttribute("userId");
 		postDTO.setUserId(userId);
 		
-		postService.createPost(postDTO);
+		String nickname = (String) session.getAttribute("nickname");
+		System.out.println("세션 닉네임: " + nickname);
 		
 		Long postId = postService.createPost(postDTO);  // ✅ 게시글 저장 후 postId를 받아옴
 	    postDTO.setPostId(postId);  // ✅ postDTO에도 설정
@@ -149,13 +150,15 @@ public class PostController {
     @GetMapping("/board")
     public String getAllPosts(@RequestParam(defaultValue = "1") int page, Model model) {
         int pageSize = 15; // 한 페이지당 게시글 개수
-        Page<PostDTO> postPage = postService.getAllPosts(PageRequest.of(page - 1, pageSize, Sort.by(Sort.Direction.DESC, "createdAt")));
+        Page<PostDTO> postPage = postService.getAllPosts(PageRequest.of(page - 1, pageSize));
 
         int totalPages = postPage.getTotalPages();
         
         model.addAttribute("posts", postPage.hasContent() ? postPage.getContent() : List.of());
-        model.addAttribute("currentPage", page);
+        model.addAttribute("currentPage", page > 0 ? page : 1); // ✅ null 방지
         model.addAttribute("totalPages", totalPages > 0 ? totalPages : 1);
+        
+        
 
         return "foodhub/post/allPostList"; // Thymeleaf 템플릿 경로
     }
@@ -166,9 +169,6 @@ public class PostController {
     @GetMapping("/postDetail")
     public String postDetail(Model model, @RequestParam("postId") long postId) {
         model.addAttribute("postMap", postService.getPostDetail(postId, true));
-        model.addAttribute("allCommentCnt", commentService.getCommentCnt(postId));
-        model.addAttribute("commentList", commentService.getCommentList(postId));
-        model.addAttribute("fileList", fileUploadService.getFilesByPostId(postId));
         return "foodhub/post/postDetail";
     }
 }

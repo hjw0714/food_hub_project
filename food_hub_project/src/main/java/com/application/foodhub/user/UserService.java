@@ -17,5 +17,6 @@ public interface UserService {
 	public String findId(String email, String tel);
 	public String findPasswd(String userId, String email, String tel);
 	public void resetPassword(String newPassword, String userId);
+	public String findNicknameByUserId(String userId);
 	
 }

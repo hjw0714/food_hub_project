@@ -110,6 +110,11 @@
         .section ul li button:hover {
             background-color: var(--accent-hover);
         }
+        
+        .section ul li div span {
+		    margin-right: 8px;
+		    font-weight: bold;
+		}
 
         .actions {
             display: flex;
@@ -151,10 +156,22 @@
 	        if (membershipType == "COMMON") {
 	            $("#businessDate").hide();  // 창업일 숨김
 	            $("#businessType").hide();
+	            $("#membershipType").text("일반회원"); // mypage에서 COMMON을 일반회원으로 출력
 	        } else {
 	            $("#businessDate").show();  // 창업일 표시
 	            $("#businessType").show();
+	            $("#membershipType").text("사업자회원"); // mypage에서 BUSSI를 사업자회원으로 출력
 	        }
+	        
+	        let gender = $("#gender").text();
+	        if (gender == "M") {
+	        	$("#gender").text("남성");
+	        }
+	        else if (gender == "F") {
+	        	$("#gender").text("여성");
+	        }
+	        
+	      
 	    });
     </script>
 </head>
@@ -170,14 +187,14 @@
         </div>
 
         <div class="profile-info">
-            <div class="profile-info">
-           <p th:utext="|<strong>아이디</strong> : ${userDTO.userId}|"><p>
+		  <div class="profile-info">
+            <p th:utext="|<strong>아이디</strong> : ${userDTO.userId}|"><p>
             <p th:utext="|<strong>닉네임</strong> : ${userDTO.nickname}|"></p>
             <p th:utext="|<strong>Email</strong> : ${userDTO.email}|"></p>
             <p th:utext="|<strong>휴대폰 번호</strong> : ${userDTO.tel}|"></p>
-            <p th:utext="|<strong>성별</strong> : ${userDTO.gender}|"></p>
+            <p><strong>성별</strong> : <span id="gender" th:text="${userDTO.gender}"></span></p>
             <p th:utext="|<strong>생일</strong> : ${userDTO.birthday}|"></p>
-            <p th:utext="|<strong>회원유형</strong> : ${userDTO.membershipType}|"></p>
+            <p><strong>회원유형</strong> : <span id="membershipType" th:text="${userDTO.membershipType}"></span></p>
             <p id="businessDate" style="display:none;">
 			    <strong>창업일: </strong><span th:text="${userDTO.foundingAt}"></span>
 			</p>
@@ -185,7 +202,7 @@
 			    <strong>업종: </strong><span th:text="${userDTO.businessType}"></span>
 			</p>
             <p th:utext="|<strong>가입일자</strong> : ${#dates.format(userDTO.joinAt, 'yyyy-MM-dd')}|"></p>
-        </div>
+          </div>
         </div>
 
         <!-- 게시글 북마크 리스트 -->
@@ -210,11 +227,17 @@
         <!-- 나의 게시글 리스트 -->
         <div class="section">
             <h2>나의 게시글 리스트</h2>
-            <ul>
-                <li><a href="#">게시글 제목1</a></li>
-                <li><a href="#">게시글 제목2</a></li>
-            </ul>
+           	<ul>
+			    <li th:each="post, postList : ${myPostList}">
+			        <div style="display: flex; align-items: center;">
+			            <span th:text="${postList.count} + '.'" style="margin-right: 8px;"></span>
+			            <a href="#" th:text="${post.TITLE}"></a>
+			        </div>
+			    </li>
+			</ul>
         </div>
+        
+       
 
         <!-- 나의 댓글 리스트 -->
         <div class="section">
