@@ -15,9 +15,7 @@ public interface UserDAO {
 	public void updateUser(UserDTO userDTO);
 	public String getDeleteUserProfile(String userId);
 	public void deleteUser(String userId);
-
 	public String findId(Map<String, Object> params);
 	public String findPasswd(Map<String, Object> params);
 	public void resetPassword(UserDTO userDTO);
-
 }
