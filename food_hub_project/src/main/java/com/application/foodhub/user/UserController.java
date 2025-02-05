@@ -168,16 +168,14 @@ public class UserController {
   
 		HttpSession session = request.getSession();
 		userService.deleteUser((String)session.getAttribute("userId"));
-
-		session.invalidate();
-		
-		String jsScript ="""
-				<script>
-					alert('탈퇴되었습니다.');
-					location.href = '/foodhub';
-				</script>
-				""";
-
+		    session.invalidate();
+		  
+		    String jsScript ="""
+		    <script>
+		       alert('탈퇴되었습니다.');
+		       location.href = '/foodhub';
+		    </script>
+		    """;
 		return jsScript;
 	} 
 	
@@ -223,6 +221,7 @@ public class UserController {
 	        </script>
 	    """;
 
+	    
 	    return jsScript;
 	}
 	

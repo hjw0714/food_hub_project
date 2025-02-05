@@ -49,7 +49,7 @@
 
 <div layout:fragment="content">
 
-  <main class="main">
+   <main class="main">
     <section id="board" class="board section">
       <div class="container">
         <div class="board-header mb-4">
@@ -63,29 +63,28 @@
             <a th:each="post : ${posts}" th:href="@{/post/detail/{id}(id=${post.postId})}" class="list-group-item list-group-item-action">
               <h5 class="mb-1">[<span th:text="${post.subCateNm}"></span>] <span th:text="${post.title}"></span></h5>
               <small class="text-muted">
-                작성자: <span th:text="${post.nickname}"></span> | 
-                작성일: <span th:text="${#dates.format(post.createdAt, 'yyyy-MM-dd')}"></span> | 
-                조회수: <span th:text="${post.viewCnt}"></span> | 
-                추천수: <span th:text="${post.likeCnt}"></span>
+                작성자: <span th:text="${post.nickname}"></span> |
+                작성일: <span th:text="${#dates.format(post.createdAt, 'yyyy-MM-dd')}"></span> |
+                조회수: <span th:text="${post.viewCnt}"></span>
               </small>
             </a>
           </div>
         </div>
 
-      <div class="pagination d-flex justify-content-center mt-4">
-    <ul class="pagination">
-        <li class="page-item" th:if="${currentPage > 1}">
-            <a class="page-link" th:href="@{/board(page=${currentPage - 1})}">이전</a>
-        </li>
-        <li class="page-item" th:each="pageNum : ${#numbers.sequence(1, totalPages != null ? totalPages : 1)}">
-            <a class="page-link" th:href="@{/board(page=${pageNum})}" th:text="${pageNum}"
-               th:classappend="${pageNum == currentPage} ? 'active' : ''"></a>
-        </li>
-        <li class="page-item" th:if="${currentPage < (totalPages != null ? totalPages : 1)}">
-            <a th:href="@{/posts?page=__${currentPage != null ? currentPage + 1 : 1}__}">다음</a>
-        </li>
-    </ul>
-</div>
+        <div class="pagination d-flex justify-content-center mt-4">
+          <ul class="pagination">
+            <li class="page-item" th:if="${currentPage > 1}">
+              <a class="page-link" th:href="@{/board(page=${currentPage - 1})}">이전</a>
+            </li>
+            <li class="page-item" th:each="pageNum : ${#numbers.sequence(1, totalPages != null ? totalPages : 1)}">
+              <a class="page-link" th:href="@{/board(page=${pageNum})}" th:text="${pageNum}"
+                 th:classappend="${pageNum == currentPage} ? 'active' : ''"></a>
+            </li>
+            <li class="page-item" th:if="${currentPage < (totalPages != null ? totalPages : 1)}">
+              <a class="page-link" th:href="@{/board(page=${currentPage + 1})}">다음</a>
+            </li>
+          </ul>
+        </div>
       </div>
     </section>
   </main>

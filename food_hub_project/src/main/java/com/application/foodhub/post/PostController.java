@@ -143,31 +143,32 @@ public class PostController {
 		return jsScript;
 	}
 	
-	@GetMapping("/board")
-	public String getAllPosts(@RequestParam(defaultValue = "1") int page, Model model) {
-	    int pageSize = 10; // 한 페이지당 게시글 개수
-	    Page<PostDTO> postPage = postService.getAllPosts(PageRequest.of(page - 1, pageSize, Sort.by(Sort.Direction.DESC, "createdAt")));
+	/**
+     * 전체 게시글 목록을 최신순으로 15개씩 페이징하여 가져옴
+     */
+    @GetMapping("/board")
+    public String getAllPosts(@RequestParam(defaultValue = "1") int page, Model model) {
+        int pageSize = 15; // 한 페이지당 게시글 개수
+        Page<PostDTO> postPage = postService.getAllPosts(PageRequest.of(page - 1, pageSize, Sort.by(Sort.Direction.DESC, "createdAt")));
 
-	    int totalPages = postPage.getTotalPages();
-	    
-	    // 게시글이 없을 때 빈 리스트를 반환하도록 처리
-	    model.addAttribute("posts", postPage.hasContent() ? postPage.getContent() : List.of());
-	    model.addAttribute("currentPage", page);
-	    model.addAttribute("totalPages", totalPages > 0 ? totalPages : 1);
+        int totalPages = postPage.getTotalPages();
+        
+        model.addAttribute("posts", postPage.hasContent() ? postPage.getContent() : List.of());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages > 0 ? totalPages : 1);
 
-	    return "foodhub/post/allPostList"; // Thymeleaf 템플릿 경로
-	}
+        return "foodhub/post/allPostList"; // Thymeleaf 템플릿 경로
+    }
 
-
-	
-	@GetMapping("/postDetail")	// 게시글 상세보기 
-	public String postDetail(Model model , @RequestParam("postId") long postId) {
-		
-		model.addAttribute("postMap" , postService.getPostDetail(postId , true)); // 1개의 게시글 관련정보 반환 (+조회수 증가)
-		model.addAttribute("allCommentCnt" , commentService.getCommentCnt(postId));	  // 총 댓글의 갯수를 반환
-		model.addAttribute("commentList" , commentService.getCommentList(postId));
-		model.addAttribute("fileList", fileUploadService.getFilesByPostId(postId));
-		return "foodhub/post/postDetail";
-	}
-	
+    /**
+     * 게시글 상세보기
+     */
+    @GetMapping("/postDetail")
+    public String postDetail(Model model, @RequestParam("postId") long postId) {
+        model.addAttribute("postMap", postService.getPostDetail(postId, true));
+        model.addAttribute("allCommentCnt", commentService.getCommentCnt(postId));
+        model.addAttribute("commentList", commentService.getCommentList(postId));
+        model.addAttribute("fileList", fileUploadService.getFilesByPostId(postId));
+        return "foodhub/post/postDetail";
+    }
 }

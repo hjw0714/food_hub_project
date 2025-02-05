@@ -96,6 +96,7 @@ public class UserServiceImpl implements UserService{
 			
 			uploadProfile.transferTo(new File(fileRepositoryPath + uploadFile));
 		}
+		System.out.println(userDTO);
 		userDAO.updateUser(userDTO);
 	}
 	
@@ -145,7 +146,6 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public void resetPassword(String newPassword, String userId) {  
 		
-
 //	    System.out.println(newPassword);
 //	    System.out.println(userId);
 //	    System.out.println(passwordEncoder.encode(newPassword));
@@ -157,12 +157,6 @@ public class UserServiceImpl implements UserService{
 	    //System.out.println("변경된 비밀번호: " + userDTO.getPasswd());  //  확인용 출력
 
 	    userDAO.resetPassword(userDTO);
-
-		String deleteProfile = userDAO.getDeleteUserProfile(userId);
-		new File(fileRepositoryPath + deleteProfile).delete();
-		userDAO.deleteUser(userId);
-		
-
 	}
 
 
