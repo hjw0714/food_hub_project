@@ -20,29 +20,32 @@ CREATE TABLE USER (
 	MODIFY_AT 			TIMESTAMP DEFAULT NOW() ON UPDATE NOW() -- 수정일
 );
 
--- 말머리 테이블
-CREATE TABLE SUB_CATEGORY (
-	SUB_CATE_ID BIGINT PRIMARY KEY AUTO_INCREMENT , -- 말머리 ID 
-	SUB_CATE_NM VARCHAR(255) NOT NULL 				-- 말머리 이름
-);
 
-
-
--- 게시글 카테고리 테이블 (수정 및 보완)
 CREATE TABLE POST_CATEGORY (
     CATEGORY_ID BIGINT PRIMARY KEY AUTO_INCREMENT, -- 카테고리 ID
-    CATEGORY_NM VARCHAR(255) NOT NULL,              -- 카테고리명
-    SUB_CATE_ID BIGINT ,
-    FOREIGN KEY (SUB_CATE_ID) REFERENCES SUB_CATEGORY(SUB_CATE_ID)
+    CATEGORY_NM VARCHAR(255) NOT NULL              -- 카테고리명
 );
+
+
+
+CREATE TABLE SUB_CATEGORY (
+    SUB_CATE_ID BIGINT PRIMARY KEY AUTO_INCREMENT,  -- 말머리 ID
+    SUB_CATE_NM VARCHAR(255) NOT NULL,              -- 말머리 이름
+    CATEGORY_ID BIGINT NOT NULL,                    -- 카테고리 ID (연결)
+    FOREIGN KEY (CATEGORY_ID) REFERENCES POST_CATEGORY(CATEGORY_ID) 
+    ON DELETE CASCADE  -- 카테고리 삭제 시 해당 서브 카테고리도 삭제
+);
+
+
 
 
 -- 게시글 테이블
 CREATE TABLE POST (
     POST_ID 			BIGINT PRIMARY KEY AUTO_INCREMENT ,  								-- 게시글 아이디
     USER_ID 			VARCHAR(255) NOT NULL,              								-- 유저 아이디
-    CATEGORY_ID 		BIGINT NOT NULL,         -- 카테고리 아이디 추가
-   SUB_CATE_ID			BIGINT NOT NULL,													-- 말머리 아이디 추가 
+    NICKNAME			VARCHAR(255) NOT NULL, 												-- 닉네임
+    CATEGORY_ID 		BIGINT NOT NULL,         											-- 카테고리 아이디 추가
+   	SUB_CATE_ID			BIGINT NOT NULL,													-- 말머리 아이디 추가 
     CATEGORY_NM 		VARCHAR(255) NOT NULL,												-- 카테고리 이름 
     SUB_CATE_NM 		VARCHAR(255) NOT NULL,												-- 말머리 이름
     TITLE 				VARCHAR(255) NOT NULL,                 								-- 제목
@@ -52,7 +55,7 @@ CREATE TABLE POST (
     CREATED_AT         	TIMESTAMP DEFAULT NOW(), 			 								-- 작성일 (NOW() 적용)
     UPDATED_AT         	TIMESTAMP DEFAULT NOW() ON UPDATE NOW(),							-- 수정일 (자동 갱신)
     FOREIGN KEY (USER_ID) REFERENCES USER(USER_ID) ON DELETE CASCADE,  						-- 유저와 연결
-    FOREIGN KEY (CATEGORY_ID) REFERENCES POST_CATEGORY(CATEGORY_ID) ON DELETE CASCADE  		-- 카테고리 연결
+    FOREIGN KEY (CATEGORY_ID) REFERENCES POST_CATEGORY(CATEGORY_ID) ON DELETE CASCADE  		-- 카테고리 삭제 시 해당 게시글도 삭제
 );
 
 CREATE TABLE FILE_UPLOAD (
@@ -137,3 +140,40 @@ CREATE TABLE BOOKMARKS (
     FOREIGN KEY (POST_ID) REFERENCES POST(POST_ID) ON DELETE CASCADE,
     UNIQUE (USER_ID, POST_ID)											-- 북마크 중복 방지	
 );
+
+
+INSERT INTO post_category (CATEGORY_ID, CATEGORY_NM) VALUES
+(1, '외식업정보게시판'),
+(2, '자유게시판'),
+(3, '알바공고게시판'),
+(4, '질문게시판'),
+(5, '중고장비거래게시판'),
+(6, '매장홍보게시판'),
+(7, '협력업체게시판');
+
+INSERT INTO SUB_CATEGORY(SUB_CATE_ID, CATEGORY_ID, SUB_CATE_NM) VALUES
+(1, 2, '잡담'),
+(2, 2, '일상이야기'),
+(3, 2, '질문'),
+(4, 1, '업계뉴스'),
+(5, 1, '업체소식'),
+(6, 1, '트렌드'),
+(7, 1, '업계분석'),
+(8, 1, '새로운 맛집'),
+(9, 3, '직원 구인'),
+(10, 3, '알바 구인'),
+(11, 3, '구직'),
+(12, 4, '업계 질문'),
+(13, 4, '자유 질문'),
+(14, 4, '도움 요청'),
+(15, 4, '팁을 구합니다'),
+(16, 5, '판매'),
+(17, 5, '나눔'),
+(18, 5, '교환'),
+(19, 5, '구매희망'),
+(20, 6, '매장 소개'),
+(21, 6, '신규 오픈'),
+(22, 6, '이벤트'),
+(23, 6, '맛집 추천'),
+(24, 7, '업체 소개'),
+(25, 7, '협력 요청');

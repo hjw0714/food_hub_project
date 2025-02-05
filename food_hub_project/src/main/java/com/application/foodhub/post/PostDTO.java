@@ -10,6 +10,7 @@ import lombok.Data;
 public class PostDTO {
     private Long postId = null;
     private String userId;
+    private String nickname;
     private Long categoryId;
     private Long subCateId;
     private String cateNm;

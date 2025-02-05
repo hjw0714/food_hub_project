@@ -19,6 +19,7 @@
 <insert id="createPost" parameterType="PostDTO" useGeneratedKeys="true" keyProperty="postId">
     INSERT INTO POST (
         USER_ID,
+        NICKNAME,
         CATEGORY_ID,
         CATEGORY_NM,
         SUB_CATE_ID,
@@ -28,6 +29,7 @@
         CREATED_AT
     ) VALUES (
         #{userId},
+        #{nickname},
         #{categoryId},
         CASE 
             WHEN #{categoryId} = 1 THEN '외식업정보게시판'

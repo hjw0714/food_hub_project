@@ -44,6 +44,7 @@
         <form id="postForm" th:action="@{/post/createPost}" method="post" enctype="multipart/form-data">
           <input type="hidden" name="postId" th:value="${postId}" />
           <input type="hidden" name="userId" th:value="${session.userId}" />
+          <input type="hidden" name="nickname" th:value="${session.nickname}" />
           <div class="form-group mb-4">
             <label for="postTitle" class="form-label">제목</label>
             <input type="text" id="postTitle" name="title" class="form-control" placeholder="제목을 입력하세요" required>
