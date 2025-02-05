@@ -1,96 +1,90 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	  layout:decorate="~{/foodhub/index/headerAndFooter.html}">
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{/foodhub/index/headerAndFooter.html}">
 
 <head>
-  <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>협력업체</title>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>통합게시판</title>
+<style>
+.comment-box {
+	background-color: #f8f9fa;
+	padding: 15px;
+	border-radius: 5px;
+	margin-bottom: 20px;
+}
 
-  <style>
-    .comment-box {
-      background-color: #f8f9fa;
-      padding: 15px;
-      border-radius: 5px;
-      margin-bottom: 20px;
-    }
+.comment-header {
+	font-weight: bold;
+	margin-bottom: 10px;
+}
 
-    .comment-header {
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
+.comment-footer {
+	display: flex;
+	justify-content: space-between;
+	font-size: 0.9rem;
+}
 
-    .comment-footer {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.9rem;
-    }
+.comment-footer a {
+	color: #6c757d;
+	text-decoration: none;
+}
 
-    .comment-footer a {
-      color: #6c757d;
-      text-decoration: none;
-    }
+.profile-img {
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	margin-right: 10px;
+}
 
-    .profile-img {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      margin-right: 10px;
-    }
-
-    .post-navigation a {
-      margin: 0 5px;
-    }
-  </style>
+.post-navigation a {
+	margin: 0 5px;
+}
+</style>
 </head>
 
 <body class="board-page">
 
-<div layout:fragment="content">
+	<div layout:fragment="content">
 
-   <main class="main">
-    <section id="board" class="board section">
-      <div class="container">
-        <div class="board-header mb-4">
-          <h2 class="mb-3">통합 게시판</h2>
-          <p>모든 사용자가 자유롭게 글을 작성하고 댓글을 달 수 있는 공간입니다.</p>
-          <a th:href="@{/post/createPost}" class="btn btn-primary mb-4">새 글 작성</a>
-        </div>
+		<main class="main">
 
-        <div class="board-list">
-          <div class="list-group">
-            <a th:each="post : ${posts}" th:href="@{/post/detail/{id}(id=${post.postId})}" class="list-group-item list-group-item-action">
-              <h5 class="mb-1">[<span th:text="${post.subCateNm}"></span>] <span th:text="${post.title}"></span></h5>
-              <small class="text-muted">
-                작성자: <span th:text="${post.nickname}"></span> |
-                작성일: <span th:text="${#dates.format(post.createdAt, 'yyyy-MM-dd')}"></span> |
-                조회수: <span th:text="${post.viewCnt}"></span>
-              </small>
-            </a>
-          </div>
-        </div>
+			<section id="board" class="board section">
+				<div class="container">
+					<div class="board-header mb-4">
+						<h2 class="mb-3">통합 게시판</h2>
+						<p>모든 사용자가 자유롭게 글을 작성하고 댓글을 달 수 있는 공간입니다.</p>
+						<a th:href="@{/foodhub/post/createPost}"
+							class="btn btn-primary mb-4">새 글 작성</a>
+					</div>
 
-        <div class="pagination d-flex justify-content-center mt-4">
-          <ul class="pagination">
-            <li class="page-item" th:if="${currentPage > 1}">
-              <a class="page-link" th:href="@{/board(page=${currentPage - 1})}">이전</a>
-            </li>
-            <li class="page-item" th:each="pageNum : ${#numbers.sequence(1, totalPages != null ? totalPages : 1)}">
-              <a class="page-link" th:href="@{/board(page=${pageNum})}" th:text="${pageNum}"
-                 th:classappend="${pageNum == currentPage} ? 'active' : ''"></a>
-            </li>
-            <li class="page-item" th:if="${currentPage < totalPages}">
-             <a th:href="@{/board(page=${(currentPage != null ? currentPage + 1 : 2)})}">다음</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </section>
-  </main>
-  
-</div>
+					<div class="board-list">
+						<div class="list-group" th:each="post : ${postListMap}">
+							<a th:href="@{/foodhub/post/{postId}(postId=${post['postId']})}"
+								class="list-group-item list-group-item-action">
+								<h5 class="mb-1"
+									th:text="|[${post['subCateNm']}] ${post['title']}|"></h5> <small
+								class="text-muted"> <span
+									th:text="'작성자 : ' + ${post['nickname']}"></span> <span
+									th:text="'|작성일 : ' + ${post['createdAt']}"></span> <span
+									th:text="'|조회수 : ' + ${post['viewCnt']}"></span> <span
+									th:text="'|추천수 : ' + ${post['likeCnt']}"></span>
+							</small>
+							</a>
+						</div>
+					</div>
+					<div class="pagination">
+						<a th:href="@{/foodhub/post/allPostList(page=${page - 1})}"
+							th:if="${page > 1}">이전</a> <a
+							th:href="@{/foodhub/post/allPostList(page=${page + 1})}"
+							th:if="${page < maxPages}">다음</a>
+					</div>
 
+				</div>
+			</section>
+		</main>
+	</div>
 </body>
 
 </html>

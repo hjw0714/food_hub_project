@@ -1,128 +1,113 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	  layout:decorate="~{/foodhub/index/headerAndFooter.html}">
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{/foodhub/index/headerAndFooter.html}">
 
 <head>
-  <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>질문게시판</title>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>질문게시판</title>
 
-  <!-- Vendor CSS Files -->
-  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
-  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+<style>
+.comment-box {
+	background-color: #f8f9fa;
+	padding: 15px;
+	border-radius: 5px;
+	margin-bottom: 20px;
+}
 
-  <!-- Main CSS File -->
-  <link href="assets/css/main.css" rel="stylesheet">
+.comment-header {
+	font-weight: bold;
+	margin-bottom: 10px;
+}
 
-  <style>
-    .comment-box {
-      background-color: #f8f9fa;
-      padding: 15px;
-      border-radius: 5px;
-      margin-bottom: 20px;
-    }
+.comment-footer {
+	display: flex;
+	justify-content: space-between;
+	font-size: 0.9rem;
+}
 
-    .comment-header {
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
+.comment-footer a {
+	color: #6c757d;
+	text-decoration: none;
+}
 
-    .comment-footer {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.9rem;
-    }
+.profile-img {
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	margin-right: 10px;
+}
 
-    .comment-footer a {
-      color: #6c757d;
-      text-decoration: none;
-    }
-
-    .profile-img {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      margin-right: 10px;
-    }
-
-    .post-navigation a {
-      margin: 0 5px;
-    }
-  </style>
+.post-navigation a {
+	margin: 0 5px;
+}
+</style>
 </head>
 
 <body class="board-page">
 
-  
-
-
-
 <div layout:fragment="content">
 
 	<main class="main">
-	
-	  <section id="board" class="board section">
-	    <div class="container">
-	      <div class="board-header mb-4">
-	        <h2 class="mb-3">질문게시판</h2>
-	        <p>모든 사용자가 자유롭게 글을 작성하고 댓글을 달 수 있는 공간입니다.</p>
-	        <a th:href="@{/post/createPost}" class="btn btn-primary mb-4">새 글 작성</a>
-	      </div>
-	
-	      <div class="board-list">
-	        <div class="list-group">
-	          <a href="postDetail.html" class="list-group-item list-group-item-action">
-	            <h5 class="mb-1">[질문] 신규 메뉴 개발 시 필요한 재료를 어디서 구매하나요?</h5>
-	            <small class="text-muted">작성자: 김요리 | 2025-01-16 | 댓글: 6</small>
-	          </a>
-	      
-	          <a href="postDetail.html" class="list-group-item list-group-item-action">
-	            <h5 class="mb-1">[질문] 배달 서비스 이용 시 추가 수익을 올릴 수 있는 방법이 있을까요?</h5>
-	            <small class="text-muted">작성자: 이배달 | 2025-01-15 | 댓글: 8</small>
-	          </a>
-	      
-	          <a href="postDetail.html" class="list-group-item list-group-item-action">
-	            <h5 class="mb-1">[질문] 매장 내 주방 동선 설계에 관한 조언을 구합니다!</h5>
-	            <small class="text-muted">작성자: 박매장 | 2025-01-14 | 댓글: 5</small>
-	          </a>
-	      
-	          <a href="postDetail.html" class="list-group-item list-group-item-action">
-	            <h5 class="mb-1">[질문] 소규모 창업 시 인테리어 비용을 줄이는 팁이 있을까요?</h5>
-	            <small class="text-muted">작성자: 최창업 | 2025-01-13 | 댓글: 7</small>
-	          </a>
-	      
-	          <a href="postDetail.html" class="list-group-item list-group-item-action">
-	            <h5 class="mb-1">[질문] 고객 만족도를 높이기 위한 프로모션 아이디어가 궁금합니다.</h5>
-	            <small class="text-muted">작성자: 정프로 | 2025-01-12 | 댓글: 4</small>
-	          </a>
-	        </div>
-	      </div>
-	      
-	
-	      <div class="pagination d-flex justify-content-center mt-4">
-	        <nav aria-label="Page navigation">
-	          <ul class="pagination">
-	            <li class="page-item"><a class="page-link" href="#">이전</a></li>
-	            <li class="page-item"><a class="page-link" href="#">1</a></li>
-	            <li class="page-item"><a class="page-link" href="#">2</a></li>
-	            <li class="page-item"><a class="page-link" href="#">3</a></li>
-	            <li class="page-item"><a class="page-link" href="#">다음</a></li>
-	          </ul>
-	        </nav>
-	      </div>
-	
-	    </div>
-	  </section>
-	
+
+		<section id="board" class="board section">
+			<div class="container">
+				<div class="board-header mb-4">
+					<h2 class="mb-3">질문게시판</h2>
+					<p>모든 사용자가 자유롭게 글을 작성하고 댓글을 달 수 있는 공간입니다.</p>
+					<a th:href="@{/foodhub/post/createPost}"
+						class="btn btn-primary mb-4">새 글 작성</a>
+				</div>
+
+				<div class="board-list">
+					<div class="list-group">
+						<a href="postDetail.html"
+							class="list-group-item list-group-item-action">
+							<h5 class="mb-1">[질문] 신규 메뉴 개발 시 필요한 재료를 어디서 구매하나요?</h5> <small
+							class="text-muted">작성자: 김요리 | 2025-01-16 | 댓글: 6</small>
+						</a> <a href="postDetail.html"
+							class="list-group-item list-group-item-action">
+							<h5 class="mb-1">[질문] 배달 서비스 이용 시 추가 수익을 올릴 수 있는 방법이 있을까요?</h5>
+							<small class="text-muted">작성자: 이배달 | 2025-01-15 | 댓글: 8</small>
+						</a> <a href="postDetail.html"
+							class="list-group-item list-group-item-action">
+							<h5 class="mb-1">[질문] 매장 내 주방 동선 설계에 관한 조언을 구합니다!</h5> <small
+							class="text-muted">작성자: 박매장 | 2025-01-14 | 댓글: 5</small>
+						</a> <a href="postDetail.html"
+							class="list-group-item list-group-item-action">
+							<h5 class="mb-1">[질문] 소규모 창업 시 인테리어 비용을 줄이는 팁이 있을까요?</h5> <small
+							class="text-muted">작성자: 최창업 | 2025-01-13 | 댓글: 7</small>
+						</a> <a href="postDetail.html"
+							class="list-group-item list-group-item-action">
+							<h5 class="mb-1">[질문] 고객 만족도를 높이기 위한 프로모션 아이디어가 궁금합니다.</h5> <small
+							class="text-muted">작성자: 정프로 | 2025-01-12 | 댓글: 4</small>
+						</a>
+					</div>
+				</div>
+
+
+				<div class="pagination d-flex justify-content-center mt-4">
+					<nav aria-label="Page navigation">
+						<ul class="pagination">
+							<li class="page-item"><a class="page-link" href="#">이전</a></li>
+							<li class="page-item"><a class="page-link" href="#">1</a></li>
+							<li class="page-item"><a class="page-link" href="#">2</a></li>
+							<li class="page-item"><a class="page-link" href="#">3</a></li>
+							<li class="page-item"><a class="page-link" href="#">다음</a></li>
+						</ul>
+					</nav>
+				</div>
+
+			</div>
+		</section>
+
 	</main>
 
 </div>
 
 
- 
+
 </body>
 
 </html>

@@ -2,6 +2,7 @@ package com.application.foodhub.user;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.annotation.RequestScope;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.application.foodhub.post.PostDTO;
 import com.application.foodhub.post.PostService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -100,17 +102,36 @@ public class UserController {
 		}
 	
 	@GetMapping("/myPage")
-	   public String myPage(Model model , HttpServletRequest request) {
-	      HttpSession session = request.getSession();
-	      String userId = (String)session.getAttribute("userId");
+	public String myPage(Model model , HttpServletRequest request, 
+						@RequestParam(value = "postPage", defaultValue = "1") int postPage,
+						//@RequestParam(value = "bookmarkPage", defaultValue = "1") int bookmarkPage,
+						//@RequestParam(value = "commentPage", defaultValue = "1") int commentPage,
+		    			@RequestParam(value = "size", defaultValue = "5") int size) {
+		
+		HttpSession session = request.getSession();
+		String userId = (String)session.getAttribute("userId");
 	      
-	      model.addAttribute("userDTO" , userService.getUserDetail(userId));    // 유저 정보
-//	      model.addAttribute("myBookmarkList" , bookmarkService.myBookmark(userId));   // 유저 북마크 리스트
-	      model.addAttribute("myPostList" , postService.myPostList(userId));      // 유저 게시글 리스트
-//	      model.addAttribute("myCommentList" , commentService.myCommentList(userId)); // 유저 댓글 리스트
+	    // 로그인한 유저가 쓴 전체 게시글 가져오기
+	    List<Map<String, Object>> allPosts = postService.myPostList(userId);
+	    
+	    int totalPosts = allPosts.size();
+	    int totalPages = (int) Math.ceil((double) totalPosts / size);
+	    
+	    // 페이지에 해당하는 게시글만 가져오기
+	    int startIndex = (postPage - 1) * size;
+	    int endIndex = Math.min(startIndex + size, totalPosts);
+	    List<Map<String, Object>> paginatedPosts = allPosts.subList(startIndex, endIndex);
 	      
-	      return "foodhub/user/myPage";
-	   }
+	    model.addAttribute("userDTO" , userService.getUserDetail(userId));    // 유저 정보
+	    //model.addAttribute("myBookmarkList" , bookmarkService.myBookmark(userId));   // 유저 북마크 리스트
+	    //model.addAttribute("myPostList" , postService.myPostList(userId));      // 유저 게시글 리스트
+	    //model.addAttribute("myCommentList" , commentService.myCommentList(userId)); // 유저 댓글 리스트
+	    model.addAttribute("myPostList", paginatedPosts);
+	    model.addAttribute("currentPage", postPage);
+	    model.addAttribute("totalPages", totalPages);
+	      
+	    return "foodhub/user/myPage";
+	}
 
 	    
 	    

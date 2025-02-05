@@ -71,10 +71,10 @@
 	    $("#loginBtn").click(function(event) {
 	        event.preventDefault();
 			
-			let loginData = {
-				"userId" : $("[name='userId']").val(),
-				"passwd" : $("[name='passwd']").val()
-			}
+	        let loginData = {
+	                "userId": $("#userId").val().trim(),  // 공백 제거 (대소문자 변환 X)
+	                "passwd": $("#passwd").val().trim()
+            };
 			
 			$.ajax({
 	            url: "/foodhub/user/login",

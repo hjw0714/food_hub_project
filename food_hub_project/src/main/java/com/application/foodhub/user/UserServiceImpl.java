@@ -66,6 +66,8 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public boolean login(UserDTO userDTO) {
+		
+		//System.out.println("입력된 userId: " + userDTO.getUserId());
 
 		String encodedPasswd = userDAO.getEncodedPasswd(userDTO.getUserId());
 		
