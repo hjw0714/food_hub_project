@@ -1,6 +1,7 @@
 package com.application.foodhub.post;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 
@@ -17,11 +18,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.application.foodhub.comment.CommentService;
 import com.application.foodhub.fileUpload.FileUploadDTO;
 import com.application.foodhub.fileUpload.FileUploadService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -85,6 +88,7 @@ public class PostController {
 	 * 
 	 * return "foodhub/post/salePostList"; }
 	 */
+	
 	@GetMapping("/allPostList")
 	public String allPostList(@RequestParam(name = "page", defaultValue = "1") int page, Model model) {
 		final int pageSize = 15; // 한 페이지에 보여줄 게시글 수
@@ -148,8 +152,130 @@ public class PostController {
 	 */
 	@GetMapping("/postDetail")
 	public String postDetail(Model model,
-			@RequestParam(value = "postId", required = false, defaultValue = "1") long postId) {
-		model.addAttribute("postMap", postService.getPostDetail(postId, true));
-		return "foodhub/post/postDetail";
+	                         @RequestParam(value = "postId", required = false, defaultValue = "1") long postId) {
+	    // 게시글 상세 정보 가져오기
+	    model.addAttribute("postMap", postService.getPostDetail(postId, true));
+
+	    // 해당 게시글의 파일 목록 가져오기
+	    List<FileUploadDTO> fileList = fileUploadService.getFileListByPostId(postId);
+	    model.addAttribute("fileList", fileList);
+
+	    return "foodhub/post/postDetail";
 	}
+	
+	//게시글 삭제
+	@GetMapping("/deletePost")
+	public String deletePost(Model model, @RequestParam("postId") long postId, HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		
+		String sessionNickname = (String) session.getAttribute("nickname");
+		
+		model.addAttribute("postId", postId);
+		model.addAttribute("postMap" , postService.getPostDetail(postId, false));
+		model.addAttribute("sessionNickname", sessionNickname);
+		
+		return "foodhub/post/deletePost";
+	}
+
+	
+	@PostMapping("/deletePost")
+	@ResponseBody
+	public String deletePost(@RequestParam("postId") long postId) {
+		postService.deletePost(postId);
+		
+		String jsScript = """
+				<script>
+					alert('게시글이 삭제 되었습니다.');
+					location.href='/foodhub';
+				</script>
+				
+				""";
+		
+		return jsScript;
+	}
+	
+	// 게시글 수정
+	@GetMapping("/updatePost")
+	public String updatePost(Model model, @RequestParam("postId") long postId, HttpServletRequest request) {
+							 HttpSession session = request.getSession();
+							 String sessionNickname = (String) session.getAttribute("nickname");
+
+	    // 게시글 정보 가져오기
+	    Map<String, Object> postMap = postService.getPostDetail(postId, false);
+
+	    // 기존 첨부파일 목록 가져오기
+	    List<FileUploadDTO> fileList = fileUploadService.getFileListByPostId(postId);
+
+//	    // 파일 목록이 제대로 불러와지는지 로그 출력
+//	    System.out.println("파일 개수: " + fileList.size());
+//	    for (FileUploadDTO file : fileList) {
+//	        System.out.println("파일명: " + file.getFileName() + ", UUID: " + file.getFileUUID());
+//	    }
+
+	    // 모델에 데이터 추가
+	    model.addAttribute("postId", postId);
+	    model.addAttribute("postMap", postMap);
+	    model.addAttribute("sessionNickname", sessionNickname);
+	    model.addAttribute("fileList", fileList);  // 기존 파일 목록 추가
+
+	    return "foodhub/post/updatePost";
+	}
+	
+	@PostMapping("/updatePost")
+	@ResponseBody
+	public String updatePost(@RequestParam("file[]") List<MultipartFile> files,
+	                         @RequestParam(value = "deleteFiles", required = false) List<String> deleteFiles,
+	                         @ModelAttribute PostDTO postDTO,
+	                         HttpSession session) {
+	    
+	    String userId = (String) session.getAttribute("userId");
+	    postDTO.setUserId(userId);
+	    
+	    String jsScript = """
+								
+				""";
+		
+		
+	    try {
+	        //  게시글 업데이트 실행
+	        postService.updatePost(postDTO);
+	        Long postId = postDTO.getPostId();
+
+//	        // ✅ 기존 파일 삭제 (체크된 파일만 삭제)
+//	        if (deleteFiles != null && !deleteFiles.isEmpty()) {
+//	            for (String fileUUID : deleteFiles) {
+//	                fileUploadService.deleteFileByUUID(fileUUID);
+//	            }
+//	        }
+//
+//	        // ✅ 새로운 파일 업로드
+//	        for (MultipartFile file : files) {
+//	            if (!file.isEmpty()) {
+//	                FileUploadDTO fileUploadDTO = new FileUploadDTO();
+//	                fileUploadDTO.setPostId(postId);
+//	                fileUploadService.uploadFile(file, fileUploadDTO);
+//	            }
+//	        }
+	        jsScript = """
+	        		<script>
+	        		alert('게시글이 성공적으로 수정되었습니다.');
+	        		location.href='/foodhub/post/postDetail?postId=' + """ + postId + """
+	        		</script>
+	        		""";
+	        	        
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        jsScript = """
+	        		<script>
+	        		alert('게시글 수정 중 오류가 발생했습니다.');
+	        		location.href='/foodhub/post/postDetail?postId=' + """ + postDTO.getPostId() + """
+    		 		</script>
+	        		""";
+	       
+	    }
+	    return jsScript;
+	}
+
+
+	
 }

@@ -10,12 +10,23 @@
         			(#{postId}, #{fileUUID}, #{fileName}, #{filePath} , NOW())
     </insert>
 
-    <!-- ✅ 특정 게시글의 파일 목록 조회 (SELECT) -->
-    <select id="findFilesByPostId" resultType="com.application.foodhub.fileUpload.FileUploadDTO">
-        SELECT 	*	 
-        FROM 	FILE_UPLOAD 
-        WHERE 	POST_ID = #{postId}
-    </select>
+    <!-- ✅ 파일 리스트 가져오기 -->
+	<select id="getFileListByPostId" parameterType="long" resultType="com.application.foodhub.fileUpload.FileUploadDTO">
+	    SELECT    FILE_ID,
+	              POST_ID,
+	              FILE_UUID,
+	              FILE_NAME,
+	              FILE_PATH
+	    FROM      FILE_UPLOAD
+	    WHERE     POST_ID = #{postId}
+	</select>
+	
+	<!--  fileUUID로 원래 fileName 조회 -->
+	<select id="getFileByUUID" parameterType="string" resultType="com.application.foodhub.fileUpload.FileUploadDTO">
+	    SELECT	FILE_ID, POST_ID, FILE_UUID, FILE_NAME, FILE_PATH
+	    FROM	FILE_UPLOAD
+	    WHERE	FILE_UUID = #{fileUUID}
+	</select>
     
     <!-- ✅ 파일 업데이트 (UPDATE) -->
     <update id="updateFileUpload">

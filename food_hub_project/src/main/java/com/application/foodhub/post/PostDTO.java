@@ -24,4 +24,5 @@ public class PostDTO {
     @DateTimeFormat(pattern="yyyy-MM-dd-hh-mm")
     private Date updatedAt;
     
+    
 }

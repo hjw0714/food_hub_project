@@ -8,12 +8,15 @@
 		<result column="TITLE" 	   		property="title"/>
 		<result column="CATEGORY_NM"	property="cateNm"/>
 		<result	column="SUB_CATE_NM"	property="subCateNm"/>
+		<result	column="CATEGORY_ID"	property="categoryId"/>
+		<result	column="SUB_CATE_ID"	property="subCateId"/>
 		<result column="CONTENT" 	   	property="content"/>
 		<result column="VIEW_CNT" 	   	property="viewCnt"/>
 		<result column="CREATED_AT" 	property="createdAt"/>
 		<result column="USER_ID"       	property="userId"/>
 		<result column="NICKNAME"     	property="nickname"/>
 		<result column="PROFILE_UUID"  	property="profileUUID"/>
+		<result column="FILE_UUID"		property="fileUUID"/>
 </resultMap>
 
 <insert id="createPost" parameterType="PostDTO" useGeneratedKeys="true" keyProperty="postId">
@@ -106,21 +109,24 @@
 	  </select>
 
 	
-	<!--  1개의 게시글 상세조회 -->
+	
+	<!-- 게시글 정보만 가져오기 (파일 제외) -->
 	<select id="getPostDetail" parameterType="long" resultMap="postMap">
-		SELECT P.POST_ID 		AS POST_ID,
-			   P.SUB_CATE_NM 	AS SUB_CATE_NM,
-			   P.TITLE			AS TITLE,
-			   U.PROFILE_UUID 	AS PROFILE_UUID,
-			   U.USER_ID		AS USER_ID,
-			   U.NICKNAME		AS NICKNAME,
-			   P.CREATED_AT		AS CREATED_AT,
-			   P.VIEW_CNT		AS VIEW_CNT,
-			   P.CONTENT		AS CONTENT
-		FROM   POST P
-		JOIN   USER U
-		  ON   P.USER_ID = U.USER_ID
-		WHERE  POST_ID = #{postId}
+	    SELECT    P.POST_ID        AS POST_ID,
+	              P.SUB_CATE_NM    AS SUB_CATE_NM,
+	              P.TITLE          AS TITLE,
+	              P.CATEGORY_ID    AS CATEGORY_ID,
+	              P.SUB_CATE_ID    AS SUB_CATE_ID,
+	              U.PROFILE_UUID   AS PROFILE_UUID,
+	              U.USER_ID        AS USER_ID,
+	              U.NICKNAME       AS NICKNAME,
+	              P.CREATED_AT     AS CREATED_AT,
+	              P.VIEW_CNT       AS VIEW_CNT,
+	              P.CONTENT        AS CONTENT
+	    FROM      POST P
+	    JOIN      USER U
+	      ON      P.USER_ID = U.USER_ID
+	    WHERE     P.POST_ID = #{postId}
 	</select>
 	
 	<select id="getAllPosts" parameterType="map" resultMap="postMap">
@@ -145,5 +151,60 @@
 	    ON      P.USER_ID = U.USER_ID
 	    WHERE   P.USER_ID = #{userId}
 	</select>
+	
+	<!-- 게시글 삭제 -->
+	<delete id="deletePost" parameterType="long">
+		DELETE 	FROM POST
+		WHERE		 POST_ID = #{postId}
+	</delete>
+	
+	<update id="updatePost" parameterType="PostDTO">
+	    UPDATE POST 
+	    SET 
+	        CATEGORY_ID = #{categoryId},
+	        CATEGORY_NM = CASE 
+	            WHEN #{categoryId} = 1 THEN '외식업정보게시판'
+	            WHEN #{categoryId} = 2 THEN '자유게시판'
+	            WHEN #{categoryId} = 3 THEN '알바공고게시판'
+	            WHEN #{categoryId} = 4 THEN '질문게시판'
+	            WHEN #{categoryId} = 5 THEN '중고장비거래게시판'
+	            WHEN #{categoryId} = 6 THEN '매장홍보게시판'
+	            WHEN #{categoryId} = 7 THEN '협력업체게시판'
+	            ELSE CATEGORY_NM
+	        END,
+	        SUB_CATE_ID = #{subCateId},
+	        SUB_CATE_NM = CASE 
+	            WHEN #{subCateId} = 1 THEN '잡담'
+	            WHEN #{subCateId} = 2 THEN '일상이야기'
+	            WHEN #{subCateId} = 3 THEN '질문'
+	            WHEN #{subCateId} = 4 THEN '업계뉴스'
+	            WHEN #{subCateId} = 5 THEN '업체소식'
+	            WHEN #{subCateId} = 6 THEN '트렌드'
+	            WHEN #{subCateId} = 7 THEN '업계분석'
+	            WHEN #{subCateId} = 8 THEN '새로운 맛집'
+	            WHEN #{subCateId} = 9 THEN '직원 구인'
+	            WHEN #{subCateId} = 10 THEN '알바 구인'
+	            WHEN #{subCateId} = 11 THEN '구직'
+	            WHEN #{subCateId} = 12 THEN '업계 질문'
+	            WHEN #{subCateId} = 13 THEN '자유 질문'
+	            WHEN #{subCateId} = 14 THEN '도움 요청'
+	            WHEN #{subCateId} = 15 THEN '팁을 구합니다'
+	            WHEN #{subCateId} = 16 THEN '판매'
+	            WHEN #{subCateId} = 17 THEN '나눔'
+	            WHEN #{subCateId} = 18 THEN '교환'
+	            WHEN #{subCateId} = 19 THEN '구매희망'
+	            WHEN #{subCateId} = 20 THEN '매장 소개'
+	            WHEN #{subCateId} = 21 THEN '신규 오픈'
+	            WHEN #{subCateId} = 22 THEN '이벤트'
+	            WHEN #{subCateId} = 23 THEN '맛집 추천'
+	            WHEN #{subCateId} = 24 THEN '업체 소개'
+	            WHEN #{subCateId} = 25 THEN '협력 요청'
+	            ELSE SUB_CATE_NM
+	        END,
+	        TITLE = #{title},
+	        CONTENT = #{content},
+	        UPDATED_AT = NOW()
+	    WHERE POST_ID = #{postId}
+	</update>
 
 </mapper>

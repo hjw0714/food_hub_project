@@ -5,8 +5,6 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 
 @Mapper
 public interface PostDAO {
@@ -25,6 +23,10 @@ public interface PostDAO {
 
 
    public List<Map<String, Object>> myPostList(String userId);
+   
+   public void deletePost(long postId);
+   
+   public void updatePost(PostDTO postDTO);
 
    
    

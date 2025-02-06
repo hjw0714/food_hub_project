@@ -8,7 +8,7 @@
 <title>게시글 상세보기</title>
 
 <style>
-/* 댓글 스타일 */
+/* ✅ 댓글 스타일 */
 .comment-box {
 	background-color: #f8f9fa;
 	padding: 15px;
@@ -23,276 +23,588 @@
 
 .comment-footer {
 	display: flex;
-	justify-content: flex-end; /* 버튼들을 오른쪽 끝으로 정렬 */
+	justify-content: flex-end;
 	font-size: 0.9rem;
 	align-items: center;
 }
 
-.comment-footer a, .comment-footer .like-button, .comment-footer .report-button
-	{
-	margin-left: 15px; /* 버튼 사이 간격 */
+.comment-footer a, .comment-footer .like-button, .comment-footer .report-button {
+	margin-left: 15px;
 }
 
-.profile-img {
-	width: 40px;
-	height: 40px;
-	border-radius: 50%;
-	margin-right: 10px;
+
+/* ✅ 작성자 정보 스타일 */
+.post-meta {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #ddd;
 }
 
-.like-button {
-	color: #007bff;
-	cursor: pointer;
+.author-box {
+    display: flex;
+    align-items: center;
 }
 
-.like-count {
-	margin-left: 5px;
+.post-details {
+    text-align: right;
 }
 
-/* 답글 스타일 */
-.reply-comment-box {
-	margin-left: 30px; /* 답글 들여쓰기 */
-	background-color: #f1f3f5; /* 답글 배경 색상 */
-	display: block; /* 기본 block 레이아웃으로 변경 */
+/* ✅ 본문과 첨부파일 박스 스타일 */
+.content-box {
+    background: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    margin-bottom: 15px;
 }
 
-/* 신고 버튼 스타일 */
-.report-button {
-	color: #dc3545;
-	cursor: pointer;
+/* 본문 내용과 작성 정보 구분선 */
+.section-divider {
+    border: none;
+    height: 2px;
+    background: #ccc;
+    margin: 20px 0;
 }
 
+/* ✅ 첨부파일 목록 스타일 */
+.file-list {
+    padding-left: 0;
+    list-style: none;
+}
+
+.file-list li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.file-list img {
+    max-width: 100px;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+.file-list a {
+    text-decoration: none;
+    color: #007bff;
+    font-weight: bold;
+}
+
+/* ✅ 북마크 버튼 스타일 */
 #bookmarkButton {
-	background-color: #ffc107; /* 노란색 */
+	background-color: #ffc107;
 	color: white;
 	border: none;
 	display: flex;
 	align-items: center;
-	margin-left: auto; /* 오른쪽 끝으로 위치 */
+	margin-left: auto;
 }
 
 #bookmarkButton i {
-	margin-right: 5px; /* 아이콘과 텍스트 간격 */
+	margin-right: 5px;
 }
 
 #bookmarkButton:hover {
-	background-color: #e0a800; /* 호버 시 색상 */
+	background-color: #e0a800;
+}
+
+.thumbnail-img {
+    max-width: 30%;  /* 원본 크기의 30%로 자동 조정 */
+    height: auto;  /* 비율 유지 */
+    border-radius: 5px;
+    margin-top: 15px;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+}
+
+.thumbnail-img:hover {
+    transform: scale(1.05);  /* 마우스 올리면 확대 */
+}
+
+/* 대댓글 입력창 스타일 수정 */
+.reply-form {
+    margin-top: 10px; /* 상단 간격 추가 */
+}
+
+.reply-form textarea {
+    width: 100%;
+    margin-bottom: 8px; /* 버튼과 간격 추가 */
+}
+
+.reply-form button {
+    margin-right: 5px; /* 버튼 간격 조정 */
+}
+
+/* ✅ 대댓글 크기 최적화 */
+.reply-comment-box {
+   margin-left: 25px;
+   background-color: #f1f3f5;
+   padding: 8px;
+   border-radius: 5px;
+}
+
+.reply-box {
+    margin-left: 20px; /* 대댓글이 원댓글 내부에서 들여쓰기되도록 설정 */
+}
+
+.comment-footer a, .comment-footer .like-button, .comment-footer .report-button
+   {
+   margin-left: 15px; /* 버튼 사이 간격 */
+}
+
+/* 댓글 스타일 */
+.comment-box {
+   background-color: #f8f9fa;
+   padding: 15px;
+   border-radius: 5px;
+   margin-bottom: 10px;
+}
+
+.comment-header {
+   font-weight: bold;
+   margin-bottom: 10px;
+}
+
+.comment-footer {
+   display: flex;
+   justify-content: flex-end; /* 버튼들을 오른쪽 끝으로 정렬 */
+   font-size: 0.9rem;
+   align-items: center;
+}
+
+/* ✅ 수정 입력창 스타일 */
+.edit-form {
+   margin-top: 5px;
+}
+
+.edit-form textarea {
+   width: 100%;
+   margin-bottom: 5px;
+}
+
+.edit-form button {
+   margin-right: 5px;
+   font-size: 0.85rem;
 }
 
 .profile-img {
-	width: 30px;
-	height: 30px;
-	border-radius: 50%;
-	margin-right: 8px;
+   width: 30px;
+   height: 30px;
+   border-radius: 50%;
+   margin-right: 8px;
 }
 
 /* 작성자 정보 정렬 */
 .post-header .author-info {
-	display: flex;
-	align-items: center;
+   display: flex;
+   align-items: center;
 }
+
 </style>
 
+<script>
+	$().ready(function() {
+		$("#editPostButton").hide();
+		$("#deletePostButton").hide();
 
+		let nickname = $("#nicknmae").text();
+		let loginNickname = "[[${session.nickname}]]";
+
+		if (nickname == loginNickname) {
+			$("#editPostButton").show();
+			$("#deletePostButton").show();
+		}
+		
+		
+		
+	});
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let attachmentSection = document.getElementById("attachmentSection");
+        let attachments = document.querySelectorAll(".attachment-item");
+
+        // ✅ 이미지 파일이 아닌 첨부파일이 있는지 확인
+        let hasNonImageFiles = false;
+        attachments.forEach(file => {
+            let fileName = file.getAttribute("data-filename").toLowerCase();
+            if (!fileName.endsWith(".jpg") && !fileName.endsWith(".png") && !fileName.endsWith(".gif")) {
+                hasNonImageFiles = true;
+            }
+        });
+
+        // ✅ 이미지 파일만 있을 경우, 첨부파일 섹션 숨김
+        if (!hasNonImageFiles) {
+            attachmentSection.style.display = "none";
+        }
+    });
+    
+    $(document).ready(function () {
+        let postId = $("#postId").val();
+
+        // ✅ 부모 댓글 먼저 로드
+         function loadComments() {
+            $.ajax({
+                url: "/comments/post/" + postId + "/parents",
+                type: "GET",
+                dataType: "json",
+                success: function (parentComments) {
+                    $("#commentList").empty(); // 기존 댓글 목록 초기화
+
+                    parentComments.forEach(comment => {
+                        let commentHtml = createCommentHtml(comment);
+                        $("#commentList").append(commentHtml);
+
+                        // ✅ 해당 부모 댓글의 대댓글 가져오기
+                        loadChildComments(comment.commentId);
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error("댓글 불러오기 오류:", error);
+                }
+            });
+        }
+         function loadChildComments(parentId) {
+             $.ajax({
+                 url: "/comments/parent/" + parentId,
+                 type: "GET",
+                 dataType: "json",
+                 success: function (childComments) {
+                     childComments.forEach(reply => {
+                         let replyHtml = createReplyHtml(reply);
+
+                         // ✅ 부모 댓글의 `.reply-box` 내부에 대댓글 추가
+                         $(`.comment-box[data-id='${reply.parentId}'] .reply-box`).append(replyHtml);
+                     });
+                 }
+             });
+         }
+
+        // 댓글 HTML 생성 함수
+      function createCommentHtml(comment) {
+            let profileImgSrc = comment.profileUUID 
+                ? `/foodhub/user/thumbnails?fileName=${comment.profileUUID}`
+                : "/default-profile.png";
+
+            let currentUserId = $("#userId").val(); // 현재 로그인한 사용자 ID
+
+            let editButtonHtml = comment.userId === currentUserId 
+                ? `<a href="javascript:void(0);" class="btn btn-outline-secondary btn-sm edit-btn" data-id="${comment.commentId}">수정</a>`
+                : ''; // 본인만 수정 가능
+
+            let deleteButtonHtml = comment.userId === currentUserId 
+                ? `<a href="javascript:void(0);" class="btn btn-outline-danger btn-sm delete-btn" data-id="${comment.commentId}">삭제</a>`
+                : ''; // 본인만 삭제 가능
+
+            return `
+                <div class="comment-box" data-id="${comment.commentId}">
+                    <div class="comment-header">
+                        <img class="profile-img" src="${profileImgSrc}" alt="프로필">
+                        <span>${comment.userId}</span>
+                        <span class="text-muted">${comment.createdAt}</span>
+                    </div>
+                    <p class="comment-content">${comment.content}</p>
+                    <div class="comment-footer">
+                        <a href="javascript:void(0);" class="btn btn-outline-primary btn-sm reply-btn" data-id="${comment.commentId}">답글</a>
+                        ${editButtonHtml}
+                        ${deleteButtonHtml}
+                    </div>
+                    <div class="reply-box"></div>
+                </div>
+            `;
+        }
+
+    // 대댓글 작성
+     function createReplyHtml(reply) {
+            let profileImgSrc = reply.profileUUID 
+                ? `/foodhub/user/thumbnails?fileName=${reply.profileUUID}`
+                : "/default-profile.png";
+
+            let currentUserId = $("#userId").val();
+
+            let editButtonHtml = reply.userId === currentUserId 
+                ? `<a href="javascript:void(0);" class="btn btn-outline-secondary btn-sm edit-btn" data-id="${reply.commentId}">수정</a>`
+                : '';
+
+            let deleteButtonHtml = reply.userId === currentUserId 
+                ? `<a href="javascript:void(0);" class="btn btn-outline-danger btn-sm delete-btn" data-id="${reply.commentId}">삭제</a>`
+                : '';
+
+            return `
+                <div class="reply-comment-box comment-box" data-id="${reply.commentId}">
+                    <div class="comment-header">
+                        <img class="profile-img" src="${profileImgSrc}" alt="프로필">
+                        <span>${reply.userId}</span>
+                        <span class="text-muted">${reply.createdAt}</span>
+                    </div>
+                    <p class="comment-content">${reply.content}</p>
+                    <div class="comment-footer">
+                        ${editButtonHtml}
+                        ${deleteButtonHtml}
+                    </div>
+                </div>
+            `;
+        }
+
+
+
+
+        // 댓글 등록
+      // 댓글 등록 (alert 제거 후 UI 즉시 업데이트)
+    $("#commentForm").submit(function (event) {
+        event.preventDefault();
+        let content = $("#commentContent").val();
+        let postId = $("#postId").val();
+        let userId = $("#userId").val();
+
+        if (!content.trim()) return;
+
+        $.ajax({
+            url: "/comments/add",
+            type: "POST",
+            data: {
+                postId: postId,
+                userId: userId,
+                content: content
+            },
+            success: function (response) {
+                $("#commentContent").val(""); // 입력창 초기화
+                let newCommentHtml = createCommentHtml(response); // 새 댓글 생성
+                $("#commentList").prepend(newCommentHtml); // 댓글 목록의 맨 위에 추가
+            }
+        });
+    });
+
+        // 대댓글 작성
+      // 대댓글 입력창 추가 (기존 대댓글을 유지)
+    $(document).on("click", ".reply-btn", function () {
+        let parentId = $(this).data("id");
+        let commentBox = $(this).closest(".comment-box"); // 현재 댓글의 부모 요소 가져오기
+        let replyBox = commentBox.find(".reply-box"); // 해당 댓글의 대댓글 영역
+
+        // 이미 대댓글 입력창이 있다면 제거
+        if (replyBox.find(".reply-form").length > 0) {
+            replyBox.find(".reply-form").remove();
+            return;
+        }
+
+        // 대댓글 입력창 추가 (기존 대댓글 유지)
+        let replyFormHtml = `
+            <div class="reply-form">
+                <textarea class="form-control reply-content" rows="2" placeholder="답글을 입력하세요..."></textarea>
+                <button class="btn btn-sm btn-primary submit-reply" data-id="${parentId}">등록</button>
+                <button class="btn btn-sm btn-secondary cancel-reply">취소</button>
+            </div>
+        `;
+
+        replyBox.append(replyFormHtml); // ✅ 기존 대댓글을 유지하면서 입력창 추가
+    });
+
+
+
+
+    //대댓글 등록 (기존 대댓글 유지)
+    $(document).on("click", ".submit-reply", function () {
+        let parentId = $(this).data("id");
+        let replyBox = $(this).closest(".reply-box");
+        let replyContent = replyBox.find(".reply-content").val();
+        let postId = $("#postId").val();
+        let userId = $("#userId").val();
+
+        if (!replyContent.trim()) return;
+
+        $.ajax({
+            url: "/comments/add",
+            type: "POST",
+            data: {
+                postId: postId,
+                userId: userId,
+                parentId: parentId,
+                content: replyContent
+            },
+            success: function (response) {
+                let newReplyHtml = createReplyHtml(response);
+                replyBox.append(newReplyHtml); // 대댓글 추가
+                replyBox.find(".reply-form").remove(); // 입력창 제거
+            }
+        });
+    });
+
+    $(document).on("click", ".edit-btn", function () {
+        let commentBox = $(this).closest(".comment-box");
+        let commentId = $(this).data("id");
+        let originalContent = commentBox.find(".comment-content").text();
+
+        let editForm = `
+            <div class="edit-form">
+                <textarea class="form-control edit-content">${originalContent}</textarea>
+                <button class="btn btn-sm btn-success save-edit" data-id="${commentId}">저장</button>
+                <button class="btn btn-sm btn-secondary cancel-edit">취소</button>
+            </div>
+        `;
+        commentBox.find(".comment-content").replaceWith(editForm);
+    });
+
+    $(document).on("click", ".save-edit", function () {
+        let commentId = $(this).data("id");
+        let newContent = $(this).siblings(".edit-content").val();
+        let userId = $("#userId").val(); // 현재 로그인한 사용자 ID 추가
+
+        $.ajax({
+            url: "/comments/update",
+            type: "POST",
+            data: { 
+                commentId: commentId, 
+                content: newContent,
+                userId: userId // ✅ userId 추가
+            },
+            success: function (response) {
+                alert(response); // 수정 성공 메시지 표시
+                loadComments(); // 다시 로드하여 수정 반영
+            },
+            error: function (xhr, status, error) {
+                console.error("댓글 수정 오류:", error);
+                alert("댓글 수정에 실패했습니다."); // 오류 메시지 표시
+            }
+        });
+    });
+
+    $().on("click", ".cancel-edit", function () {
+        loadComments();
+    });
+
+    $(document).on("click", ".cancel-reply", function () {
+        $(this).closest(".reply-form").remove(); // ✅ 입력창만 제거
+    });
+
+    //✅ 댓글 삭제 버튼 클릭 이벤트
+    $(document).on("click", ".delete-btn", function () {
+        let commentId = $(this).data("id");
+        let userId = $("#userId").val(); // 로그인한 사용자 ID 가져오기
+
+        if (!confirm("댓글을 삭제하시겠습니까?")) return;
+
+        $.ajax({
+            url: "/comments/delete",
+            type: "POST",
+            data: { commentId: commentId, userId: userId },
+            success: function (response) {
+                if (response === "댓글이 삭제 처리되었습니다.") {
+                    $(`.comment-box[data-id='${commentId}']`).remove(); // ✅ UI에서 제거
+                } else {
+                    alert("삭제 실패: " + response);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("댓글 삭제 오류:", error);
+                alert("댓글 삭제에 실패했습니다.");
+            }
+        });
+    });
+
+        // 페이지 로드 시 댓글 불러오기
+        loadComments();
+    });
+</script>
 </head>
 
 <body class="single-post-page">
 
-	<div layout:fragment="content">
+<div layout:fragment="content">
+	<main class="main">
+		<section id="post-detail" class="post-detail section">
+			<div class="container">
+				<!-- 게시글 제목 -->
+				<div class="post-header mb-4">
+				    <h2 class="mb-3" th:text="${postMap.title}"></h2>
 
-		<main class="main">
-
-			<section id="post-detail" class="post-detail section">
-				<div class="container">
-					<div class="post-header mb-4">
-						<h2 class="mb-3" th:text="${postMap.title}"></h2>
-						<!--게시글 제목 불러오기.  -->
-						<div class="d-flex align-items-center mb-2">
-							<img class="profile-img"
-								th:src="@{/foodhub/user/thumbnails(fileName=${postMap.profileUUID})}"
-								alt="프로필 사진"> <span class="text-muted">작성자: <span
-								th:text="${postMap.nickname}"></span></span>
-							<!-- 작성자 닉네임 불러오기  -->
-						</div>
-						<div class="details">
-							<span class="text-muted">작성일: <span
-								th:text="${postMap.createdAt}"></span></span> <span class="text-muted">조회수:
-								<span th:text="${postMap.viewCnt}"></span>
-							</span> <span class="text-muted">추천수: <span id="likeCount">0</span></span>
-						</div>
-					</div>
-
-					<div class="post-body mb-4">
-						<p>
-							<span th:utext="${postMap.content}"></span>
-						</p>
-					</div>
-
-					<div class="post-footer d-flex justify-content-between mb-5">
-						<button id="likeButton" class="btn btn-outline-success">
-							<i class="bi bi-hand-thumbs-up"></i> 추천
-						</button>
-						<button id="reportButton" class="btn btn-outline-danger">
-							<i class="bi bi-flag"></i> 신고
-						</button>
-					</div>
-
-
-					<button id="bookmarkButton" class="btn btn-warning ms-auto d-block">
-						<i class="bi bi-bookmark"></i> 북마크
-					</button>
-					
-					<div class="d-flex justify-content-center gap-2 mb-4">
-					    <button id="editPostButton" class="btn btn-outline-secondary">
-					        <i class="bi bi-pencil"></i> 수정
-					    </button>
-					    <button id="deletePostButton" class="btn btn-outline-secondary">
-					        <i class="bi bi-trash"></i> 삭제
-					    </button>
-					</div>
-
-					<section id="comments" class="comments section">
-						<h3 class="mb-4">댓글</h3>
-
-						<div class="comment-box">
-							<div class="comment-header">김철수</div>
-							<div class="comment-body">좋은 정보 감사합니다!</div>
-							<div class="comment-footer">
-								<span class="text-muted">2025-01-17 14:35</span> <a href="#">답글</a>
-								<span class="like-button" onclick="updateCommentLikeCount(this)">
-									<i class="bi bi-hand-thumbs-up"></i> 좋아요
-								</span> <span class="like-count">0</span> <span class="report-button"
-									onclick="reportComment(this)"> <i class="bi bi-flag"></i>
-									신고
-								</span>
-							</div>
-
-							<!-- 답글 예시 추가 -->
-							<div class="reply-comment-box">
-								<div class="comment-header">이영수</div>
-								<div class="comment-body">저도 감사합니다! 유용한 정보네요.</div>
-								<div class="comment-footer">
-									<span class="text-muted">2025-01-17 15:00</span> <span
-										class="like-button" onclick="updateCommentLikeCount(this)">
-										<i class="bi bi-hand-thumbs-up"></i> 좋아요
-									</span> <span class="like-count">0</span> <span class="report-button"
-										onclick="reportComment(this)"> <i class="bi bi-flag"></i>
-										신고
-									</span>
-								</div>
-							</div>
-						</div>
-
-						<div class="comment-box">
-							<div class="comment-header">이영수</div>
-							<div class="comment-body">정말 유용한 정보네요. 감사합니다!</div>
-							<div class="comment-footer">
-								<span class="text-muted">2025-01-17 15:00</span> <a href="#">답글</a>
-								<span class="like-button" onclick="updateCommentLikeCount(this)">
-									<i class="bi bi-hand-thumbs-up"></i> 좋아요
-								</span> <span class="like-count">0</span> <span class="report-button"
-									onclick="reportComment(this)"> <i class="bi bi-flag"></i>
-									신고
-								</span>
-							</div>
-						</div>
-
-						<div class="comment-box">
-							<div class="comment-header">박지현</div>
-							<div class="comment-body">댓글을 달 수 있어 좋네요!</div>
-							<div class="comment-footer">
-								<span class="text-muted">2025-01-17 15:30</span> <a href="#">답글</a>
-								<span class="like-button" onclick="updateCommentLikeCount(this)">
-									<i class="bi bi-hand-thumbs-up"></i> 좋아요
-								</span> <span class="like-count">0</span> <span class="report-button"
-									onclick="reportComment(this)"> <i class="bi bi-flag"></i>
-									신고
-								</span>
-							</div>
-						</div>
-
-						<form id="commentForm" class="mt-4">
-							<div class="form-group mb-3">
-								<label for="commentContent" class="form-label">댓글 작성</label>
-								<textarea id="commentContent" class="form-control" rows="3"
-									placeholder="댓글을 입력하세요" required></textarea>
-							</div>
-							<button type="submit" class="btn btn-primary">댓글 등록</button>
-						</form>
-						
-						<div class="d-flex justify-content-center post-navigation mb-4">
-							<a href="previous-post.html" class="btn btn-outline-secondary">이전글</a>
-							<a th:href="@{/foodhub/post/FreeBoardPostList}"
-								class="btn btn-outline-secondary">전체 게시판</a> <a
-								href="next-post.html" class="btn btn-outline-secondary">다음글</a>
-						</div>
-					</section>
+				    <!-- 작성자 정보 박스 -->
+				    <div class="post-meta">
+				        <div class="author-box">
+				            <img class="profile-img" th:src="@{/foodhub/user/thumbnails(fileName=${postMap.profileUUID})}" alt="프로필 사진">
+				            <span class="text-muted">작성자: <span id="nicknmae" th:text="${postMap.nickname}"></span></span>
+				        </div>
+				        <div class="post-details">
+				            <span class="text-muted">작성일: <span th:text="${postMap.createdAt}"></span></span>
+				            <span class="text-muted">조회수: <span th:text="${postMap.viewCnt}"></span></span>
+				            <span class="text-muted">추천수: <span id="likeCount">0</span></span>
+				        </div>
+				    </div>
 				</div>
-			</section>
 
-			<script>
-      // 조회수 로직
-      function updateViewCount() {
-        const viewCountElement = document.getElementById('viewCount');
-        let viewCount = parseInt(localStorage.getItem('postViewCount')) || 0;
-        viewCount++;
-        localStorage.setItem('postViewCount', viewCount);
-        viewCountElement.textContent = viewCount;
-      }
+				<!-- 본문 내용 -->
+				<div class="content-box">
+				    <h4>📄 본문 내용</h4>
+				    <p>
+				        <span th:utext="${postMap.content}"></span>
+				    </p>
+				
+				    <!-- 이미지 파일을 본문 아래에 표시 (최대 크기 조정) -->
+				    <div th:each="file : ${fileList}" th:if="${file.fileName.endsWith('.jpg') or file.fileName.endsWith('.png') or file.fileName.endsWith('.gif')}">
+				        <a th:href="@{/uploads/{fileUUID}(fileUUID=${file.fileUUID})}" target="_blank">
+				            <img th:src="@{/uploads/{fileUUID}(fileUUID=${file.fileUUID})}" alt="첨부 이미지" class="thumbnail-img">
+				        </a>
+				    </div>
+				</div>
+				
+				<!-- 이미지가 아닌 파일만 첨부파일 목록에 표시 -->
+				<div id="attachmentSection" class="content-box" th:if="${fileList != null and #lists.size(fileList) > 0}">
+				    <h4>📂 첨부 파일</h4>
+				    <ul class="file-list">
+				        <li th:each="file : ${fileList}" class="attachment-item" 
+				            th:data-filename="${file.fileName}"
+				            th:unless="${file.fileName.endsWith('.jpg') or file.fileName.endsWith('.png') or file.fileName.endsWith('.gif')}">
+				            <a th:href="@{/uploads/{fileUUID}(fileUUID=${file.fileUUID})}" th:text="${file.fileName}" title="다운로드">
+				                📂 다운로드
+				            </a>
+				        </li>
+				    </ul>
+				</div>
 
-      // 추천수 로직
-      function updateLikeCount() {
-        const likeButton = document.getElementById('likeButton');
-        const likeCountElement = document.getElementById('likeCount');
-        let likeCount = parseInt(localStorage.getItem('postLikeCount')) || 0;
+				<!-- 북마크 버튼 -->
+				<button id="bookmarkButton" class="btn btn-warning ms-auto d-block">
+					<i class="bi bi-bookmark"></i> 북마크
+				</button>
 
-        likeButton.addEventListener('click', () => {
-          likeCount++;
-          localStorage.setItem('postLikeCount', likeCount);
-          likeCountElement.textContent = likeCount;
-        });
-      }
+				<!-- 수정 & 삭제 버튼 -->
+				<div class="d-flex justify-content-center gap-2 mb-4">
+					<button id="editPostButton" class="btn btn-outline-secondary" th:onclick="|location.href='@{/foodhub/post/updatePost(postId=${postMap.postId})}'|">
+						<i class="bi bi-pencil"></i> 수정
+					</button>
+					<button id="deletePostButton" class="btn btn-outline-secondary" th:onclick="|location.href='@{/foodhub/post/deletePost(postId=${postMap.postId})}'|">
+						<i class="bi bi-trash"></i> 삭제
+					</button>
+				</div>
 
-      // 댓글 좋아요 버튼 로직
-      function updateCommentLikeCount(button) {
-        const likeCountSpan = button.nextElementSibling;
-        let likeCount = parseInt(likeCountSpan.textContent);
-        likeCount++;
-        likeCountSpan.textContent = likeCount;
-      }
+				<!-- 댓글 섹션 -->
+				<section id="comments" class="comments section">
+				    <h3>댓글</h3>
+				
+				    <!-- 댓글 입력 폼 -->
+				    <div class="comment-box">
+				        <form id="commentForm">
+				            <textarea name="content" id="commentContent" class="form-control" rows="3" placeholder="댓글을 입력하세요..."></textarea>
+				            <input type="hidden" id="postId" th:value="${postMap.postId}">
+				            <input type="hidden" id="userId" th:value="${session.userId}">
+				            <button type="submit" class="btn btn-primary mt-2">댓글 등록</button>
+				        </form>
+				    </div>
+				
+				    <!-- 댓글 목록 -->
+				    <div id="commentList">
+				        <!-- 서버에서 가져온 댓글 동적 렌더링 -->
+				    </div>
+				</section>
 
-      // 댓글 신고 버튼 로직
-      function reportComment(button) {
-        alert("댓글이 신고되었습니다.");
-      }
+            </div>
+      </main>
 
-      // 신고 버튼 로직
-      const reportButton = document.getElementById('reportButton');
-      reportButton.addEventListener('click', () => {
-        alert("게시글이 신고되었습니다.");
-      });
-
-      // 페이지 로드 시 조회수 및 추천수 업데이트
-      document.addEventListener('DOMContentLoaded', () => {
-        updateViewCount();
-        updateLikeCount();
-      });
-
-      // 댓글 작성 로직
-      const commentForm = document.getElementById('commentForm');
-      commentForm.addEventListener('submit', (event) => {
-        event.preventDefault();
-        const commentContent = document.getElementById('commentContent').value;
-        if (commentContent.trim() !== '') {
-          alert("댓글이 등록되었습니다.");
-          document.getElementById('commentContent').value = '';
-        }
-      });
-    </script>
-		</main>
-
-	</div>
+   </div>
 
 </body>
-
 </html>
