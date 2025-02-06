@@ -13,46 +13,55 @@ import org.springframework.stereotype.Service;
 @Service
 public class PostServiceImpl implements PostService {
 
-   @Autowired
-   private PostDAO postDAO;
-   
-   
-    @Override
-       public List<Map<String, Object>> getPostList(int pageSize, int offset) {
-           return postDAO.getPostList(pageSize, offset);
-       }
+	@Autowired
+	private PostDAO postDAO;
 
-   @Override
-   public long getAllPostCnt() {
-      return postDAO.getAllPostCnt();
-   }
+	@Override
+	public List<Map<String, Object>> getPostList(int pageSize, int offset) {
+		return postDAO.getPostList(pageSize, offset);
+	}
 
-   @Override
-   public long getPostCnt() {
-      return postDAO.getPostCnt();
-   }
+	@Override
+	public long getAllPostCnt() {
+		return postDAO.getAllPostCnt();
+	}
 
-   @Override
-   public Map<String, Object> getPostDetail(long postId, boolean isIncreaseReadCnt) {
-      
-      if (isIncreaseReadCnt) {
-         postDAO.updateReadCnt(postId); // 조회수 증가
-      }
-      return postDAO.getPostDetail(postId);
-   }
+	@Override
+	public long getPostCnt() {
+		return postDAO.getPostCnt();
+	}
 
-   @Override
-   public Long createPost(PostDTO postDTO) {
-      postDAO.createPost(postDTO);
-      return postDTO.getPostId();
-   }
+	@Override
+	public Map<String, Object> getPostDetail(long postId, boolean isIncreaseReadCnt) {
 
-      @Override
-      public List<Map<String, Object>> myPostList(String userId) {
-          return postDAO.myPostList(userId);
-      }
-   
+		if (isIncreaseReadCnt) {
+			postDAO.updateReadCnt(postId); // 조회수 증가
+		}
+		return postDAO.getPostDetail(postId);
+	}
+	
+	
 
-    
+	@Override
+	public Long createPost(PostDTO postDTO) {
+		postDAO.createPost(postDTO);
+		return postDTO.getPostId();
+	}
+
+	@Override
+	public List<Map<String, Object>> myPostList(String userId) {
+		return postDAO.myPostList(userId);
+	}
+
+	@Override
+	public void deletePost(long postId) {
+		postDAO.deletePost(postId);
+	}
+
+	@Override
+	public void updatePost(PostDTO postDTO) {
+		postDAO.updatePost(postDTO);
+		
+	}
 
 }

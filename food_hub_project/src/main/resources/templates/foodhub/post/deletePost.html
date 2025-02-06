@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{/foodhub/index/headerAndFooter.html}">
+<head>
+<meta charset="UTF-8">
+<title>게시글 삭제</title>
+<style>
+    .delete-page {
+      background-color: var(--background-color);
+      color: var(--default-color);
+      font-family: var(--default-font);
+    }
+
+    .delete-box {
+      max-width: 400px;
+      width: 100%;
+      margin: 15px auto;
+      padding: 30px;
+      border-radius: 8px;
+      background-color: var(--surface-color);
+      box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .delete-box h3 {
+      font-size: 24px;
+      font-family: var(--heading-font);
+      color: var(--heading-color);
+      margin-bottom: 15px;
+    }
+
+    .delete-box p {
+      font-size: 16px;
+      margin-bottom: 20px;
+      color: red;
+    }
+
+    .delete-box .btn {
+      font-size: 16px;
+      padding: 10px 20px;
+      border-radius: 4px;
+      transition: 0.3s;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    .btn-delete {
+      background-color: var(--accent-color);
+      border-color: var(--accent-color);
+      color: white;
+    }
+
+    .btn-delete:hover {
+      background-color: color-mix(in srgb, var(--accent-color), transparent 20%);
+      border-color: color-mix(in srgb, var(--accent-color), transparent 20%);
+    }
+
+    .btn-cancel {
+      background-color: #6c757d;
+      border-color: #6c757d;
+      color: white;
+    }
+
+    .btn-cancel:hover {
+      background-color: #5a6268;
+      border-color: #545b62;
+    }
+</style>
+
+</head>
+<body>
+
+<div layout:fragment="content">
+    <main class="d-flex align-items-center justify-content-center" style="min-height: 70vh;">
+        <div class="delete-box">
+            <h3>게시글 삭제</h3>
+            <p>삭제된 게시글은 다시는 복구할 수 없습니다.<br>정말 삭제하시겠습니까?</p>
+            <form th:action="@{/foodhub/post/deletePost}" method="post">
+                <input type="hidden" name="postId" th:value="${postId}">                
+                <th:block th:if="${sessionNickname == postMap.nickname}">
+				    <th:block th:if="${sessionNickname == postMap.nickname}">
+					    <button id="deletePostButton" class="btn btn-outline-secondary"
+					        th:onclick="|location.href='@{/foodhub/post/deletePost(postId=${postMap.postId})}'|">
+					        <i class="bi bi-trash"></i> 삭제
+					    </button>
+					</th:block>
+				</th:block>
+            </form>
+            <button type="button" class="btn btn-cancel" th:onclick="|location.href='@{/foodhub/post/postDetail(postId=${postId})}'|">취소</button>
+        </div>
+    </main>
+</div>
+
+</body>
+</html>

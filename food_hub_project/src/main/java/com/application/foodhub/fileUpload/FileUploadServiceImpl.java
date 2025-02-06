@@ -38,8 +38,14 @@ public class FileUploadServiceImpl implements FileUploadService {
 
 
 	@Override
-	public List<FileUploadDTO> getFilesByPostId(Long postId) {
+	public List<FileUploadDTO> getFileListByPostId(Long postId) {
+		return fileUploadDAO.getFileListByPostId(postId);
+	}
+
+
+	@Override
+	public FileUploadDTO getFileByUUID(String fileUUID) {
 		
-		return fileUploadDAO.findFilesByPostId(postId);
+		return fileUploadDAO.getFileByUUID(fileUUID);
 	}
 }

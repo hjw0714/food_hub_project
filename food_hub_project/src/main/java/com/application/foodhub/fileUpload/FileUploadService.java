@@ -6,8 +6,11 @@ import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface FileUploadService {
+	
 	public void uploadFile(MultipartFile uploadFile , FileUploadDTO fileUploadDTO) throws IllegalStateException, IOException;
 	
-	public List<FileUploadDTO> getFilesByPostId(Long postId);
+	public List<FileUploadDTO> getFileListByPostId(Long postId);
+	
+	public FileUploadDTO getFileByUUID(String fileUUID); //  파일 UUID로 정보 조회
 	
 }

@@ -12,6 +12,9 @@ public interface FileUploadDAO {
 
 	public void updateFileUpload(FileUploadDTO fileUploadDTO);
 
-	public List<FileUploadDTO> findFilesByPostId(Long postId);
+	public List<FileUploadDTO> getFileListByPostId(Long postId);
+	
+	FileUploadDTO getFileByUUID(String fileUUID); //  파일 UUID로 정보 조회
+	
 	
 }

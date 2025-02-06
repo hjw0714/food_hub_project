@@ -41,46 +41,71 @@
 .post-navigation a {
 	margin: 0 5px;
 }
+
+.pagination {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-top: 20px;
+}
+.pagination a {
+	padding: 8px 12px;
+	margin: 0 5px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	text-decoration: none;
+	color: #333;
+}
+.pagination a.active {
+	background-color: #007bff;
+	color: white;
+	border: 1px solid #007bff;
+}
+.pagination a:hover {
+	background-color: #ddd;
+}
 </style>
 </head>
 
 <body class="board-page">
 
 	<div layout:fragment="content">
-
 		<main class="main">
-
 			<section id="board" class="board section">
 				<div class="container">
 					<div class="board-header mb-4">
 						<h2 class="mb-3">통합 게시판</h2>
 						<p>모든 사용자가 자유롭게 글을 작성하고 댓글을 달 수 있는 공간입니다.</p>
-						<a th:href="@{/foodhub/post/createPost}"
-							class="btn btn-primary mb-4">새 글 작성</a>
+						<a th:href="@{/foodhub/post/createPost}" class="btn btn-primary mb-4">새 글 작성</a>
 					</div>
 
 					<div class="board-list">
 						<div class="list-group" th:each="post : ${postListMap}">
-							<a th:href="@{/foodhub/post/{postId}(postId=${post['postId']})}"
+							<a th:href="@{/foodhub/post/postDetail(postId=${post.postId})}"
 								class="list-group-item list-group-item-action">
-								<h5 class="mb-1"
-									th:text="|[${post['subCateNm']}] ${post['title']}|"></h5> <small
-								class="text-muted"> <span
-									th:text="'작성자 : ' + ${post['nickname']}"></span> <span
-									th:text="'|작성일 : ' + ${post['createdAt']}"></span> <span
-									th:text="'|조회수 : ' + ${post['viewCnt']}"></span> <span
-									th:text="'|추천수 : ' + ${post['likeCnt']}"></span>
-							</small>
+								<h5 class="mb-1" th:text="|[${post['subCateNm']}] ${post['title']}|"></h5>
+								<small class="text-muted">
+									<span th:text="'작성자 : ' + ${post['nickname']}"></span>
+									<span th:text="'| 작성일 : ' + ${post['createdAt']}"></span>
+									<span th:text="'| 조회수 : ' + ${post['viewCnt']}"></span>
+									<span th:text="'| 추천수 : ' + ${post['likeCnt']}"></span>
+								</small>
 							</a>
 						</div>
 					</div>
-					<div class="pagination">
-						<a th:href="@{/foodhub/post/allPostList(page=${page - 1})}"
-							th:if="${page > 1}">이전</a> <a
-							th:href="@{/foodhub/post/allPostList(page=${page + 1})}"
-							th:if="${page < maxPages}">다음</a>
-					</div>
 
+					<div class="pagination">
+						<a th:href="@{/foodhub/post/allPostList(page=1)}" th:if="${page > 1}">&laquo; 첫 페이지</a>
+						<a th:href="@{/foodhub/post/allPostList(page=${page - 1})}" th:if="${page > 1}">이전</a>
+
+						<th:block th:each="i : ${#numbers.sequence(1, maxPages)}">
+							<a th:href="@{/foodhub/post/allPostList(page=${i})}" th:text="${i}"
+							   th:classappend="${i == page} ? 'active' : ''"></a>
+						</th:block>
+
+						<a th:href="@{/foodhub/post/allPostList(page=${page + 1})}" th:if="${page < maxPages}">다음</a>
+						<a th:href="@{/foodhub/post/allPostList(page=${maxPages})}" th:if="${page < maxPages}">마지막 페이지 &raquo;</a>
+					</div>
 				</div>
 			</section>
 		</main>
