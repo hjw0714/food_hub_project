@@ -21,13 +21,16 @@ public interface PostDAO {
 
    public void updateReadCnt(long postId);
 
-
    public List<Map<String, Object>> myPostList(String userId);
    
    public void deletePost(long postId);
    
    public void updatePost(PostDTO postDTO);
-
    
+   public void deleteFileByUUID(String fileUUID); // 파일 UUID로 파일 삭제
+   
+   // 게시글 상세보기에서 이전글 다음글 postId 가져오기
+   public Long getPrevPostId(@Param("postId") long postId, @Param("categoryId") long categoryId);
+   public Long getNextPostId(@Param("postId") long postId, @Param("categoryId") long categoryId);
    
 }

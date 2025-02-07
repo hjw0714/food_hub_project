@@ -24,6 +24,8 @@ public interface PostService {
    
    public void updatePost(PostDTO postDTO);
    
-
-
+   // 게시글 상세보기에서 이전글 다음글 postId 가져오기
+   public Long getPrevPostId(long postId, long categoryId);
+   public Long getNextPostId(long postId, long categoryId);
+   
 }

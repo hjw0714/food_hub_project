@@ -60,8 +60,18 @@ public class PostServiceImpl implements PostService {
 
 	@Override
 	public void updatePost(PostDTO postDTO) {
-		postDAO.updatePost(postDTO);
-		
+		postDAO.updatePost(postDTO);		
 	}
+
+	@Override
+	public Long getPrevPostId(long postId, long categoryId) {
+		return postDAO.getPrevPostId(postId, categoryId);
+	}
+
+	@Override
+	public Long getNextPostId(long postId, long categoryId) {
+		return postDAO.getNextPostId(postId, categoryId);
+	}
+
 
 }

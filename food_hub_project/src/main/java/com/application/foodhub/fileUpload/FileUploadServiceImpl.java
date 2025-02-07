@@ -48,4 +48,11 @@ public class FileUploadServiceImpl implements FileUploadService {
 		
 		return fileUploadDAO.getFileByUUID(fileUUID);
 	}
+
+
+	@Override
+	public void deleteFileByUUID(String fileUUID) {
+		
+		fileUploadDAO.deleteFileByUUID(fileUUID);
+	}
 }

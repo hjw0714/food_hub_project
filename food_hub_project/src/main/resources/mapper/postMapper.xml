@@ -206,5 +206,28 @@
 	        UPDATED_AT = NOW()
 	    WHERE POST_ID = #{postId}
 	</update>
+	
+	<!-- 이전글 다음글을 눌렀을때 카테고리 아이디가 같은 경우의 postId 가져오기 -->
+	<select id="getPrevPostId" resultType="long">
+		<![CDATA[
+	 	SELECT 		POST_ID
+     	FROM 		POST
+	    WHERE 		POST_ID  <  #{postId} 
+      	AND 		CATEGORY_ID = #{categoryId}
+      	ORDER BY 	POST_ID DESC
+	    LIMIT 1
+	    ]]>
+	</select>
+	
+	<select id="getNextPostId" resultType="long">
+		<![CDATA[
+	    SELECT 		POST_ID
+	    FROM 		POST
+	    WHERE 		POST_ID > #{postId} 
+      	AND 		CATEGORY_ID = #{categoryId}  
+	    ORDER BY 	POST_ID ASC
+	    LIMIT 1
+	    ]]>	    
+	</select>
 
 </mapper>

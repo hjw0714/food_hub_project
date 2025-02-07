@@ -246,14 +246,16 @@
     
     $(document).ready(function () {
         let postId = $("#postId").val();
-
+        let userId = $("#userId").val();
+        
         // ✅ 부모 댓글 먼저 로드
-         function loadComments() {
+        function loadComments() {
             $.ajax({
                 url: "/comments/post/" + postId + "/parents",
                 type: "GET",
                 dataType: "json",
                 success: function (parentComments) {
+                    console.log("서버에서 받은 부모 댓글 데이터:", parentComments);
                     $("#commentList").empty(); // 기존 댓글 목록 초기화
 
                     parentComments.forEach(comment => {
@@ -269,43 +271,44 @@
                 }
             });
         }
-         function loadChildComments(parentId) {
-             $.ajax({
-                 url: "/comments/parent/" + parentId,
-                 type: "GET",
-                 dataType: "json",
-                 success: function (childComments) {
-                     childComments.forEach(reply => {
-                         let replyHtml = createReplyHtml(reply);
+        
+        function loadChildComments(parentId) {
+            $.ajax({
+                url: "/comments/parent/" + parentId,
+                type: "GET",
+                dataType: "json",
+                success: function (childComments) {
+                    console.log("서버에서 받은 대댓글 데이터:", childComments);
+                    childComments.forEach(reply => {
+                        let replyHtml = createReplyHtml(reply);
+                        $(`.comment-box[data-id='${reply.parentId}'] .reply-box`).append(replyHtml);
+                    });
+                }
+            });
+        }
 
-                         // ✅ 부모 댓글의 `.reply-box` 내부에 대댓글 추가
-                         $(`.comment-box[data-id='${reply.parentId}'] .reply-box`).append(replyHtml);
-                     });
-                 }
-             });
-         }
-
-        // 댓글 HTML 생성 함수
-      function createCommentHtml(comment) {
+     // 댓글 HTML 생성 함수
+        function createCommentHtml(comment) {
             let profileImgSrc = comment.profileUUID 
                 ? `/foodhub/user/thumbnails?fileName=${comment.profileUUID}`
                 : "/default-profile.png";
 
-            let currentUserId = $("#userId").val(); // 현재 로그인한 사용자 ID
+            let currentUserId = $("#userId").val();
+            let displayName = `${comment.nickname}(${comment.userId})`; // ✅ 닉네임(userId) 형식으로 표시
 
             let editButtonHtml = comment.userId === currentUserId 
                 ? `<a href="javascript:void(0);" class="btn btn-outline-secondary btn-sm edit-btn" data-id="${comment.commentId}">수정</a>`
-                : ''; // 본인만 수정 가능
+                : '';
 
             let deleteButtonHtml = comment.userId === currentUserId 
                 ? `<a href="javascript:void(0);" class="btn btn-outline-danger btn-sm delete-btn" data-id="${comment.commentId}">삭제</a>`
-                : ''; // 본인만 삭제 가능
+                : '';
 
             return `
                 <div class="comment-box" data-id="${comment.commentId}">
                     <div class="comment-header">
                         <img class="profile-img" src="${profileImgSrc}" alt="프로필">
-                        <span>${comment.userId}</span>
+                        <span>${displayName}</span>
                         <span class="text-muted">${comment.createdAt}</span>
                     </div>
                     <p class="comment-content">${comment.content}</p>
@@ -319,13 +322,14 @@
             `;
         }
 
-    // 대댓글 작성
-     function createReplyHtml(reply) {
+        // 대댓글 HTML 생성 함수
+        function createReplyHtml(reply) {
             let profileImgSrc = reply.profileUUID 
                 ? `/foodhub/user/thumbnails?fileName=${reply.profileUUID}`
                 : "/default-profile.png";
 
             let currentUserId = $("#userId").val();
+            let displayName = `${reply.nickname}(${reply.userId})`; // ✅ 닉네임(userId) 형식으로 표시
 
             let editButtonHtml = reply.userId === currentUserId 
                 ? `<a href="javascript:void(0);" class="btn btn-outline-secondary btn-sm edit-btn" data-id="${reply.commentId}">수정</a>`
@@ -339,7 +343,7 @@
                 <div class="reply-comment-box comment-box" data-id="${reply.commentId}">
                     <div class="comment-header">
                         <img class="profile-img" src="${profileImgSrc}" alt="프로필">
-                        <span>${reply.userId}</span>
+                        <span>${displayName}</span>
                         <span class="text-muted">${reply.createdAt}</span>
                     </div>
                     <p class="comment-content">${reply.content}</p>
@@ -352,59 +356,61 @@
         }
 
 
-
-
-        // 댓글 등록
-      // 댓글 등록 (alert 제거 후 UI 즉시 업데이트)
-    $("#commentForm").submit(function (event) {
-        event.preventDefault();
-        let content = $("#commentContent").val();
-        let postId = $("#postId").val();
-        let userId = $("#userId").val();
-
-        if (!content.trim()) return;
-
-        $.ajax({
-            url: "/comments/add",
-            type: "POST",
-            data: {
-                postId: postId,
-                userId: userId,
-                content: content
-            },
-            success: function (response) {
-                $("#commentContent").val(""); // 입력창 초기화
-                let newCommentHtml = createCommentHtml(response); // 새 댓글 생성
-                $("#commentList").prepend(newCommentHtml); // 댓글 목록의 맨 위에 추가
+        // ✅ 로그인 여부 확인 후 댓글 등록 처리
+        $("#commentForm").submit(function (event) {
+            event.preventDefault();
+            if (!userId) {
+                alert("로그인이 필요합니다. 로그인 페이지로 이동합니다.");
+                window.location.href = "/foodhub/user/login"; // 로그인 페이지 URL
+                return;
             }
+
+            let content = $("#commentContent").val();
+            if (!content.trim()) return;
+
+            $.ajax({
+                url: "/comments/add",
+                type: "POST",
+                data: {
+                    postId: postId,
+                    userId: userId,
+                    content: content
+                },
+                success: function (response) {
+                    $("#commentContent").val(""); // 입력창 초기화
+                    let newCommentHtml = createCommentHtml(response);
+                    $("#commentList").prepend(newCommentHtml);
+                }
+            });
         });
-    });
 
-        // 대댓글 작성
-      // 대댓글 입력창 추가 (기존 대댓글을 유지)
-    $(document).on("click", ".reply-btn", function () {
-        let parentId = $(this).data("id");
-        let commentBox = $(this).closest(".comment-box"); // 현재 댓글의 부모 요소 가져오기
-        let replyBox = commentBox.find(".reply-box"); // 해당 댓글의 대댓글 영역
 
-        // 이미 대댓글 입력창이 있다면 제거
-        if (replyBox.find(".reply-form").length > 0) {
-            replyBox.find(".reply-form").remove();
-            return;
-        }
+     // ✅ 로그인 여부 확인 후 답글 입력창 추가
+        $(document).on("click", ".reply-btn", function () {
+            if (!userId) {
+                alert("로그인이 필요합니다. 로그인 페이지로 이동합니다.");
+                window.location.href = "/foodhub/user/login";
+                return;
+            }
 
-        // 대댓글 입력창 추가 (기존 대댓글 유지)
-        let replyFormHtml = `
-            <div class="reply-form">
-                <textarea class="form-control reply-content" rows="2" placeholder="답글을 입력하세요..."></textarea>
-                <button class="btn btn-sm btn-primary submit-reply" data-id="${parentId}">등록</button>
-                <button class="btn btn-sm btn-secondary cancel-reply">취소</button>
-            </div>
-        `;
+            let parentId = $(this).data("id");
+            let commentBox = $(this).closest(".comment-box");
+            let replyBox = commentBox.find(".reply-box");
 
-        replyBox.append(replyFormHtml); // ✅ 기존 대댓글을 유지하면서 입력창 추가
-    });
+            if (replyBox.find(".reply-form").length > 0) {
+                replyBox.find(".reply-form").remove();
+                return;
+            }
 
+            let replyFormHtml = `
+                <div class="reply-form">
+                    <textarea class="form-control reply-content" rows="2" placeholder="답글을 입력하세요..."></textarea>
+                    <button class="btn btn-sm btn-primary submit-reply" data-id="${parentId}">등록</button>
+                    <button class="btn btn-sm btn-secondary cancel-reply">취소</button>
+                </div>
+            `;
+            replyBox.append(replyFormHtml);
+        });
 
 
 
@@ -434,11 +440,25 @@
             }
         });
     });
-
+ // ✅ 답글 취소 버튼 작동 안 하는 문제 해결
+    $(document).on("click", ".cancel-reply", function () {
+        $(this).closest(".reply-form").remove(); // ✅ 해당 입력창만 삭제
+    });
+ 
     $(document).on("click", ".edit-btn", function () {
         let commentBox = $(this).closest(".comment-box");
+        let commentContent = commentBox.children(".comment-content");
         let commentId = $(this).data("id");
-        let originalContent = commentBox.find(".comment-content").text();
+
+        // ✅ 중복 생성 방지
+        if (commentBox.find(".edit-form").length > 0) {
+            return;
+        }
+
+        let originalContent = commentContent.text();
+
+        // ✅ 원래 내용을 data 속성에 저장 (취소할 때 복원하기 위해)
+        commentBox.data("originalContent", originalContent);
 
         let editForm = `
             <div class="edit-form">
@@ -447,13 +467,17 @@
                 <button class="btn btn-sm btn-secondary cancel-edit">취소</button>
             </div>
         `;
-        commentBox.find(".comment-content").replaceWith(editForm);
+
+        // ✅ 기존 댓글 내용을 숨기고 textarea 삽입
+        commentContent.hide();
+        commentContent.after(editForm);
     });
 
+ // ✅ 1번, 2번 버그 해결: 저장 버튼 클릭 이벤트
     $(document).on("click", ".save-edit", function () {
         let commentId = $(this).data("id");
         let newContent = $(this).siblings(".edit-content").val();
-        let userId = $("#userId").val(); // 현재 로그인한 사용자 ID 추가
+        let userId = $("#userId").val();
 
         $.ajax({
             url: "/comments/update",
@@ -461,7 +485,7 @@
             data: { 
                 commentId: commentId, 
                 content: newContent,
-                userId: userId // ✅ userId 추가
+                userId: userId
             },
             success: function (response) {
                 alert(response); // 수정 성공 메시지 표시
@@ -469,17 +493,20 @@
             },
             error: function (xhr, status, error) {
                 console.error("댓글 수정 오류:", error);
-                alert("댓글 수정에 실패했습니다."); // 오류 메시지 표시
+                alert("댓글 수정에 실패했습니다.");
             }
         });
     });
 
-    $().on("click", ".cancel-edit", function () {
-        loadComments();
-    });
+ // ✅ 수정 취소 버튼 클릭 이벤트 (댓글이 사라지지 않도록 복원)
+    $(document).on("click", ".cancel-edit", function () {
+        let commentBox = $(this).closest(".comment-box");
 
-    $(document).on("click", ".cancel-reply", function () {
-        $(this).closest(".reply-form").remove(); // ✅ 입력창만 제거
+        // ✅ textarea 제거
+        commentBox.find(".edit-form").remove();
+
+        // ✅ 숨겨져 있던 원래 댓글 내용 다시 표시
+        commentBox.children(".comment-content").show();
     });
 
     //✅ 댓글 삭제 버튼 클릭 이벤트
@@ -521,7 +548,7 @@
 			<div class="container">
 				<!-- 게시글 제목 -->
 				<div class="post-header mb-4">
-				    <h2 class="mb-3" th:text="${postMap.title}"></h2>
+				    <h2 class="mb-3" th:text="|[${postMap['subCateNm']}] ${postMap['title']}|"></h2>
 
 				    <!-- 작성자 정보 박스 -->
 				    <div class="post-meta">
@@ -599,8 +626,26 @@
 				    <div id="commentList">
 				        <!-- 서버에서 가져온 댓글 동적 렌더링 -->
 				    </div>
+				    
+				    
 				</section>
-
+				
+				<!-- 이전 글, 전체 게시판, 다음 글 버튼 -->
+				<div class="d-flex justify-content-center gap-2 mt-4">
+				    <a th:if="${prevPostId != null}" th:href="@{/foodhub/post/postDetail(postId=${prevPostId}, categoryId=${categoryId})}" 
+				       class="btn btn-outline-secondary">
+				        <i class="bi bi-arrow-left"></i> 이전 글
+				    </a>
+				
+				    <a th:href="@{/foodhub/post/postList(categoryId=${categoryId})}" class="btn btn-outline-primary">
+				        <i class="bi bi-list"></i> 전체 게시판
+				    </a>
+				
+				    <a th:if="${nextPostId != null}" th:href="@{/foodhub/post/postDetail(postId=${nextPostId}, categoryId=${categoryId})}" 
+				       class="btn btn-outline-secondary">
+				        다음 글 <i class="bi bi-arrow-right"></i>
+				    </a>
+				</div>
             </div>
       </main>
 
