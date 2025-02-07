@@ -255,7 +255,9 @@
 		        <li th:each="post, postList : ${myPostList}">
 		            <div style="display: flex; align-items: center;">
 		                <span th:text="${(currentPostPage - 1) * 5 + postList.count} + '.'" style="margin-right: 8px;"></span>
-		                <a th:href="@{/foodhub/post/postDetail(postId=${post.postId})}" th:text="${post.title}"></a>
+		                <a th:href="@{/foodhub/post/postDetail(postId=${post.postId})}" 
+		               		th:text="${#strings.length(post.title) > 30 ? #strings.substring(post.title, 0, 30) + '...' : post.title}">
+	               		</a>
 		            </div>
 		        </li>
 		    </ul>

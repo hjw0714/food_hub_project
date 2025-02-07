@@ -16,7 +16,7 @@
   --bs-green: #198754;
   --bs-teal: #20c997;
   --bs-cyan: #0dcaf0;
-  --bs-black: #000;
+  --bs-black: #000; 
   --bs-white: #fff;
   --bs-gray: #6c757d;
   --bs-gray-dark: #343a40;
@@ -3088,20 +3088,21 @@ textarea.form-control-lg {
 }
 
 .btn-success {
-  --bs-btn-color: #fff;
-  --bs-btn-bg: #198754;
-  --bs-btn-border-color: #198754;
-  --bs-btn-hover-color: #fff;
-  --bs-btn-hover-bg: #157347;
-  --bs-btn-hover-border-color: #146c43;
-  --bs-btn-focus-shadow-rgb: 60, 153, 110;
-  --bs-btn-active-color: #fff;
-  --bs-btn-active-bg: #146c43;
-  --bs-btn-active-border-color: #13653f;
+  --bs-btn-color: rgb(255, 0, 128); /* 기본 글씨 색상을 회색(#6c757d)으로 변경 */
+  --bs-btn-bg: transparent; /* 배경색을 투명하게 설정 */
+  --bs-btn-border-color: #198754; /* 테두리 색상만 초록색(#198754) */
+  --bs-btn-hover-color: #fff; /* 호버 시 글씨 색상을 흰색 */
+  --bs-btn-hover-bg: #198754; /* 호버 시 배경 초록색 */
+  --bs-btn-hover-border-color: #198754; /* 호버 시 테두리 초록색 */
+  --bs-btn-focus-shadow-rgb: 25, 135, 84; /* 포커스 시 초록빛 */
+  --bs-btn-active-color: #fff; /* 클릭 시 글씨 흰색 */
+  --bs-btn-active-bg: #198754; /* 클릭 시 배경 초록색 */
+  --bs-btn-active-border-color: #198754; /* 클릭 시 테두리 초록 */
   --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-  --bs-btn-disabled-color: #fff;
-  --bs-btn-disabled-bg: #198754;
-  --bs-btn-disabled-border-color: #198754;
+  --bs-btn-disabled-color: #6c757d; /* 비활성화 시 글씨 회색 */
+  --bs-btn-disabled-bg: transparent; /* 비활성화 시 배경 투명 */
+  --bs-btn-disabled-border-color: #198754; /* 비활성화 시 테두리 초록 */
+  --bs-gradient: none;
 }
 
 .btn-info {
@@ -3224,19 +3225,19 @@ textarea.form-control-lg {
 }
 
 .btn-outline-success {
-  --bs-btn-color: #198754;
-  --bs-btn-border-color: #198754;
-  --bs-btn-hover-color: #fff;
-  --bs-btn-hover-bg: #198754;
-  --bs-btn-hover-border-color: #198754;
+  --bs-btn-color: #6c757d; /* 글씨 색상 (기존 btn-outline-secondary와 동일) */
+  --bs-btn-border-color: #198754; /* 테두리 색상 초록 */
+  --bs-btn-hover-color: #fff; /* 호버 시 글씨 색상 흰색 */
+  --bs-btn-hover-bg: #198754; /* 호버 시 배경 초록 */
+  --bs-btn-hover-border-color: #198754; /* 호버 시 테두리 초록 */
   --bs-btn-focus-shadow-rgb: 25, 135, 84;
-  --bs-btn-active-color: #fff;
-  --bs-btn-active-bg: #198754;
-  --bs-btn-active-border-color: #198754;
+  --bs-btn-active-color: #fff; /* 클릭 시 글씨 색상 */
+  --bs-btn-active-bg: #198754; /* 클릭 시 배경 초록 */
+  --bs-btn-active-border-color: #198754; /* 클릭 시 테두리 초록 */
   --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-  --bs-btn-disabled-color: #198754;
-  --bs-btn-disabled-bg: transparent;
-  --bs-btn-disabled-border-color: #198754;
+  --bs-btn-disabled-color: #6c757d; /* 비활성화 시 글씨 색상 */
+  --bs-btn-disabled-bg: transparent; /* 비활성화 시 배경 투명 */
+  --bs-btn-disabled-border-color: #198754; /* 비활성화 시 테두리 초록 */
   --bs-gradient: none;
 }
 

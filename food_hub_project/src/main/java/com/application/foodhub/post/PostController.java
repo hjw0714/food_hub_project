@@ -2,6 +2,7 @@ package com.application.foodhub.post;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -40,63 +42,30 @@ public class PostController {
 	@Autowired
 	private CommentService commentService;
 
-	/*
-	 * @GetMapping("/FreeBoardPostList") // 자유 게시판 public String
-	 * FreeBoardPostList(Model model) { model.addAttribute("postCnt" ,
-	 * postService.getPostCnt()); model.addAttribute("postListMap" ,
-	 * postService.getPostList());
-	 * 
-	 * return "foodhub/post/FreeBoardPostList"; }
-	 * 
-	 * @GetMapping("/coopPostList") // 협력업체 게시판 public String coopPostList(Model
-	 * model) { model.addAttribute("postCnt" , postService.getPostCnt());
-	 * model.addAttribute("postListMap" , postService.getPostList());
-	 * 
-	 * return "foodhub/post/coopPostList"; }
-	 * 
-	 * 
-	 * @GetMapping("/informativePostList") // 외식업 정보 게시판 public String
-	 * informativePostList(Model model) { model.addAttribute("postCnt" ,
-	 * postService.getPostCnt()); model.addAttribute("postListMap" ,
-	 * postService.getPostList());
-	 * 
-	 * return "foodhub/post/informativePostList"; }
-	 * 
-	 * @GetMapping("/jobBoardPostList") // 구인구직 게시판 public String
-	 * jobBoardPostList(Model model) { model.addAttribute("postCnt" ,
-	 * postService.getPostCnt()); model.addAttribute("postListMap" ,
-	 * postService.getPostList());
-	 * 
-	 * return "foodhub/post/jobBoardPostList"; }
-	 * 
-	 * @GetMapping("/QnAPostList") // 질문 게시판 public String QnAPostList(Model model)
-	 * { model.addAttribute("postCnt" , postService.getPostCnt());
-	 * model.addAttribute("postListMap" , postService.getPostList());
-	 * 
-	 * return "foodhub/post/QnAPostList"; }
-	 * 
-	 * @GetMapping("/storePromoPostList") // 매장홍보 게시판 public String
-	 * storePromoPostList(Model model) { model.addAttribute("postCnt" ,
-	 * postService.getPostCnt()); model.addAttribute("postListMap" ,
-	 * postService.getPostList());
-	 * 
-	 * return "foodhub/post/storePromoPostList"; }
-	 * 
-	 * @GetMapping("/salePostList") // 판매 게시판 public String salePostList(Model
-	 * model) { model.addAttribute("postCnt" , postService.getPostCnt());
-	 * model.addAttribute("postListMap" , postService.getPostList());
-	 * 
-	 * return "foodhub/post/salePostList"; }
+	@Autowired
+	   private PostLikeService postLikeService; 
+	/**
+	 * 통합 게시판 목록 조회
 	 */
-
 	@GetMapping("/allPostList")
 	public String allPostList(@RequestParam(name = "page", defaultValue = "1") int page, Model model) {
-		final int pageSize = 15; // 한 페이지에 보여줄 게시글 수
-		long totalPosts = postService.getPostCnt(); // 전체 게시글 수
-		int maxPages = (int) Math.ceil((double) totalPosts / pageSize); // 페이지 수 계산
-		int offset = (page - 1) * pageSize; // 페이징 오프셋 계산
+		final int pageSize = 15;
+		long totalPosts = postService.getPostCnt();
 
-		// 게시글 목록 가져오기
+		// 게시글이 없는 경우 최소한 1페이지는 유지
+		int maxPages = (int) Math.ceil((double) totalPosts / pageSize);
+		if (maxPages == 0) {
+			maxPages = 1;
+		}
+
+		// 0페이지 방지: page 값이 1보다 작으면 1로 설정
+		if (page < 1) {
+			page = 1;
+		} else if (page > maxPages) {
+			page = maxPages;
+		}
+
+		int offset = (page - 1) * pageSize;
 		List<Map<String, Object>> postList = postService.getPostList(pageSize, offset);
 
 		model.addAttribute("postListMap", postList);
@@ -107,21 +76,51 @@ public class PostController {
 		return "foodhub/post/allPostList";
 	}
 
+	@GetMapping("/category/{categoryId}")
+	public String categoryPostList(@PathVariable("categoryId") Long categoryId,
+			@RequestParam(name = "page", defaultValue = "1") int page, Model model) {
+		final int pageSize = 15;
+		long totalPosts = postService.getPostCntByCategory(categoryId);
+
+		// maxPages가 0이면 최소한 1페이지는 유지
+		int maxPages = (int) Math.ceil((double) totalPosts / pageSize);
+		if (maxPages == 0) {
+			maxPages = 1;
+		}
+
+		// 페이지 번호 검증 (0 이하인 경우 1로 설정)
+		if (page < 1) {
+			page = 1;
+		} else if (page > maxPages) {
+			page = maxPages;
+		}
+
+		int offset = (page - 1) * pageSize;
+		List<Map<String, Object>> postList = postService.getPostListByCategory(categoryId, pageSize, offset);
+		String categoryName = postService.getCategoryName(categoryId);
+
+		model.addAttribute("postListMap", postList);
+		model.addAttribute("categoryId", categoryId);
+		model.addAttribute("categoryName", categoryName);
+		model.addAttribute("page", page);
+		model.addAttribute("maxPages", maxPages);
+
+		return "foodhub/post/categoryPostList";
+	}
+
 	@GetMapping("/createPost")
 	public String createPost(HttpServletRequest request) {
-	    
-	    HttpSession session = request.getSession();
-	    String userId = (String) session.getAttribute("userId");
 
-	    // 로그인 상태가 아니라면 로그인 페이지로 리다이렉트
-	    if (userId == null) {
-	        return "redirect:/foodhub/user/login";  
-	    }
+		HttpSession session = request.getSession();
+		String userId = (String) session.getAttribute("userId");
 
-	    return "foodhub/post/createPost";  
+		// 로그인 상태가 아니라면 로그인 페이지로 리다이렉트
+		if (userId == null) {
+			return "redirect:/foodhub/user/login";
+		}
+
+		return "foodhub/post/createPost";
 	}
-	
-	
 
 	@PostMapping("/createPost")
 	@ResponseBody
@@ -163,42 +162,41 @@ public class PostController {
 	@GetMapping("/postDetail")
 	public String postDetail(Model model,
 			@RequestParam(value = "postId", required = false, defaultValue = "1") long postId) {
-		
-		 // 게시글 상세 정보 가져오기
-	    Map<String, Object> postMap = postService.getPostDetail(postId, true);
-	    model.addAttribute("postMap", postMap);
-	    
+
+		// 게시글 상세 정보 가져오기
+		Map<String, Object> postMap = postService.getPostDetail(postId, true);
+		model.addAttribute("postMap", postMap);
+
 		// 해당 게시글의 파일 목록 가져오기
 		List<FileUploadDTO> fileList = fileUploadService.getFileListByPostId(postId);
 		model.addAttribute("fileList", fileList);
-		
+
 		// 게시글의 카테고리 ID 가져오기
-	    Long categoryId = (long) postMap.get("categoryId");
-	    //System.out.println("카테고리 아이디 : " + categoryId);
-	    
+		Long categoryId = (long) postMap.get("categoryId");
+		// System.out.println("카테고리 아이디 : " + categoryId);
+
 		// 이전 글, 다음 글의 postId 가져오기
 		Long prevPostId = postService.getPrevPostId(postId, categoryId);
-	    Long nextPostId = postService.getNextPostId(postId, categoryId);
-	    model.addAttribute("prevPostId", prevPostId);
-	    model.addAttribute("nextPostId", nextPostId);
+		Long nextPostId = postService.getNextPostId(postId, categoryId);
+		model.addAttribute("prevPostId", prevPostId);
+		model.addAttribute("nextPostId", nextPostId);
 
 		return "foodhub/post/postDetail";
 	}
-	
 
 	// 게시글 삭제
 	@GetMapping("/deletePost")
 	public String deletePost(Model model, @RequestParam("postId") long postId, HttpServletRequest request) {
-		
+
 		HttpSession session = request.getSession();
 
 		String sessionNickname = (String) session.getAttribute("nickname");
 
 		// 로그인 상태가 아니라면 로그인 페이지로 리다이렉트
-	    if (sessionNickname == null) {
-	        return "redirect:/foodhub/user/login";  
-	    }
-	    
+		if (sessionNickname == null) {
+			return "redirect:/foodhub/user/login";
+		}
+
 		model.addAttribute("postId", postId);
 		model.addAttribute("postMap", postService.getPostDetail(postId, false));
 		model.addAttribute("sessionNickname", sessionNickname);
@@ -232,7 +230,7 @@ public class PostController {
 		// 게시글 정보 가져오기
 		Map<String, Object> postMap = postService.getPostDetail(postId, false);
 		String postNickname = (String) postMap.get("nickname");
-		
+
 		// 현재 로그인한 사용자가 게시글 작성자가 아니라면 접근 차단
 		if (sessionNickname == null || !sessionNickname.equals(postNickname)) {
 			return "redirect:/foodhub/post/postDetail?postId=" + postId;
@@ -308,5 +306,30 @@ public class PostController {
 		}
 		return jsScript;
 	}
+	
+	@GetMapping("/notification")
+	public String notificationPage(Model model) {
+	    List<Map<String, Object>> postList = postService.getPostList(15, 0);
 
+	    if (postList == null) {
+	        postList = new ArrayList<>(); // 빈 리스트 반환
+	    }
+
+	    model.addAttribute("postListMap", postList);
+	    return "foodhub/post/notification";
+	}
+	
+	@PostMapping("/postLike")
+	   public String postLike(@RequestBody PostLikeDTO postLikeDTO) {
+	      
+	      long postId = postLikeDTO.getPostId();
+	      String userId = postLikeDTO.getUserId();
+	      
+	      postLikeService.togglePostLike(postId, userId);
+	      
+	      //System.out.println("postid : " + postId);
+	      //System.out.println("userId : " + userId);
+	      
+	      return "";
+	   }
 }
