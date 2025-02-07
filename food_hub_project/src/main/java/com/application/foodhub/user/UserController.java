@@ -2,6 +2,7 @@ package com.application.foodhub.user;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -118,6 +119,9 @@ public class UserController {
 	    // 로그인한 유저가 쓴 전체 게시글 가져오기
 	    List<Map<String, Object>> allPosts = postService.myPostList(userId);
 	    
+	    // 게시글을 역순으로 정렬
+	    Collections.reverse(allPosts);
+	    
 	    int totalPosts = allPosts.size();
 	    int totalPostPages = (int) Math.ceil((double) totalPosts / size);
 	    
@@ -128,6 +132,9 @@ public class UserController {
 	    
 	    // 로그인한 유저가 작성한 전체 댓글 가져오기
 	    List<Map<String, Object>> allComments = commentService.myCommentList(userId);
+	    
+	    //댓글을 역순으로 정렬
+	    Collections.reverse(allComments);
 	    
 	    int totalComments = allComments.size();
 	    int totalCommentPages = (int) Math.ceil((double) totalComments / size);
