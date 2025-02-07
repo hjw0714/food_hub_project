@@ -229,5 +229,21 @@
 	    LIMIT 1
 	    ]]>	    
 	</select>
+	
+	<select id="getPostListByCategory" resultMap="postMap">
+    	SELECT P.POST_ID, P.SUB_CATE_NM, P.TITLE, P.NICKNAME, P.CREATED_AT, P.VIEW_CNT
+    	FROM POST P
+    	WHERE P.CATEGORY_ID = #{categoryId}
+    	ORDER BY P.CREATED_AT DESC
+    	LIMIT #{pageSize} OFFSET #{offset}
+	</select>
+
+	<select id="getPostCntByCategory" resultType="long">
+    	SELECT COUNT(*) FROM POST WHERE CATEGORY_ID = #{categoryId}
+	</select>
+
+	<select id="getCategoryName" resultType="string">
+    	SELECT CATEGORY_NM FROM POST_CATEGORY WHERE CATEGORY_ID = #{categoryId}
+	</select>
 
 </mapper>

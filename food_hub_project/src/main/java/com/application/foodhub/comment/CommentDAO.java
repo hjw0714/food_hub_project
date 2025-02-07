@@ -24,4 +24,6 @@ public interface CommentDAO {
 	public CommentDTO getCommentById(Long commentId);
 
 	public List<Map<String, Object>> myCommentList(String userId);
+	
+	
 }
