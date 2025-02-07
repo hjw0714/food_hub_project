@@ -28,7 +28,8 @@ public class PostServiceImpl implements PostService {
 
 	@Override
 	public long getPostCnt() {
-		return postDAO.getPostCnt();
+		long count = postDAO.getPostCnt();
+		return Math.max(count, 0); // 0 미만이 되지 않도록 보장
 	}
 
 	@Override
@@ -39,8 +40,6 @@ public class PostServiceImpl implements PostService {
 		}
 		return postDAO.getPostDetail(postId);
 	}
-	
-	
 
 	@Override
 	public Long createPost(PostDTO postDTO) {
@@ -60,7 +59,7 @@ public class PostServiceImpl implements PostService {
 
 	@Override
 	public void updatePost(PostDTO postDTO) {
-		postDAO.updatePost(postDTO);		
+		postDAO.updatePost(postDTO);
 	}
 
 	@Override
@@ -73,5 +72,20 @@ public class PostServiceImpl implements PostService {
 		return postDAO.getNextPostId(postId, categoryId);
 	}
 
+	@Override
+	public List<Map<String, Object>> getPostListByCategory(Long categoryId, int pageSize, int offset) {
+		return postDAO.getPostListByCategory(categoryId, pageSize, offset);
+	}
+
+	@Override
+	public long getPostCntByCategory(Long categoryId) {
+		long count = postDAO.getPostCntByCategory(categoryId);
+		return Math.max(count, 0); // 0 미만이 되지 않도록 보장
+	}
+
+	@Override
+	public String getCategoryName(Long categoryId) {
+		return postDAO.getCategoryName(categoryId);
+	}
 
 }

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/foodhub/index/headerAndFooter.html}">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>카테고리별 게시판</title>
+    <style>
+        .no-posts {
+            text-align: center;
+            font-size: 18px;
+            color: #777;
+            margin: 20px 0;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+        .pagination a {
+            padding: 8px 12px;
+            margin: 0 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #333;
+        }
+        .pagination a.active {
+            background-color: #007bff;
+            color: white;
+            border: 1px solid #007bff;
+        }
+        .pagination a:hover {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+
+<body class="board-page">
+
+<div layout:fragment="content">
+    <main class="main">
+        <section id="board" class="board section">
+            <div class="container">
+                <div class="board-header mb-4">
+                    <h2 class="mb-3" th:text="${categoryName} + ' 게시판'"></h2>
+                    <p>해당 카테고리의 게시글을 확인하세요.</p>
+                    <a th:if="${session.userId != null}"
+                       th:href="@{/foodhub/post/createPost}" class="btn btn-primary mb-4">
+                        새 글 작성
+                    </a>
+                    <a th:if="${session.userId == null}"
+                       th:href="@{/foodhub/user/login}" class="btn btn-primary mb-4">
+                        새 글 작성
+                    </a>
+                </div>
+
+                <div class="board-list">
+                    <!-- 게시글이 존재하는 경우 -->
+                    <div class="list-group" th:if="${postListMap.size() > 0}" th:each="post : ${postListMap}">
+                        <a th:href="@{/foodhub/post/postDetail(postId=${post.postId})}"
+                           class="list-group-item list-group-item-action">
+                            <h5 class="mb-1" th:text="|[${post['subCateNm']}] ${post['title']}|"></h5>
+                            <small class="text-muted">
+                                <span th:text="'작성자 : ' + ${post['nickname']}"></span>
+                                <span th:text="'| 작성일 : ' + ${post['createdAt']}"></span>
+                                <span th:text="'| 조회수 : ' + ${post['viewCnt']}"></span>
+                            </small>
+                        </a>
+                    </div>
+
+                    <!-- 게시글이 없는 경우 -->
+                    <div class="no-posts" th:if="${postListMap.size() == 0}">
+                        작성된 게시글이 없습니다.
+                    </div>
+                </div>
+
+                <div class="pagination" th:if="${maxPages > 1}">
+    <a th:href="@{/foodhub/post/category/{categoryId}(categoryId=${categoryId}, page=1)}" th:if="${page > 1}">&laquo; 첫 페이지</a>
+    <a th:href="@{/foodhub/post/category/{categoryId}(categoryId=${categoryId}, page=${page - 1})}" th:if="${page > 1}">이전</a>
+
+    <th:block th:each="i : ${#numbers.sequence(1, maxPages)}">
+        <a th:href="@{/foodhub/post/category/{categoryId}(categoryId=${categoryId}, page=${i})}" th:text="${i}"
+           th:classappend="${i == page} ? 'active' : ''"></a>
+    </th:block>
+
+    <a th:href="@{/foodhub/post/category/{categoryId}(categoryId=${categoryId}, page=${page + 1})}" th:if="${page < maxPages}">다음</a>
+    <a th:href="@{/foodhub/post/category/{categoryId}(categoryId=${categoryId}, page=${maxPages})}" th:if="${page < maxPages}">마지막 페이지 &raquo;</a>
+</div>
+            </div>
+        </section>
+    </main>
+</div>
+</body>
+
+</html>
