@@ -13,4 +13,6 @@ public interface FileUploadService {
 	
 	public FileUploadDTO getFileByUUID(String fileUUID); //  파일 UUID로 정보 조회
 	
+	public void deleteFileByUUID(String fileUUID); // 파일 UUID로 파일 삭제
+	
 }

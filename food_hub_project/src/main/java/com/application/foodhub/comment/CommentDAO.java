@@ -7,20 +7,21 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface CommentDAO {
-	List<CommentDTO> getCommentsByPostId(Long postId);
-    
-	List<CommentDTO> getParentComments(Long postId);
-    
-	List<CommentDTO> getChildComments(Long parentId);
+	public List<CommentDTO> getCommentsByPostId(Long postId);
 
-    void insertComment(Map<String, Object> params);
+	public List<CommentDTO> getParentComments(Long postId);
 
-    void updateComment(Map<String, Object> params);
+	public List<CommentDTO> getChildComments(Long parentId);
 
-    void deleteComment(Long commentId);
-    
+	public void insertComment(Map<String, Object> params);
 
-	CommentDTO getLastInsertedComment(Map<String, Object> params);
+	public void updateComment(Map<String, Object> params);
 
-	CommentDTO getCommentById(Long commentId);
+	public void deleteComment(Long commentId);
+
+	public CommentDTO getLastInsertedComment(Map<String, Object> params);
+
+	public CommentDTO getCommentById(Long commentId);
+
+	public List<Map<String, Object>> myCommentList(String userId);
 }

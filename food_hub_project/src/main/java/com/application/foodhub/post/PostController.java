@@ -88,7 +88,7 @@ public class PostController {
 	 * 
 	 * return "foodhub/post/salePostList"; }
 	 */
-	
+
 	@GetMapping("/allPostList")
 	public String allPostList(@RequestParam(name = "page", defaultValue = "1") int page, Model model) {
 		final int pageSize = 15; // 한 페이지에 보여줄 게시글 수
@@ -107,10 +107,21 @@ public class PostController {
 		return "foodhub/post/allPostList";
 	}
 
-	@GetMapping("/createPost") // 게시글 작성
-	public String createPost() {
-		return "foodhub/post/createPost";
+	@GetMapping("/createPost")
+	public String createPost(HttpServletRequest request) {
+	    
+	    HttpSession session = request.getSession();
+	    String userId = (String) session.getAttribute("userId");
+
+	    // 로그인 상태가 아니라면 로그인 페이지로 리다이렉트
+	    if (userId == null) {
+	        return "redirect:/foodhub/user/login";  
+	    }
+
+	    return "foodhub/post/createPost";  
 	}
+	
+	
 
 	@PostMapping("/createPost")
 	@ResponseBody
@@ -146,65 +157,89 @@ public class PostController {
 		return jsScript;
 	}
 
-
 	/**
 	 * 게시글 상세보기
 	 */
 	@GetMapping("/postDetail")
 	public String postDetail(Model model,
-	                         @RequestParam(value = "postId", required = false, defaultValue = "1") long postId) {
-	    // 게시글 상세 정보 가져오기
-	    model.addAttribute("postMap", postService.getPostDetail(postId, true));
+			@RequestParam(value = "postId", required = false, defaultValue = "1") long postId) {
+		
+		 // 게시글 상세 정보 가져오기
+	    Map<String, Object> postMap = postService.getPostDetail(postId, true);
+	    model.addAttribute("postMap", postMap);
+	    
+		// 해당 게시글의 파일 목록 가져오기
+		List<FileUploadDTO> fileList = fileUploadService.getFileListByPostId(postId);
+		model.addAttribute("fileList", fileList);
+		
+		// 게시글의 카테고리 ID 가져오기
+	    Long categoryId = (long) postMap.get("categoryId");
+	    //System.out.println("카테고리 아이디 : " + categoryId);
+	    
+		// 이전 글, 다음 글의 postId 가져오기
+		Long prevPostId = postService.getPrevPostId(postId, categoryId);
+	    Long nextPostId = postService.getNextPostId(postId, categoryId);
+	    model.addAttribute("prevPostId", prevPostId);
+	    model.addAttribute("nextPostId", nextPostId);
 
-	    // 해당 게시글의 파일 목록 가져오기
-	    List<FileUploadDTO> fileList = fileUploadService.getFileListByPostId(postId);
-	    model.addAttribute("fileList", fileList);
-
-	    return "foodhub/post/postDetail";
+		return "foodhub/post/postDetail";
 	}
 	
-	//게시글 삭제
+
+	// 게시글 삭제
 	@GetMapping("/deletePost")
 	public String deletePost(Model model, @RequestParam("postId") long postId, HttpServletRequest request) {
+		
 		HttpSession session = request.getSession();
-		
+
 		String sessionNickname = (String) session.getAttribute("nickname");
-		
+
+		// 로그인 상태가 아니라면 로그인 페이지로 리다이렉트
+	    if (sessionNickname == null) {
+	        return "redirect:/foodhub/user/login";  
+	    }
+	    
 		model.addAttribute("postId", postId);
-		model.addAttribute("postMap" , postService.getPostDetail(postId, false));
+		model.addAttribute("postMap", postService.getPostDetail(postId, false));
 		model.addAttribute("sessionNickname", sessionNickname);
-		
-		return "foodhub/post/deletePost";
+
+		return "redirect:/foodhub/post/deletePost";
 	}
 
-	
 	@PostMapping("/deletePost")
 	@ResponseBody
 	public String deletePost(@RequestParam("postId") long postId) {
 		postService.deletePost(postId);
-		
+
 		String jsScript = """
 				<script>
 					alert('게시글이 삭제 되었습니다.');
 					location.href='/foodhub';
 				</script>
-				
+
 				""";
-		
+
 		return jsScript;
 	}
-	
+
 	// 게시글 수정
 	@GetMapping("/updatePost")
 	public String updatePost(Model model, @RequestParam("postId") long postId, HttpServletRequest request) {
-							 HttpSession session = request.getSession();
-							 String sessionNickname = (String) session.getAttribute("nickname");
 
-	    // 게시글 정보 가져오기
-	    Map<String, Object> postMap = postService.getPostDetail(postId, false);
+		HttpSession session = request.getSession();
+		String sessionNickname = (String) session.getAttribute("nickname");
 
-	    // 기존 첨부파일 목록 가져오기
-	    List<FileUploadDTO> fileList = fileUploadService.getFileListByPostId(postId);
+		// 게시글 정보 가져오기
+		Map<String, Object> postMap = postService.getPostDetail(postId, false);
+		String postNickname = (String) postMap.get("nickname");
+		
+		// 현재 로그인한 사용자가 게시글 작성자가 아니라면 접근 차단
+		if (sessionNickname == null || !sessionNickname.equals(postNickname)) {
+			return "redirect:/foodhub/post/postDetail?postId=" + postId;
+		}
+
+		// 기존 첨부파일 목록 가져오기
+		List<FileUploadDTO> fileList = fileUploadService.getFileListByPostId(postId);
 
 //	    // 파일 목록이 제대로 불러와지는지 로그 출력
 //	    System.out.println("파일 개수: " + fileList.size());
@@ -212,70 +247,66 @@ public class PostController {
 //	        System.out.println("파일명: " + file.getFileName() + ", UUID: " + file.getFileUUID());
 //	    }
 
-	    // 모델에 데이터 추가
-	    model.addAttribute("postId", postId);
-	    model.addAttribute("postMap", postMap);
-	    model.addAttribute("sessionNickname", sessionNickname);
-	    model.addAttribute("fileList", fileList);  // 기존 파일 목록 추가
+		// 모델에 데이터 추가
+		model.addAttribute("postId", postId);
+		model.addAttribute("postMap", postMap);
+		model.addAttribute("sessionNickname", sessionNickname);
+		model.addAttribute("fileList", fileList); // 기존 파일 목록 추가
 
-	    return "foodhub/post/updatePost";
+		return "foodhub/post/updatePost";
 	}
-	
+
 	@PostMapping("/updatePost")
 	@ResponseBody
 	public String updatePost(@RequestParam("file[]") List<MultipartFile> files,
-	                         @RequestParam(value = "deleteFiles", required = false) List<String> deleteFiles,
-	                         @ModelAttribute PostDTO postDTO,
-	                         HttpSession session) {
-	    
-	    String userId = (String) session.getAttribute("userId");
-	    postDTO.setUserId(userId);
-	    
-	    String jsScript = """
-								
-				""";
-		
-		
-	    try {
-	        //  게시글 업데이트 실행
-	        postService.updatePost(postDTO);
-	        Long postId = postDTO.getPostId();
+			@RequestParam(value = "deleteFiles", required = false) List<String> deleteFiles,
+			@ModelAttribute PostDTO postDTO, HttpSession session) {
 
-//	        // ✅ 기존 파일 삭제 (체크된 파일만 삭제)
-//	        if (deleteFiles != null && !deleteFiles.isEmpty()) {
-//	            for (String fileUUID : deleteFiles) {
-//	                fileUploadService.deleteFileByUUID(fileUUID);
-//	            }
-//	        }
-//
-//	        // ✅ 새로운 파일 업로드
-//	        for (MultipartFile file : files) {
-//	            if (!file.isEmpty()) {
-//	                FileUploadDTO fileUploadDTO = new FileUploadDTO();
-//	                fileUploadDTO.setPostId(postId);
-//	                fileUploadService.uploadFile(file, fileUploadDTO);
-//	            }
-//	        }
-	        jsScript = """
-	        		<script>
-	        		alert('게시글이 성공적으로 수정되었습니다.');
-	        		location.href='/foodhub/post/postDetail?postId=' + """ + postId + """
-	        		</script>
-	        		""";
-	        	        
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        jsScript = """
-	        		<script>
-	        		alert('게시글 수정 중 오류가 발생했습니다.');
-	        		location.href='/foodhub/post/postDetail?postId=' + """ + postDTO.getPostId() + """
-    		 		</script>
-	        		""";
-	       
-	    }
-	    return jsScript;
+		String userId = (String) session.getAttribute("userId");
+		postDTO.setUserId(userId);
+
+		String jsScript = """
+
+				""";
+
+		try {
+			// 게시글 업데이트 실행
+			postService.updatePost(postDTO);
+			Long postId = postDTO.getPostId();
+
+			// ✅ 기존 파일 삭제 (체크된 파일만 삭제)
+			if (deleteFiles != null && !deleteFiles.isEmpty()) {
+				for (String fileUUID : deleteFiles) {
+					fileUploadService.deleteFileByUUID(fileUUID);
+				}
+			}
+
+			// ✅ 새로운 파일 업로드
+			for (MultipartFile file : files) {
+				if (!file.isEmpty()) {
+					FileUploadDTO fileUploadDTO = new FileUploadDTO();
+					fileUploadDTO.setPostId(postId);
+					fileUploadService.uploadFile(file, fileUploadDTO);
+				}
+			}
+			jsScript = """
+					<script>
+					alert('게시글이 성공적으로 수정되었습니다.');
+					location.href='/foodhub/post/postDetail?postId=' + """ + postId + """
+					</script>
+					""";
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			jsScript = """
+					<script>
+					alert('게시글 수정 중 오류가 발생했습니다.');
+					location.href='/foodhub/post/postDetail?postId=' + """ + postDTO.getPostId() + """
+					</script>
+							""";
+
+		}
+		return jsScript;
 	}
 
-
-	
 }

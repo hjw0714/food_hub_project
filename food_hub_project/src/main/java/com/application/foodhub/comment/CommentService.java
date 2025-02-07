@@ -15,12 +15,12 @@ public interface CommentService {
 
 	public void updateComment(Map<String, Object> params);
 
-	void deleteComment(Long commentId);
+	public void deleteComment(Long commentId);
 
 	public CommentDTO getLastInsertedComment(Long postId, String userId);
 
 	public CommentDTO getCommentById(Long commentId);
 
-	
+	public List<Map<String, Object>> myCommentList(String userId); // 해당 유저가 쓴 댓글 불러오기
 
 }

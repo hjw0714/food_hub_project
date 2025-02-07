@@ -3,75 +3,117 @@
 
 <mapper namespace="com.application.foodhub.comment.CommentDAO">
 
-<select id="getCommentById" parameterType="Long" resultType="CommentDTO">
-    SELECT * FROM COMMENTS WHERE COMMENT_ID = #{commentId}
-</select>
-    <!-- 특정 게시글의 모든 댓글 조회 (원댓글 + 대댓글 포함) -->
-  	<select id="getCommentsByPostId" parameterType="Long" resultType="CommentDTO">
-    SELECT 
-        c.*, 
-        u.PROFILE_UUID 
-    FROM COMMENTS c
-    JOIN USER u ON c.USER_ID = u.USER_ID
-    WHERE c.POST_ID = #{postId}
-      AND c.STATUS != 'DELETED'  <!-- ✅ 삭제된 댓글 제외 -->
-    ORDER BY c.CREATED_AT ASC
-</select>
-    <!-- 특정 게시글의 원댓글(부모 댓글) 조회 -->
-   <select id="getParentComments" parameterType="Long" resultType="CommentDTO">
-    SELECT 
-        c.*, 
-        u.PROFILE_UUID 
-    FROM COMMENTS c
-    JOIN USER u ON c.USER_ID = u.USER_ID
-    WHERE c.POST_ID = #{postId} 
-      AND c.PARENT_ID IS NULL
-      AND c.STATUS != 'DELETED'  <!-- ✅ 삭제된 댓글 제외 -->
-    ORDER BY c.CREATED_AT ASC
-</select>
-    <!-- 특정 댓글의 대댓글 조회 -->
-    <select id="getChildComments" parameterType="Long" resultType="CommentDTO">
-    SELECT 
-        c.*, 
-        u.PROFILE_UUID 
-    FROM COMMENTS c
-    JOIN USER u ON c.USER_ID = u.USER_ID
-    WHERE c.PARENT_ID = #{parentId}
-      AND c.STATUS != 'DELETED'  <!-- ✅ 삭제된 대댓글 제외 -->
-    ORDER BY c.CREATED_AT ASC
-</select>
-    <!-- 댓글 삽입 (원댓글 또는 대댓글) -->
-    <insert id="insertComment">
-    INSERT INTO COMMENTS 
-                (POST_ID, USER_ID, PARENT_ID, CONTENT, CREATED_AT, UPDATED_AT, STATUS)
-    VALUES      (#{postId}, #{userId}, 
-                 CASE WHEN #{parentId} IS NULL THEN NULL ELSE #{parentId} END, 
-                 #{content}, NOW(), NOW(), 'VISIBLE')
-</insert>
+	<select id="getCommentById" parameterType="Long" resultType="CommentDTO">
+		SELECT 	* 
+		FROM 	COMMENTS 
+		WHERE 	COMMENT_ID = #{commentId}
+	</select>
+	
+	<!-- 특정 게시글의 모든 댓글 조회 (원댓글 + 대댓글 포함) -->
+	<select id="getCommentsByPostId" parameterType="Long" resultType="CommentDTO">
+		SELECT		C.*,
+					U.PROFILE_UUID,
+					U.NICKNAME  
+		FROM 		COMMENTS C
+		JOIN 		USER U 
+		ON 			C.USER_ID = U.USER_ID
+		WHERE 		C.POST_ID = #{postId}
+		AND			C.STATUS != 'DELETED'
+		ORDER BY 	C.CREATED_AT ASC
+	</select>
+	
+	<!-- 특정 게시글의 원댓글(부모 댓글) 조회 -->
+	<select id="getParentComments" parameterType="Long" resultType="CommentDTO">
+		SELECT	C.*,
+				U.PROFILE_UUID,
+				U.NICKNAME  
+		FROM 	COMMENTS C
+		JOIN 	USER U 
+		ON 		C.USER_ID = U.USER_ID
+		WHERE 	C.POST_ID = #{postId}
+		AND 	C.PARENT_ID IS NULL
+		AND 	C.STATUS != 'DELETED'
+		ORDER BY C.CREATED_AT ASC
+	</select>
+	
+	<!-- 특정 댓글의 대댓글 조회 -->
+	<select id="getChildComments" parameterType="Long" resultType="CommentDTO">
+		SELECT 		C.*,
+					U.PROFILE_UUID,
+					U.NICKNAME  
+		FROM 		COMMENTS C
+		JOIN 		USER U 
+		ON 			C.USER_ID = U.USER_ID
+		WHERE 		C.PARENT_ID = #{parentId}
+		AND 		C.STATUS != 'DELETED'
+		ORDER BY 	C.CREATED_AT ASC
+	</select>
+	
+	<!-- 댓글 삽입 (원댓글 또는 대댓글) -->
+	<insert id="insertComment">
+		INSERT 		INTO COMMENTS
+					(POST_ID,
+					 USER_ID, 
+					 PARENT_ID,
+					 CONTENT, 
+					 CREATED_AT, 
+					 UPDATED_AT, 
+					 STATUS)
+		VALUES 	    (#{postId}, 
+					 #{userId},
+					 CASE WHEN #{parentId} IS NULL THEN NULL ELSE #{parentId} END,
+					 #{content}, 
+					 NOW(), 
+					 NOW(), 
+					'VISIBLE')
+	</insert>
 
-<!-- 방금 등록한 최신 댓글 조회 -->
-<select id="getLastInsertedComment" parameterType="map" resultType="CommentDTO">
-    SELECT c.*, u.PROFILE_UUID
-    FROM COMMENTS c
-    JOIN USER u ON c.USER_ID = u.USER_ID
-    WHERE c.POST_ID = #{postId} 
-      AND c.USER_ID = #{userId}
-    ORDER BY c.CREATED_AT DESC 
-    LIMIT 1
-</select>
+	<!-- 방금 등록한 최신 댓글 조회 -->
+	<select id="getLastInsertedComment" parameterType="map" resultType="CommentDTO">
+		SELECT		C.*,
+					U.PROFILE_UUID,
+					U.NICKNAME 
+		FROM 		COMMENTS C
+		JOIN 		USER U
+		ON 			C.USER_ID = U.USER_ID
+		WHERE 		C.POST_ID = #{postId}
+		AND 		C.USER_ID = #{userId}
+		ORDER BY 	C.CREATED_AT DESC
+		LIMIT 1
+	</select>
 
+	<!-- 댓글 수정 -->
+	<update id="updateComment">
+		UPDATE 		COMMENTS
+		SET 		CONTENT = #{content}, 
+					UPDATED_AT = NOW()
+		WHERE 		COMMENT_ID = #{commentId} 
+		AND 		STATUS = 'VISIBLE'
+	</update>
 
-    <!-- 댓글 수정 -->
-    <update id="updateComment">
-        UPDATE 	COMMENTS
-        SET 	CONTENT = #{content}, UPDATED_AT = NOW()
-        WHERE 	COMMENT_ID = #{commentId} AND STATUS = 'VISIBLE'
-    </update>
+	<!-- 댓글 삭제 (실제 삭제 X, 상태 변경) -->
+	<update id="deleteComment">
+		UPDATE 	COMMENTS
+		SET 	STATUS = 'DELETED'
+		WHERE 	COMMENT_ID = #{commentId} OR PARENT_ID = #{commentId}
+	</update>
 
-    <!-- 댓글 삭제 (실제 삭제 X, 상태 변경) -->
- <update id="deleteComment">
-    UPDATE COMMENTS
-    SET STATUS = 'DELETED'
-    WHERE COMMENT_ID = #{commentId}
-</update>
+	<resultMap id="commentMap" type="hashmap">
+		<result column="POST_ID" property="postId" />
+		<result column="COMMENT_ID" property="commentId" />
+		<result column="USER_ID" property="userId" />
+		<result column="CONTENT" property="content" />
+	</resultMap>
+
+	<!-- mypage에 내가 작성한 댓글 제목 출력 -->
+	<select id="myCommentList" parameterType="String" resultMap="commentMap">
+		SELECT 	C.COMMENT_ID 	AS COMMENT_ID,
+				C.POST_ID 		AS POST_ID,
+				C.CONTENT 		AS CONTENT
+		FROM 	COMMENTS C
+		JOIN 	USER U
+		ON 		C.USER_ID = U.USER_ID
+		WHERE 	C.USER_ID = #{userId}
+		AND     C.STATUS != 'DELETED'  <!-- 삭제된 댓글 제외 -->
+	</select>
 </mapper>

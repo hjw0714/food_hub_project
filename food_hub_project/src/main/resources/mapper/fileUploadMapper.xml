@@ -27,21 +27,16 @@
 	    FROM	FILE_UPLOAD
 	    WHERE	FILE_UUID = #{fileUUID}
 	</select>
-    
-    <!-- ✅ 파일 업데이트 (UPDATE) -->
-    <update id="updateFileUpload">
-        UPDATE FILE_UPLOAD
-        SET FILE_NAME = #{fileName}, FILE_UUID = #{fileUUID}, FILE_PATH = #{filePath}
-        WHERE FILE_ID = #{fileId}
-    </update>
-    
-    <!-- 특정 게시글 파일 하나 삭제 -->
-    <delete id="deleteFileById">
-    	DELETE FROM FILE_UPLOAD WHERE FILE_ID = #{fileId}
+	
+	<!-- fileUUID로 파일 삭제 -->
+	<delete id="deleteFileByUUID" parameterType="String">
+		DELETE FROM FILE_UPLOAD
+		WHERE		FILE_UUID = #{fileUUID}
 	</delete>
     
-    <!-- 특정 게시물 모든 파일 삭제 -->
+ <!-- 특정 게시물 모든 파일 삭제 -->
     <delete id="deleteFilesByPostId">
     	DELETE FROM FILE_UPLOAD WHERE POST_ID = #{postId}
-	</delete>
+	</delete>   
+	
 </mapper>
