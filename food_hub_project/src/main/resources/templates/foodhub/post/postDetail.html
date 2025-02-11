@@ -21,17 +21,6 @@
 	margin-bottom: 10px;
 }
 
-.comment-footer {
-	display: flex;
-	justify-content: flex-end;
-	font-size: 0.9rem;
-	align-items: center;
-}
-
-.comment-footer a, .comment-footer .like-button, .comment-footer .report-button
-	{
-	margin-left: 15px;
-}
 
 /* ✅ 작성자 정보 스타일 */
 .post-meta {
@@ -188,10 +177,6 @@
 	margin-left: 20px; /* 대댓글이 원댓글 내부에서 들여쓰기되도록 설정 */
 }
 
-.comment-footer a, .comment-footer .like-button, .comment-footer .report-button
-	{
-	margin-left: 15px; /* 버튼 사이 간격 */
-}
 
 /* 댓글 스타일 */
 .comment-box {
@@ -210,6 +195,7 @@
 	display: flex;
 	justify-content: flex-end; /* 버튼들을 오른쪽 끝으로 정렬 */
 	font-size: 0.9rem;
+	gap: 4px;
 	align-items: center;
 }
 
@@ -303,6 +289,73 @@
   opacity: 0.6;
 }
 
+/* ✅ 댓글 푸터(버튼 영역) 스타일 수정 */
+.comment-footer {
+  display: flex;
+  justify-content: flex-end; /* 버튼을 오른쪽 정렬 */
+  align-items: center; /* 세로 중앙 정렬 */
+  flex-wrap: wrap; /* 버튼이 줄바꿈되지 않도록 설정 */
+}
+
+/* ✅ 버튼 공통 스타일 (모든 버튼 크기 통일 + 폭 줄이기) */
+.comment-footer button,
+.comment-footer a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px; /* ✅ 글자 크기 줄이기 */
+  padding: 4px 8px; /* ✅ 내부 여백 줄이기 */
+  height: 28px; /* ✅ 버튼 높이 줄이기 */
+  min-width: 40px; /* ✅ 버튼 최소 너비 줄이기 */
+  border-radius: 3px; /* ✅ 모서리 둥글게 */
+  transition: all 0.2s ease-in-out;
+  font-weight: bold;
+}
+
+/* ✅ 버튼 개별 스타일 조정 */
+#commentLikeButton {
+  color: #198754;
+  background-color: transparent;
+  border: 1px solid #198754;
+}
+
+#commentLikeButton:hover {
+  background-color: #198754;
+  color: white;
+}
+
+.reply-btn {
+  color: #0d6efd;
+  border: 1px solid #0d6efd;
+}
+
+.reply-btn:hover {
+  background-color: #0d6efd;
+  color: white;
+}
+
+.edit-btn {
+  color: #6c757d;
+  border: 1px solid #6c757d;
+}
+
+.edit-btn:hover {
+  background-color: #6c757d;
+  color: white;
+}
+
+.delete-btn {
+  color: #dc3545;
+  border: 1px solid #dc3545;
+}
+
+.delete-btn:hover {
+  background-color: #dc3545;
+  color: white;
+}
+
+
+
 
 </style>
 
@@ -311,7 +364,7 @@
 		$("#editPostButton").hide();
 		$("#deletePostButton").hide();
 
-		let nickname = $("#nicknmae").text();
+		let nickname = $("#nickname").text();
 		let loginNickname = "[[${session.nickname}]]";
 
 		if (nickname == loginNickname) {
@@ -396,7 +449,7 @@
 	    }
 	});
     
-    $(document).ready(function () {
+    $().ready(function () {
         let postId = $("#postId").val();
         let userId = $("#userId").val();
         
@@ -464,7 +517,11 @@
                         <span class="text-muted">${comment.createdAt}</span>
                     </div>
                     <p class="comment-content">${comment.content}</p>
+                    
                     <div class="comment-footer">
+	                    <button id="commentLikeButton">
+					        추천
+					    </button>
                         <a href="javascript:void(0);" class="btn btn-outline-primary btn-sm reply-btn" data-id="${comment.commentId}">답글</a>
                         ${editButtonHtml}
                         ${deleteButtonHtml}
@@ -472,6 +529,7 @@
                     <div class="reply-box"></div>
                 </div>
             `;
+                         
         }
 
         // 대댓글 HTML 생성 함수
@@ -500,9 +558,12 @@
                     </div>
                     <p class="comment-content">${reply.content}</p>
                     <div class="comment-footer">
-                        ${editButtonHtml}
-                        ${deleteButtonHtml}
-                    </div>
+	                    <button id="commentLikeButton">
+					        추천
+					    </button>
+	                    ${editButtonHtml}
+	                    ${deleteButtonHtml}
+	                </div>
                 </div>
             `;
         }
@@ -555,6 +616,7 @@
             }
 
             let replyFormHtml = `
+            	
                 <div class="reply-form">
                     <textarea class="form-control reply-content" rows="2" placeholder="답글을 입력하세요..."></textarea>
                     <button class="btn btn-sm btn-primary submit-reply" data-id="${parentId}">등록</button>
@@ -705,21 +767,20 @@
 
 						<!-- 작성자 정보 박스 -->
 						<div class="post-meta">
-						    <div class="author-box">
-						        <img class="profile-img"
-								     th:src="${postMap.profileUUID == 'default-profile.png' ? 
-								              '/images/default-profile.png' :
-								              '/foodhub/user/thumbnails(fileName=' + postMap.profileUUID + ')'}"
-								     alt="프로필 사진">
-						        <span class="text-muted">작성자: <span id="nickname" th:text="${postMap.nickname}"></span></span>
-						    </div>
-						    <div class="post-details">
-						        <span class="text-muted">작성일: <span
-						                th:text="${#dates.format(postMap.createdAt, 'yyyy-MM-dd HH:mm')}"></span></span>
-						        <span class="text-muted"> | 조회수: <span th:text="${postMap.viewCnt}"></span></span>
-						        <span class="text-muted"> | 추천수: <span id="likeCount" th:text="${postMap.likeCount}">0</span></span>
-						    </div>
-						</div>
+					    <div class="author-box">
+					        <img class="profile-img"
+					             th:src="${postMap.profileUUID == 'default-profile.png' ? 
+					                      '/images/default-profile.png' : 
+					                      '/foodhub/user/thumbnails?fileName=' + postMap.profileUUID}"
+					             alt="프로필 사진">
+					        <span class="text-muted">작성자: <span id="nickname" th:text="${postMap.nickname}"></span></span>
+					    </div>
+					    <div class="post-details">
+					        <span class="text-muted">작성일: <span th:text="${#dates.format(postMap.createdAt, 'yyyy-MM-dd HH:mm')}"></span></span>
+					        <span class="text-muted"> | 조회수: <span th:text="${postMap.viewCnt}"></span></span>
+					        <span class="text-muted"> | 추천수: <span id="likeCount" th:text="${postMap.likeCount}">0</span></span>
+					    </div>
+					</div>
 					</div>
 					
 
@@ -795,8 +856,7 @@
 									class="form-control" rows="3" placeholder="댓글을 입력하세요..."></textarea>
 								<input type="hidden" id="postId" th:value="${postMap.postId}">
 								<input type="hidden" id="userId" th:value="${session.userId}">
-								<button type="submit" class="btn btn-primary mt-2">댓글
-									등록</button>
+								<button type="submit" class="btn btn-primary mt-2">댓글등록</button>
 							</form>
 						</div>
 
@@ -827,6 +887,7 @@
 						</a>
 					</div>
 				</div>
+			</section>
 		</main>
 
 	</div>
