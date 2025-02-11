@@ -3,6 +3,7 @@ package com.application.foodhub.post;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,7 +48,8 @@ public class PostController {
 	private CommentService commentService;
 
 	@Autowired
-	   private PostLikeService postLikeService; 
+	private PostLikeService postLikeService;
+
 	/**
 	 * 통합 게시판 목록 조회
 	 */
@@ -309,30 +312,28 @@ public class PostController {
 		}
 		return jsScript;
 	}
-	
+
 	@GetMapping("/notification")
 	public String notificationPage(Model model) {
-	    List<Map<String, Object>> postList = postService.getPostList(15, 0);
+		List<Map<String, Object>> postList = postService.getPostList(15, 0);
 
-	    if (postList == null) {
-	        postList = new ArrayList<>(); // 빈 리스트 반환
-	    }
+		if (postList == null) {
+			postList = new ArrayList<>(); // 빈 리스트 반환
+		}
 
-	    model.addAttribute("postListMap", postList);
-	    return "foodhub/post/notification";
+		model.addAttribute("postListMap", postList);
+		return "foodhub/post/notification";
 	}
-	
+
 	@PostMapping("/postLike")
-	   public String postLike(@RequestBody PostLikeDTO postLikeDTO) {
-	      
-	      long postId = postLikeDTO.getPostId();
-	      String userId = postLikeDTO.getUserId();
-	      
-	      postLikeService.togglePostLike(postId, userId);
-	      
-	      //System.out.println("postid : " + postId);
-	      //System.out.println("userId : " + userId);
-	      
-	      return "";
-	   }
+	public int postLike(@RequestBody PostLikeDTO postLikeDTO) {
+		long postId = postLikeDTO.getPostId();
+		String userId = postLikeDTO.getUserId();
+
+		postLikeService.togglePostLike(postId, userId);
+		int likeCount = postLikeService.getPostLikeCount(postId);
+
+
+		return likeCount;
+	}
 }

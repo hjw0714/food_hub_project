@@ -4,7 +4,8 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface PostLikeDAO {
-	
-	public void togglePostLike(long postId, String userId);
-
+    public boolean existsPostLike(long postId, String userId);
+    public void insertPostLike(long postId, String userId);
+    public void deletePostLike(long postId, String userId);
+    public int countPostLikes(long postId);
 }

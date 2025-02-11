@@ -3,18 +3,30 @@
 
 <mapper namespace="com.application.foodhub.postLike.PostLikeDAO">
 
-	<!-- [ set ] 사용예시 --> 
-	<update id="togglePostLike" parameterType="PostLikeDTO">
-		UPDATE	POST_LIKE
-		<set>
-				<if test="price != 0">
-					PRICE = PRICE + #{price},
-				</if>
-				<if test="deliveryPrice != 0">
-					DELIVERY_PRICE = DELIVERY_PRICE + #{deliveryPrice}
-				</if>
-		</set>		
-		WHERE PRODUCT_ID = 1
-	</update>
+	<delete id="deletePostLike">
+	    DELETE 	FROM POST_LIKE 
+	    WHERE 	POST_ID = #{postId} 
+	    AND 	USER_ID = #{userId}
+	</delete>
+	
+	<insert id="insertPostLike">
+	    INSERT INTO POST_LIKE 
+	    		(POST_ID, 
+	    		USER_ID) 
+   		VALUES (#{postId}, 
+   				#{userId})
+	</insert>
+	
+	<select id="existsPostLike" resultType="boolean">
+	    SELECT EXISTS (
+	        SELECT 1 FROM POST_LIKE WHERE POST_ID = #{postId} AND USER_ID = #{userId}
+	    )
+	</select>
+	
+	<select id="countPostLikes" resultType="int">
+	    SELECT 	COUNT(*) 
+	    FROM 	POST_LIKE 
+	    WHERE 	POST_ID = #{postId}
+	</select>
 	
 </mapper>

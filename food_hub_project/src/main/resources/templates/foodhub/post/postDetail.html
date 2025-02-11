@@ -343,19 +343,8 @@
 	            url: "/foodhub/post/postLike",
 	            contentType: "application/json",
 	            data: JSON.stringify(likeData), 
-	            success: function (liked) {
-	                let likeCount = parseInt($("#likeCount").text());
-	                let likeButton = $("#postLikeButton");
-
-	                if (liked) {
-	                    $("#likeCount").text(likeCount + 1);
-	                    likeButton.css("background-color", "#198754"); // 초록색
-	                    likeButton.css("color", "white");
-	                } else {
-	                    $("#likeCount").text(likeCount - 1);
-	                    likeButton.css("background-color", "transparent");
-	                    likeButton.css("color", "#6c757d");
-	                }
+	            success: function (likeCount) {
+	                $("#likeCount").text(likeCount);
 	            }
 	        });
 	    });

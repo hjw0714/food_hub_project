@@ -85,10 +85,9 @@ CREATE TABLE COMMENTS (
 
 -- 게시글 좋아요 테이블
 CREATE TABLE POST_LIKE (
-    POST_ID 		BIGINT NOT NULL,                     				-- 좋아요 한 게시글 아이디
-    USER_ID 		VARCHAR(255) NOT NULL,                				-- 유저 아이디
-   	STATUS 			ENUM('LIKED', 'CANCELLED') DEFAULT 'LIKED', 		-- 좋아요 상태
-    CREATED_AT 		TIMESTAMP DEFAULT NOW(), 							-- 좋아요 누른 시간
+    POST_ID     BIGINT NOT NULL,                     				-- 좋아요 한 게시글 아이디
+    USER_ID     VARCHAR(255) NOT NULL,                				-- 유저 아이디
+    CREATED_AT  TIMESTAMP DEFAULT NOW(), 							-- 좋아요 누른 시간
     FOREIGN KEY (POST_ID) REFERENCES POST(POST_ID) ON DELETE CASCADE,  	-- 게시글 연결
     FOREIGN KEY (USER_ID) REFERENCES USER(USER_ID) ON DELETE CASCADE,  	-- 유저 연결
     UNIQUE KEY (POST_ID, USER_ID) 										-- 중복 좋아요 방지
