@@ -2,6 +2,7 @@ package com.application.foodhub.user;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.security.Principal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -19,11 +20,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.context.annotation.RequestScope;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.application.foodhub.bookmark.BookmarkDTO;
+import com.application.foodhub.bookmark.BookmarkService;
 import com.application.foodhub.comment.CommentService;
-import com.application.foodhub.post.PostDTO;
 import com.application.foodhub.post.PostService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -45,6 +46,9 @@ public class UserController {
 	
 	@Autowired
 	private CommentService commentService;
+	
+	@Autowired
+	private BookmarkService bookmarkService;
 	
 	@GetMapping("/login")	// 로그인
 	public String login() {
@@ -107,7 +111,7 @@ public class UserController {
 		}
 	
 	@GetMapping("/myPage")
-	public String myPage(Model model , HttpServletRequest request, 
+	public String myPage(Model model , HttpServletRequest request, Principal principal,
 						@RequestParam(value = "postPage", defaultValue = "1") int postPage,
 						//@RequestParam(value = "bookmarkPage", defaultValue = "1") int bookmarkPage,
 						@RequestParam(value = "commentPage", defaultValue = "1") int commentPage,
@@ -153,6 +157,10 @@ public class UserController {
 	    model.addAttribute("currentCommentPage", commentPage);
 	    model.addAttribute("totalCommentPages", totalCommentPages);
 	    model.addAttribute("totalCommentPages", totalCommentPages);
+	    
+	    // 북마크된 게시글 목록 가져오기
+	    List<BookmarkDTO> bookmarks = bookmarkService.getBookmarksByUserId(principal.getName());
+	    model.addAttribute("bookmarks", bookmarks);
 	      
 	    return "foodhub/user/myPage";
 	}

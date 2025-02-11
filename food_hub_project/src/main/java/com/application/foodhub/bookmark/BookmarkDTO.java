@@ -13,4 +13,5 @@ public class BookmarkDTO {
     private Long postId;
     @DateTimeFormat(pattern="yyyy-MM-dd")
     private Date createdAt;
+    private String title;
 }

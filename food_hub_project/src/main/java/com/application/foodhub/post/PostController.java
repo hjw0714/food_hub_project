@@ -404,3 +404,4 @@ public class PostController {
 		return isAdded ? "added" : "removed";
 	}
 }
+
