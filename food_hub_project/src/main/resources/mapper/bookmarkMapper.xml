@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.application.foodhub.bookmark.BookmarkDAO">
+
+    <insert id="addBookmark">
+        INSERT INTO BOOKMARK (
+			POST_ID,
+			USER_ID, 
+			CREATED_AT
+		)
+        VALUES (
+        	#{postId},
+        	#{userId},
+        	NOW()
+        )
+    </insert>
+
+    <delete id="removeBookmark">
+        DELETE FROM BOOKMARK
+        WHERE  POST_ID = #{postId}
+        AND	   USER_ID = #{userId}
+    </delete>
+
+    <select id="getBookmarksByUserId" resultType="BookmarkDTO">
+        SELECT	 B.BOOKMARK_ID	AS BOOKMARK_ID,
+        		 B.POST_ID		AS POST_ID,
+        		 B.USER_ID		AS USER_ID,
+        		 B.CREATED_AT	AS CREATED_AT,
+        		 P.TITLE		AS TITLE
+        FROM 	 BOOKMARK B
+        JOIN 	 POST P
+        ON		 B.POST_ID = P.POST_ID
+        WHERE 	 B.USER_ID = #{userId}
+        ORDER BY B.CREATED_AT DESC
+    </select>
+
+    <select id="isBookmarked" resultType="boolean">
+        SELECT  COUNT(*) > 0
+        FROM	BOOKMARK
+        WHERE	POST_ID = #{postId}
+        AND 	USER_ID = #{userId}
+    </select>
+
+</mapper>

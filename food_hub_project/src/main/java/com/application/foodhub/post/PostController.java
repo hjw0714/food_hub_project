@@ -8,9 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,13 +20,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.application.foodhub.bookmark.BookmarkService;
 import com.application.foodhub.comment.CommentService;
 import com.application.foodhub.fileUpload.FileUploadDTO;
 import com.application.foodhub.fileUpload.FileUploadService;
 import com.application.foodhub.postLike.PostLikeDTO;
 import com.application.foodhub.postLike.PostLikeService;
+import com.application.foodhub.postReport.PostReportDTO;
+import com.application.foodhub.postReport.PostReportService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -49,6 +48,12 @@ public class PostController {
 
 	@Autowired
 	private PostLikeService postLikeService;
+	
+	@Autowired
+	private PostReportService postReportService;
+	
+	@Autowired
+	private BookmarkService bookmarkService;
 
 	/**
 	 * 통합 게시판 목록 조회
@@ -167,7 +172,8 @@ public class PostController {
 	 */
 	@GetMapping("/postDetail")
 	public String postDetail(Model model,
-			@RequestParam(value = "postId", required = false, defaultValue = "1") long postId) {
+			@RequestParam(value = "postId", required = false, defaultValue = "1") long postId,
+						 Principal principal) {
 
 		// 게시글 상세 정보 가져오기
 		Map<String, Object> postMap = postService.getPostDetail(postId, true);
@@ -186,6 +192,12 @@ public class PostController {
 		Long nextPostId = postService.getNextPostId(postId, categoryId);
 		model.addAttribute("prevPostId", prevPostId);
 		model.addAttribute("nextPostId", nextPostId);
+		
+		// 북마크 상태 확인
+		if (principal != null) {
+			boolean isBookmarked = bookmarkService.isBookmarked(postId, principal.getName());
+			model.addAttribute("isBookmarked", isBookmarked);
+		}
 
 		return "foodhub/post/postDetail";
 	}
@@ -340,5 +352,51 @@ public class PostController {
 	    int likeCount = postLikeService.getPostLikeCount(postId);
 
 	    return ResponseEntity.ok(likeCount);
+	}
+	
+	@PostMapping("/report")
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> report(@RequestBody PostReportDTO postReportDTO) {
+		
+		long postId = postReportDTO.getPostId();
+		String userId = postReportDTO.getUserId();
+		String content = postReportDTO.getContent();
+		
+//		System.out.println(postId);
+//		System.out.println(userId);
+//		System.out.println(content);
+		
+		boolean reportSuccess = postReportService.reportPost(postId, userId, content);
+		
+		Map<String, Object> response = new HashMap<>();
+		
+		// 이미 신고한 경우
+	    if (!reportSuccess) {
+	        response.put("success", false);
+	        response.put("message", "이미 신고한 게시글입니다.");
+	        response.put("redirectUrl", "/foodhub/post/postDetail?postId=" + postReportDTO.getPostId());
+	        return ResponseEntity.ok(response);  // 🚨 클라이언트가 알 수 있도록 JSON 반환
+	    }
+	    else{
+	    	// 신고 성공 시
+		    response.put("success", true);
+		    response.put("message", "게시글이 신고되었습니다.");
+		    response.put("redirectUrl", "/foodhub/post/postDetail?postId=" + postReportDTO.getPostId());
+		    
+		    return ResponseEntity.ok(response);
+	    }
+	    
+	}
+
+	// 북마크
+	@PostMapping("/{postId}/bookmark")
+	@ResponseBody
+	public String bookmarkPost(@PathVariable Long postId, Principal principal) {
+		if (principal == null) {
+			return "login_required";
+		}
+		String userId = principal.getName();
+		boolean isAdded = bookmarkService.toggleBookmark(postId, userId);
+		return isAdded ? "added" : "removed";
 	}
 }
