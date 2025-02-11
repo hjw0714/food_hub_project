@@ -37,11 +37,6 @@
     ======================================================== -->
     
 </head>
-<style>
-
-
-</style>
-
 <body class="index-page">
 
     <header id="header" class="header d-flex align-items-center sticky-top">
@@ -55,7 +50,7 @@
             <nav id="navmenu" class="navmenu">
                 <ul>
                     <li class="dropdown">
-                        <a href="#"><span>베스트 & 통합</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+                        <a th:href="@{/foodhub/post/allPostList}"><span>베스트 & 통합</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
                         <ul>
                             <li><a th:href="@{/foodhub/post/allPostList}">베스트 게시판</a></li>
                             <li><a th:href="@{/foodhub/post/allPostList}"><span>통합 게시판</span></a></li>
@@ -169,60 +164,67 @@
         </div>
 
     </footer>
+	<script>
+	
+	document.addEventListener("DOMContentLoaded", function () {
+	    document.querySelectorAll(".toggle-dropdown").forEach(function (toggle) {
+	        toggle.addEventListener("click", function (event) {
+	            event.preventDefault();
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const dropdowns = document.querySelectorAll('.navmenu .dropdown');
+	            let parentDropdown = this.closest(".dropdown");
+	            let dropdownMenu = parentDropdown.querySelector("ul");
 
-            dropdowns.forEach(dropdown => {
-                const toggle = dropdown.querySelector('a');
-                const menu = dropdown.querySelector('ul');
+	            // 현재 활성화 상태 확인
+	            let isActive = parentDropdown.classList.contains("active");
 
-                // 초기 상태에서 메뉴의 높이를 0으로 설정하고 숨깁니다.
-                menu.style.height = '0';
-                menu.style.overflow = 'hidden'; // overflow를 숨깁니다.
+	            // 모든 드롭다운 초기화
+	            document.querySelectorAll(".dropdown").forEach(function (dropdown) {
+	                dropdown.classList.remove("active");
+	                let menu = dropdown.querySelector("ul");
+	                if (menu) {
+	                    menu.style.display = "none";
+	                    menu.style.visibility = "hidden";
+	                    menu.style.opacity = "0";
+	                    menu.style.height = "0";
+	                }
+	            });
 
-                // 클릭 시 드롭다운 메뉴 열고 닫기
-                toggle.addEventListener('click', function(e) {
-                    e.preventDefault();
+	            // 클릭한 드롭다운만 활성화
+	            if (!isActive) {
+	                parentDropdown.classList.add("active");
+	                dropdownMenu.style.display = "block";
+	                dropdownMenu.style.visibility = "visible";
+	                dropdownMenu.style.opacity = "1";
+	                dropdownMenu.style.height = "auto";
+	            } else {
+	                parentDropdown.classList.remove("active");
+	                dropdownMenu.style.display = "none";
+	                dropdownMenu.style.visibility = "hidden";
+	                dropdownMenu.style.opacity = "0";
+	                dropdownMenu.style.height = "0";
+	            }
+	        });
+	    });
 
-                    // 현재 메뉴의 열린 상태 확인
-                    const isVisible = dropdown.classList.contains('open');
+	    // 바깥 클릭 시 닫기
+	    document.addEventListener("click", function (event) {
+	        if (!event.target.closest(".navmenu")) {
+	            document.querySelectorAll(".dropdown").forEach(function (dropdown) {
+	                dropdown.classList.remove("active");
+	                let menu = dropdown.querySelector("ul");
+	                if (menu) {
+	                    menu.style.display = "none";
+	                    menu.style.visibility = "hidden";
+	                    menu.style.opacity = "0";
+	                    menu.style.height = "0";
+	                }
+	            });
+	        }
+	    });
+	});
 
-                    // 다른 드롭다운이 열려있다면 닫기
-                    dropdowns.forEach(otherDropdown => {
-                        if (otherDropdown !== dropdown) {
-                            otherDropdown.classList.remove('open');
-                            const otherMenu = otherDropdown.querySelector('ul');
-                            otherMenu.style.height = '0'; // 다른 메뉴를 닫음
-                        }
-                    });
 
-                    // 현재 드롭다운 메뉴 토글 (열기/닫기)
-                    if (isVisible) {
-                        dropdown.classList.remove('open');
-                        menu.style.height = '0';  // 닫을 때는 높이를 0으로 설정
-                    } else {
-                        dropdown.classList.add('open');
-                        menu.style.height = menu.scrollHeight + 'px';  // 열 때는 메뉴의 실제 높이로 설정
-                    }
-                });
-            });
-
-            // 바깥 영역 클릭 시 모든 드롭다운 메뉴 닫기
-            document.addEventListener('click', function(e) {
-                const isDropdownClicked = e.target.closest('.navmenu .dropdown');
-                if (!isDropdownClicked) {
-                    dropdowns.forEach(dropdown => {
-                        dropdown.classList.remove('open');
-                        const menu = dropdown.querySelector('ul');
-                        menu.style.height = '0'; // 메뉴 숨기기
-                    });
-                }
-            });
-        });
-    </script>
-
+	</script>
     <!-- Scroll Top -->
     <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
