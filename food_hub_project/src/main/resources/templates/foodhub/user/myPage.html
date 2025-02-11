@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	  layout:decorate="~{/foodhub/index/headerAndFooter.html}">
+	  layout:decorate="~{foodhub/index/headerAndFooter.html}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -207,8 +207,11 @@
         <h1>마이 페이지</h1>
 
         <div class="profile-photo">
-            <img th:src="@{/foodhub/user/thumbnails(fileName=${userDTO.profileUUID})}" alt="프로필 사진">
-        </div>
+		    <img th:src="${userDTO.profileUUID != null} 
+		                 ? @{/foodhub/user/thumbnails(fileName=${userDTO.profileUUID})} 
+		                 : @{/images/default-profile.png}"
+		         alt="프로필 사진">
+		</div>
 
         <div class="profile-info">
 		  <div class="profile-info">

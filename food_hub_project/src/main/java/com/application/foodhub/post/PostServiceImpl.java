@@ -10,11 +10,16 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.application.foodhub.postLike.PostLikeService;
+
 @Service
 public class PostServiceImpl implements PostService {
 
 	@Autowired
 	private PostDAO postDAO;
+	
+	@Autowired
+	private PostLikeService postLikeService;
 
 	@Override
 	public List<Map<String, Object>> getPostList(int pageSize, int offset) {
@@ -38,7 +43,22 @@ public class PostServiceImpl implements PostService {
 		if (isIncreaseReadCnt) {
 			postDAO.updateReadCnt(postId); // 조회수 증가
 		}
-		return postDAO.getPostDetail(postId);
+		
+		 // 기존 게시글 정보 가져오기
+	    Map<String, Object> postMap = postDAO.getPostDetail(postId);
+
+	    // 게시글이 존재하면 추천수를 추가
+	    if (postMap != null) {
+	        int likeCount = postLikeService.getPostLikeCount(postId);
+	        postMap.put("likeCount", likeCount); // 추천수 추가
+	        
+	        // 프로필 이미지가 없는 경우 기본 이미지 설정
+	        if (!postMap.containsKey("profileUUID") || postMap.get("profileUUID") == null || postMap.get("profileUUID").toString().isEmpty()) {
+	            postMap.put("profileUUID", "default-profile.png"); // 기본 이미지 경로
+	        }
+	    }
+	    
+		return postMap;
 	}
 
 	@Override

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{/foodhub/index/headerAndFooter.html}">
+	layout:decorate="~{foodhub/index/headerAndFooter.html}">
 
 <head>
 <meta charset="utf-8">
@@ -68,6 +68,13 @@
 	background-color: #ddd;
 }
 </style>
+<script>
+	$().ready(function() {
+		$(".post-title").click(function () {
+	        localStorage.setItem("fromAllPostList", "true");
+	    });
+	});
+</script>
 </head>
 
 <body class="board-page">
@@ -87,15 +94,15 @@
 						<div class="list-group" th:if="${postCnt > 0}"
 							th:each="post : ${postListMap}">
 							<a th:href="@{/foodhub/post/postDetail(postId=${post.postId})}"
-								class="list-group-item list-group-item-action">
-								<h5 class="mb-1"
-									th:text="|[${post['subCateNm']}] ${post['title']}|"></h5> <small
-								class="text-muted"> <span
-									th:text="'작성자 : ' + ${post['nickname']}"></span> <span
-									th:text="'| 작성일 : ' + ${post['createdAt']}"></span> <span
-									th:text="'| 조회수 : ' + ${post['viewCnt']}"></span> <span
-									th:text="'| 추천수 : ' + ${post['likeCnt']}"></span>
-							</small>
+							   class="list-group-item list-group-item-action">
+							   <h5 class="mb-1 post-title"
+							       th:text="|[${post['subCateNm']}] ${post['title']}|"></h5>
+							   <small class="text-muted">
+							       <span th:text="'작성자 : ' + ${post['nickname']}"></span>
+							       <span th:text="'| 작성일 : ' + ${#dates.format(post['createdAt'], 'yyyy-MM-dd HH:mm')}"></span>
+							       <span th:text="'| 조회수 : ' + ${post['viewCnt']}"></span>
+							       <span th:text="'| 추천수 : ' + ${post['LIKE_COUNT']}"></span>
+							   </small>
 							</a>
 						</div>
 

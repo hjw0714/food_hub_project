@@ -156,7 +156,7 @@ public class PostController {
 		String jsScript = """
 				<script>
 					alert('커뮤니티 게시글이 작성 되었습니다.');
-					location.href = '/';
+					location.href = 'allPostList';
 				</script>""";
 
 		return jsScript;
@@ -189,6 +189,7 @@ public class PostController {
 
 		return "foodhub/post/postDetail";
 	}
+	
 
 	// 게시글 삭제
 	@GetMapping("/deletePost")
@@ -206,8 +207,9 @@ public class PostController {
 		model.addAttribute("postId", postId);
 		model.addAttribute("postMap", postService.getPostDetail(postId, false));
 		model.addAttribute("sessionNickname", sessionNickname);
+		
 
-		return "redirect:/foodhub/post/deletePost";
+		return "foodhub/post/deletePost";
 	}
 
 	@PostMapping("/deletePost")
@@ -326,14 +328,17 @@ public class PostController {
 	}
 
 	@PostMapping("/postLike")
-	public int postLike(@RequestBody PostLikeDTO postLikeDTO) {
-		long postId = postLikeDTO.getPostId();
-		String userId = postLikeDTO.getUserId();
+	public ResponseEntity<Integer> postLike(@RequestBody PostLikeDTO postLikeDTO) {
+	    
+	    long postId = postLikeDTO.getPostId();
+	    String userId = postLikeDTO.getUserId();
+	    
+//	    System.out.println("postId : " + postId);
+//	    System.out.println("userId : " + userId);
+	    
+	    postLikeService.togglePostLike(postId, userId);
+	    int likeCount = postLikeService.getPostLikeCount(postId);
 
-		postLikeService.togglePostLike(postId, userId);
-		int likeCount = postLikeService.getPostLikeCount(postId);
-
-
-		return likeCount;
+	    return ResponseEntity.ok(likeCount);
 	}
 }

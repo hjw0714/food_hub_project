@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{/foodhub/index/headerAndFooter.html}">
+	layout:decorate="~{foodhub/index/headerAndFooter.html}">
 <head>
 <meta charset="utf-8">
 <meta content="width=device-width, initial-scale=1.0" name="viewport">
@@ -348,6 +348,29 @@
 	            }
 	        });
 	    });
+	    
+	
+	    $("#boardListButton").click(function (event) {
+	        event.preventDefault(); // 기본 이동 막기
+
+	        let isFromAllPostList = localStorage.getItem("fromAllPostList");
+
+	        if (isFromAllPostList === "true") {
+	            window.location.href = "/foodhub/post/allPostList";
+	            localStorage.setItem("fromAllPostList", "false"); // 값 유지
+	        } else {
+	            let categoryId = $("#categoryId").val();
+	            if (!categoryId || categoryId === "undefined") {
+	                alert("카테고리 정보를 찾을 수 없습니다.");
+	                return;
+	            }
+
+	            window.location.href = `/foodhub/post/category/${categoryId}`;
+	        }
+	    });
+
+
+	    
 	});
 </script>
 <script>
@@ -682,20 +705,23 @@
 
 						<!-- 작성자 정보 박스 -->
 						<div class="post-meta">
-							<div class="author-box">
-								<img class="profile-img"
-									th:src="@{/foodhub/user/thumbnails(fileName=${postMap.profileUUID})}"
-									alt="프로필 사진"> <span class="text-muted">작성자: <span
-									id="nicknmae" th:text="${postMap.nickname}"></span></span>
-							</div>
-							<div class="post-details">
-								<span class="text-muted">작성일: <span
-									th:text="${postMap.createdAt}"></span></span> <span class="text-muted">조회수:
-									<span th:text="${postMap.viewCnt}"></span>
-								</span> <span class="text-muted">추천수: <span id="likeCount">0</span></span>
-							</div>
+						    <div class="author-box">
+						        <img class="profile-img"
+								     th:src="${postMap.profileUUID == 'default-profile.png' ? 
+								              '/images/default-profile.png' :
+								              '/foodhub/user/thumbnails(fileName=' + postMap.profileUUID + ')'}"
+								     alt="프로필 사진">
+						        <span class="text-muted">작성자: <span id="nickname" th:text="${postMap.nickname}"></span></span>
+						    </div>
+						    <div class="post-details">
+						        <span class="text-muted">작성일: <span
+						                th:text="${#dates.format(postMap.createdAt, 'yyyy-MM-dd HH:mm')}"></span></span>
+						        <span class="text-muted"> | 조회수: <span th:text="${postMap.viewCnt}"></span></span>
+						        <span class="text-muted"> | 추천수: <span id="likeCount" th:text="${postMap.likeCount}">0</span></span>
+						    </div>
 						</div>
 					</div>
+					
 
 					<!-- 본문 내용 -->
 					<div class="content-box">
@@ -729,8 +755,9 @@
 						</ul>
 					</div>
 
-					<!-- 게시글 추천 버튼 -->
+				
 					<div class="recommend-container">
+						<!-- 게시글 추천 버튼 -->
 					    <button id="postLikeButton">
 					        👍 추천
 					    </button>
@@ -784,14 +811,17 @@
 					<!-- 이전 글, 전체 게시판, 다음 글 버튼 -->
 					<div class="d-flex justify-content-center gap-2 mt-4">
 						<a th:if="${prevPostId != null}"
-							th:href="@{/foodhub/post/postDetail(postId=${prevPostId}, categoryId=${categoryId})}"
-							class="btn btn-outline-secondary"> <i
-							class="bi bi-arrow-left"></i> 이전 글
-						</a> <a th:href="@{/foodhub/post/postList(categoryId=${categoryId})}"
-							class="btn btn-outline-primary"> <i class="bi bi-list"></i>
+							   th:href="@{/foodhub/post/postDetail(postId=${prevPostId}, categoryId=${postMap.categoryId})}"
+							   class="btn btn-outline-secondary">
+							   <i class="bi bi-arrow-left"></i> 이전 글
+						</a> 
+						<a th:href="@{/foodhub/post/category/{categoryId}(categoryId=${postMap.categoryId})}"
+							class="btn btn-outline-primary" id="boardListButton"> <i class="bi bi-list"></i>
 							전체 게시판
-						</a> <a th:if="${nextPostId != null}"
-							th:href="@{/foodhub/post/postDetail(postId=${nextPostId}, categoryId=${categoryId})}"
+							<input type="hidden" id="categoryId" th:value="${postMap.categoryId}">
+						</a> 
+						<a th:if="${nextPostId != null}"
+							th:href="@{/foodhub/post/postDetail(postId=${nextPostId}, categoryId=${postMap.categoryId})}"
 							class="btn btn-outline-secondary"> 다음 글 <i
 							class="bi bi-arrow-right"></i>
 						</a>
