@@ -4,7 +4,7 @@
 <mapper namespace="com.application.foodhub.bookmark.BookmarkDAO">
 
     <insert id="addBookmark">
-        INSERT INTO BOOKMARK (
+        INSERT INTO BOOKMARKS (
 			POST_ID,
 			USER_ID, 
 			CREATED_AT
@@ -17,7 +17,7 @@
     </insert>
 
     <delete id="removeBookmark">
-        DELETE FROM BOOKMARK
+        DELETE FROM BOOKMARKS
         WHERE  POST_ID = #{postId}
         AND	   USER_ID = #{userId}
     </delete>
@@ -28,7 +28,7 @@
         		 B.USER_ID		AS USER_ID,
         		 B.CREATED_AT	AS CREATED_AT,
         		 P.TITLE		AS TITLE
-        FROM 	 BOOKMARK B
+        FROM 	 BOOKMARKS B
         JOIN 	 POST P
         ON		 B.POST_ID = P.POST_ID
         WHERE 	 B.USER_ID = #{userId}
@@ -37,7 +37,7 @@
 
     <select id="isBookmarked" resultType="boolean">
         SELECT  COUNT(*) > 0
-        FROM	BOOKMARK
+        FROM	BOOKMARKS
         WHERE	POST_ID = #{postId}
         AND 	USER_ID = #{userId}
     </select>
