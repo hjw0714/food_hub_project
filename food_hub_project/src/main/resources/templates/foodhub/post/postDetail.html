@@ -354,7 +354,29 @@
   color: white;
 }
 
+/* ✅ 신고 버튼 스타일 */
+#reportPostButton {
+  color: #dc3545; /* 빨간색 글씨 */
+  border: 2px solid #dc3545; /* 빨간색 테두리 */
+  background-color: transparent; /* 배경 투명 */
+  border-radius: 5px;
+  padding: 6px 12px;
+  font-size: 14px;
+  font-weight: bold;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+  min-width: 80px;
+  height: 38px;
+}
 
+/* ✅ 호버 효과 */
+#reportPostButton:hover {
+  background-color: #dc3545;
+  color: white;
+}
 
 
 </style>
@@ -363,6 +385,7 @@
 	$().ready(function() {
 		$("#editPostButton").hide();
 		$("#deletePostButton").hide();
+		$("#reportPostButton").hide();
 
 		let nickname = $("#nickname").text();
 		let loginNickname = "[[${session.nickname}]]";
@@ -370,11 +393,18 @@
 		if (nickname == loginNickname) {
 			$("#editPostButton").show();
 			$("#deletePostButton").show();
+			$("#reportPostButton").hide();
 		}
 		else {
 			$("#editPostButton").hide();
 			$("#deletePostButton").hide();
+			$("#reportPostButton").show();
 		}
+		
+		if ($("#userId").val() == "") {
+			$("#reportPostButton").hide();
+		}
+		
 	 	let likeButton = $("#postLikeButton");
 	    
 	    if (nickname === loginNickname) {
@@ -420,6 +450,50 @@
 
 	            window.location.href = `/foodhub/post/category/${categoryId}`;
 	        }
+	    });
+	    
+	    $("#reportPostButton").click(function() {
+	    	$("#reportModal").modal("show");
+	    });
+	    
+	    // 신고 제출 버튼 클릭 시 처리
+	    $("#submitReport").click(function () {
+	        let postId = $("#postId").val();
+	        let userId = $("#userId").val();
+	        let content = $("#reportReason").val().trim();
+
+	        if (!content) {
+	            alert("신고 사유를 입력해주세요.");
+	            return;
+	        }
+	        
+	        console.log("postId:", postId);
+	        console.log("userId:", userId);  // userId 값이 제대로 찍히는지 확인
+	        console.log("content:", content);
+	        
+	        $.ajax({
+	            type: "post",
+	            url: "/foodhub/post/report",
+	            contentType: "application/json",
+	            data: JSON.stringify({
+	                postId: postId,
+	                userId: userId,
+	                content: content
+	            }),
+	            success: function (response) {
+	                if (response.success) {
+	                    alert(response.message); 
+	                    window.location.href = response.redirectUrl; 
+	                } else {
+	                    alert(response.message); 
+	                    window.location.href = response.redirectUrl; 
+	                }
+	            },
+	            error: function (xhr, status, error) {
+	                console.error("신고 처리 오류:", error);
+	                alert("신고 처리 중 오류가 발생했습니다.");
+	            }
+	        });
 	    });
 
 
@@ -750,6 +824,32 @@
 
         // 페이지 로드 시 댓글 불러오기
         loadComments();
+        
+    });
+ // ✅ 북마크
+    $().ready(function() {
+        $('#bookmarkButton').click(function() {
+            var postId = $(this).data('post-id');
+            
+            $.ajax({
+                url: '/foodhub/post/' + postId + '/bookmark',
+                type: 'POST',
+                success: function(response) {
+                    if (response === 'login_required') {
+                        alert("로그인이 필요합니다.");
+                    } else if (response === 'added') {
+                        $('#bookmarkButton').addClass('bookmarked');
+                        alert("북마크가 추가되었습니다.");
+                    } else if (response === 'removed') {
+                        $('#bookmarkButton').removeClass('bookmarked');
+                        alert("북마크가 제거되었습니다.");
+                    }
+                },
+                error: function() {
+                    alert("오류가 발생했습니다. 다시 시도해주세요.");
+                }
+            });
+        });
     });
 </script>
 </head>
@@ -825,10 +925,13 @@
 					    <!-- 유저 정보 저장 (로그인한 유저 ID & 작성자 ID) -->
 						<input type="hidden" id="postId" th:value="${postMap.postId}">
 						<input type="hidden" id="userId" th:value="${session.userId}">
+						
 						<!-- 북마크 버튼 -->
-						<button id="bookmarkButton" >
-							🔖북마크
-						</button>
+						<button id="bookmarkButton" th:data-post-id="${postMap.postId}" 
+		                        th:class="${isBookmarked} ? 'bookmarked' : ''"
+		                        th:disabled="${session.userId == null}">
+		                   🔖 북마크
+		               </button>
 					</div>
 
 					
@@ -844,6 +947,34 @@
 							<i class="bi bi-trash"></i> 삭제
 						</button>
 					</div>
+					
+					<!-- ✅ 신고 버튼을 아래쪽에 별도로 추가 -->
+					<div class="d-flex justify-content-center mt-2">
+					    <button id="reportPostButton" class="btn btn-outline-danger">
+					    	<i class="bi bi-flag"></i> 신고
+					    </button>
+					</div>
+					
+					<!-- 신고 모달 -->
+					<div id="reportModal" class="modal fade" tabindex="-1" aria-hidden="true">
+					    <div class="modal-dialog">
+					        <div class="modal-content">
+					            <div class="modal-header">
+					                <h5 class="modal-title">게시글 신고</h5>
+					                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					            </div>
+					            <div class="modal-body">
+					                <p>신고 사유를 입력해주세요:</p>
+					                <textarea id="reportReason" class="form-control" rows="4" placeholder="신고 사유를 입력하세요..."></textarea>
+					            </div>
+					            <div class="modal-footer">
+					                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+					                <button type="button" id="submitReport" class="btn btn-danger">신고 제출</button>
+					            </div>
+					        </div>
+					    </div>
+					</div>
+										
 
 					<!-- 댓글 섹션 -->
 					<section id="comments" class="comments section">

@@ -237,18 +237,24 @@
 	
 	<select id="getPostListByCategory" resultMap="postMap">
        SELECT   P.POST_ID      AS POST_ID, 
-              	P.SUB_CATE_NM   AS SUB_CATE_NM, 
+              	S.SUB_CATE_NM   AS SUB_CATE_NM, 
               	P.TITLE      AS TITLE, 
               	U.NICKNAME      AS NICKNAME, 
               	P.CREATED_AT   AS CREATED_AT, 
-              	P.VIEW_CNT      AS VIEW_CNT
+              	P.VIEW_CNT      AS VIEW_CNT,
+              	COALESCE(L.LIKE_COUNT, 0) AS LIKE_COUNT
        FROM     POST P
-       JOIN    	USER U
-       ON       P.USER_ID = U.USER_ID
+       JOIN     USER U ON P.USER_ID = U.USER_ID
+       JOIN     SUB_CATEGORY S ON P.SUB_CATE_ID = S.SUB_CATE_ID
+       LEFT JOIN (
+            	SELECT 		POST_ID, COUNT(*) AS LIKE_COUNT 
+            	FROM 		POST_LIKE 
+            	GROUP BY 	POST_ID
+        		) AS L ON P.POST_ID = L.POST_ID
        WHERE    P.CATEGORY_ID = #{categoryId}
        ORDER BY P.CREATED_AT DESC
        LIMIT    #{pageSize} OFFSET #{offset}
-   	</select>
+</select>
 
 	<select id="getPostCntByCategory" resultType="long">
     	SELECT COUNT(*) FROM POST WHERE CATEGORY_ID = #{categoryId}

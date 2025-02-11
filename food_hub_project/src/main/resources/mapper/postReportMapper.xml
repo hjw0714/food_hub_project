@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.application.foodhub.postReport.PostReportDAO">
+
+	<insert id="reportPost">
+	    INSERT INTO POST_REPORT (POST_ID, USER_ID, CONTENT)
+	    VALUES (#{postId}, #{userId}, #{content})
+	</insert>
+	
+	<select id="existsreportPost" parameterType="map" resultType="boolean">
+	    SELECT EXISTS (
+	        SELECT 	1 
+	        FROM 	POST_REPORT 
+	        WHERE 	POST_ID = #{postId} 
+	        AND 	USER_ID = #{userId}
+	    )
+	</select>
+
+
+</mapper>
