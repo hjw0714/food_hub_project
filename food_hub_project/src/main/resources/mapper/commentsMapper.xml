@@ -9,45 +9,51 @@
 		WHERE 	COMMENT_ID = #{commentId}
 	</select>
 	
-	<!-- 특정 게시글의 모든 댓글 조회 (원댓글 + 대댓글 포함) -->
-	<select id="getCommentsByPostId" parameterType="Long" resultType="CommentDTO">
-		SELECT		C.*,
-					U.PROFILE_UUID,
-					U.NICKNAME  
-		FROM 		COMMENTS C
-		JOIN 		USER U 
-		ON 			C.USER_ID = U.USER_ID
-		WHERE 		C.POST_ID = #{postId}
-		AND			C.STATUS != 'DELETED'
-		ORDER BY 	C.CREATED_AT ASC
-	</select>
-	
-	<!-- 특정 게시글의 원댓글(부모 댓글) 조회 -->
-	<select id="getParentComments" parameterType="Long" resultType="CommentDTO">
-		SELECT	C.*,
-				U.PROFILE_UUID,
-				U.NICKNAME  
-		FROM 	COMMENTS C
-		JOIN 	USER U 
-		ON 		C.USER_ID = U.USER_ID
-		WHERE 	C.POST_ID = #{postId}
-		AND 	C.PARENT_ID IS NULL
-		AND 	C.STATUS != 'DELETED'
-		ORDER BY C.CREATED_AT ASC
-	</select>
-	
-	<!-- 특정 댓글의 대댓글 조회 -->
-	<select id="getChildComments" parameterType="Long" resultType="CommentDTO">
-		SELECT 		C.*,
-					U.PROFILE_UUID,
-					U.NICKNAME  
-		FROM 		COMMENTS C
-		JOIN 		USER U 
-		ON 			C.USER_ID = U.USER_ID
-		WHERE 		C.PARENT_ID = #{parentId}
-		AND 		C.STATUS != 'DELETED'
-		ORDER BY 	C.CREATED_AT ASC
-	</select>
+<!-- 특정 게시글의 모든 댓글 조회 (추천 수 + 추천 여부 포함) -->
+<select id="getCommentsByPostId" parameterType="map" resultType="CommentDTO">
+    SELECT 
+        C.*, 
+        U.PROFILE_UUID,
+        U.NICKNAME,
+        (SELECT COUNT(*) FROM COMMENT_LIKE CL WHERE CL.COMMENT_ID = C.COMMENT_ID) AS likeCount,
+        (SELECT COUNT(*) FROM COMMENT_LIKE CL WHERE CL.COMMENT_ID = C.COMMENT_ID AND CL.USER_ID = #{userId}) > 0 AS likedByUser
+    FROM COMMENTS C
+    JOIN USER U ON C.USER_ID = U.USER_ID
+    WHERE C.POST_ID = #{postId}
+    AND C.STATUS != 'DELETED'
+    ORDER BY C.CREATED_AT ASC
+</select>
+
+<!-- 특정 게시글의 원댓글(부모 댓글) 조회 (추천 수 + 추천 여부 포함) -->
+<select id="getParentComments" parameterType="map" resultType="CommentDTO">
+    SELECT 
+        C.*, 
+        U.PROFILE_UUID,
+        U.NICKNAME,
+        (SELECT COUNT(*) FROM COMMENT_LIKE CL WHERE CL.COMMENT_ID = C.COMMENT_ID) AS likeCount,
+        (SELECT COUNT(*) FROM COMMENT_LIKE CL WHERE CL.COMMENT_ID = C.COMMENT_ID AND CL.USER_ID = #{userId}) > 0 AS likedByUser
+    FROM COMMENTS C
+    JOIN USER U ON C.USER_ID = U.USER_ID
+    WHERE C.POST_ID = #{postId}
+    AND C.PARENT_ID IS NULL
+    AND C.STATUS != 'DELETED'
+    ORDER BY C.CREATED_AT ASC
+</select>
+
+<!-- 특정 댓글의 대댓글 조회 (추천 수 + 추천 여부 포함) -->
+<select id="getChildComments" parameterType="map" resultType="CommentDTO">
+    SELECT 
+        C.*, 
+        U.PROFILE_UUID,
+        U.NICKNAME,
+        (SELECT COUNT(*) FROM COMMENT_LIKE CL WHERE CL.COMMENT_ID = C.COMMENT_ID) AS likeCount,
+        (SELECT COUNT(*) FROM COMMENT_LIKE CL WHERE CL.COMMENT_ID = C.COMMENT_ID AND CL.USER_ID = #{userId}) > 0 AS likedByUser
+    FROM COMMENTS C
+    JOIN USER U ON C.USER_ID = U.USER_ID
+    WHERE C.PARENT_ID = #{parentId}
+    AND C.STATUS != 'DELETED'
+    ORDER BY C.CREATED_AT ASC
+</select>
 	
 	<!-- 댓글 삽입 (원댓글 또는 대댓글) -->
 	<insert id="insertComment">
@@ -116,4 +122,28 @@
 		WHERE 	C.USER_ID = #{userId}
 		AND     C.STATUS != 'DELETED'  <!-- 삭제된 댓글 제외 -->
 	</select>
+	
+	   <!-- 댓글 추천 수 조회 -->
+    <select id="getCommentLikeCount" parameterType="Long" resultType="int">
+        SELECT COUNT(*) FROM COMMENT_LIKE
+         WHERE COMMENT_ID = #{commentId}
+    </select>
+
+    <!-- 특정 유저가 댓글을 추천했는지 확인 -->
+    <select id="checkUserLikedComment" parameterType="map" resultType="int">
+        SELECT COUNT(*) FROM COMMENT_LIKE 
+        WHERE COMMENT_ID = #{commentId} AND USER_ID = #{userId}
+    </select>
+
+    <!-- 댓글 추천 추가 -->
+    <insert id="insertCommentLike">
+        INSERT INTO COMMENT_LIKE (COMMENT_ID, USER_ID) 
+        VALUES (#{commentId}, #{userId})
+    </insert>
+
+    <!-- 댓글 추천 취소 -->
+    <delete id="deleteCommentLike">
+        DELETE FROM COMMENT_LIKE 
+        WHERE COMMENT_ID = #{commentId} AND USER_ID = #{userId}
+    </delete>
 </mapper>

@@ -34,15 +34,15 @@ public class CommentController {
 
 	@GetMapping("/post/{postId}/parents")
 	@ResponseBody
-	public List<CommentDTO> getParentComments(@PathVariable("postId") Long postId) {
-		return commentService.getParentComments(postId);
+	public List<CommentDTO> getParentComments(@PathVariable("postId") Long postId ,  @RequestParam(value = "userId", required = false) String userId) {
+		return commentService.getParentComments(postId , userId);
 	}
 
 	// 특정 댓글의 대댓글 조회
 	@GetMapping("/parent/{parentId}")
 	@ResponseBody
-	public List<CommentDTO> getChildComments(@PathVariable("parentId") Long parentId) {
-		return commentService.getChildComments(parentId);
+	public List<CommentDTO> getChildComments(@PathVariable("parentId") Long parentId , @RequestParam(value = "userId", required = false) String userId) {
+		return commentService.getChildComments(parentId , userId);
 	}
 
 	// 댓글 추가 (원댓글 또는 대댓글)
@@ -109,6 +109,19 @@ public class CommentController {
 		return "댓글이 삭제 처리되었습니다.";
 	}
 	
+	@PostMapping("/like")
+    @ResponseBody
+    public Map<String, Object> toggleCommentLike(@RequestParam("commentId") Long commentId,
+                                                 @RequestParam("userId") String userId) {
+        boolean liked = commentService.toggleCommentLike(commentId, userId);
+        int likeCount = commentService.getCommentLikeCount(commentId);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("liked", liked);
+        response.put("likeCount", likeCount);
+        return response;
+    }
 	
 
 }

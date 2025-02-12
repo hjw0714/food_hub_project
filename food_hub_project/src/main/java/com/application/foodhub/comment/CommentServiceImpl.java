@@ -19,20 +19,26 @@ public class CommentServiceImpl implements CommentService {
 		return commentDAO.getCommentsByPostId(postId);
 	}
 
-	// 특정 게시글의 원댓글(부모 댓글) 조회
 	@Override
-	public List<CommentDTO> getParentComments(Long postId) {
-		List<CommentDTO> comments = commentDAO.getParentComments(postId);
-		// 삭제된 댓글을 제외하는 필터링
-		return comments.stream().filter(comment -> !"DELETED".equals(comment.getStatus())).toList();
+	public List<CommentDTO> getParentComments(Long postId, String userId) {
+	    Map<String, Object> params = new HashMap<>();
+	    params.put("postId", postId);
+	    params.put("userId", userId);
+	    
+	    List<CommentDTO> comments = commentDAO.getParentComments(params);
+	    return comments.stream().filter(comment -> !"DELETED".equals(comment.getStatus())).toList();
 	}
 
-	// 특정 댓글의 대댓글 조회
 	@Override
-	public List<CommentDTO> getChildComments(Long parentId) {
-		return commentDAO.getChildComments(parentId);
+	public List<CommentDTO> getChildComments(Long parentId, String userId) {
+	    Map<String, Object> params = new HashMap<>();
+	    params.put("parentId", parentId);
+	    params.put("userId", userId);
+	    
+	    return commentDAO.getChildComments(params);
 	}
 
+	
 	// 댓글 추가 (원댓글 또는 대댓글)
 	@Override
 	public void insertComment(Map<String, Object> params) {
@@ -69,5 +75,28 @@ public class CommentServiceImpl implements CommentService {
 	public List<Map<String, Object>> myCommentList(String userId) {
 		return commentDAO.myCommentList(userId);
 	}
+	
+	 // ✅ 추가된 메서드
+    @Override
+    public int getCommentLikeCount(Long commentId) {
+        return commentDAO.getCommentLikeCount(commentId);
+    }
+
+    @Override
+    public boolean toggleCommentLike(Long commentId, String userId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("commentId", commentId);
+        params.put("userId", userId);
+
+        int likeExists = commentDAO.checkUserLikedComment(params);
+
+        if (likeExists > 0) {
+            commentDAO.deleteCommentLike(params);
+            return false; // 추천 취소됨
+        } else {
+            commentDAO.insertCommentLike(params);
+            return true; // 추천 추가됨
+        }
+    }
 
 }

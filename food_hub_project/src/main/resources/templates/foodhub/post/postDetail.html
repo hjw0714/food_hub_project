@@ -554,25 +554,25 @@ h2 {
 	    }
 	});
     
-    $().ready(function () {
+	$().ready(function () {
         let postId = $("#postId").val();
         let userId = $("#userId").val();
         
-        // ✅ 부모 댓글 먼저 로드
         function loadComments() {
+            let postId = $("#postId").val();
+            let userId = $("#userId").val(); // 현재 로그인한 사용자 ID
+
             $.ajax({
-                url: "/comments/post/" + postId + "/parents",
+                url: `/comments/post/${postId}/parents?userId=${userId}`,  // userId 추가
                 type: "GET",
                 dataType: "json",
                 success: function (parentComments) {
-                    console.log("서버에서 받은 부모 댓글 데이터:", parentComments);
-                    $("#commentList").empty(); // 기존 댓글 목록 초기화
+                    $("#commentList").empty();
 
                     parentComments.forEach(comment => {
                         let commentHtml = createCommentHtml(comment);
                         $("#commentList").append(commentHtml);
 
-                        // ✅ 해당 부모 댓글의 대댓글 가져오기
                         loadChildComments(comment.commentId);
                     });
                 },
@@ -583,12 +583,13 @@ h2 {
         }
         
         function loadChildComments(parentId) {
+            let userId = $("#userId").val();
+
             $.ajax({
-                url: "/comments/parent/" + parentId,
+                url: `/comments/parent/${parentId}?userId=${userId}`,  // userId 추가
                 type: "GET",
                 dataType: "json",
                 success: function (childComments) {
-                    console.log("서버에서 받은 대댓글 데이터:", childComments);
                     childComments.forEach(reply => {
                         let replyHtml = createReplyHtml(reply);
                         $(`.comment-box[data-id='${reply.parentId}'] .reply-box`).append(replyHtml);
@@ -613,7 +614,7 @@ h2 {
             let deleteButtonHtml = comment.userId === currentUserId 
                 ? `<a href="javascript:void(0);" class="btn btn-outline-danger btn-sm delete-btn" data-id="${comment.commentId}">삭제</a>`
                 : '';
-
+            let likedClass = comment.likedByUser ? "btn-success" : "btn-outline-success";
             return `
                 <div class="comment-box" data-id="${comment.commentId}">
                     <div class="comment-header">
@@ -624,9 +625,9 @@ h2 {
                     <p class="comment-content">${comment.content}</p>
                     
                     <div class="comment-footer">
-	                    <button id="commentLikeButton">
-					        추천
-					    </button>
+                    <button class="btn ${likedClass} like-btn" data-id="${comment.commentId}">
+          			 👍 <span class="like-count">${comment.likeCount}</span>
+       				</button>
                         <a href="javascript:void(0);" class="btn btn-outline-primary btn-sm reply-btn" data-id="${comment.commentId}">답글</a>
                         ${editButtonHtml}
                         ${deleteButtonHtml}
@@ -653,7 +654,7 @@ h2 {
             let deleteButtonHtml = reply.userId === currentUserId 
                 ? `<a href="javascript:void(0);" class="btn btn-outline-danger btn-sm delete-btn" data-id="${reply.commentId}">삭제</a>`
                 : '';
-
+            let likedClass = reply.likedByUser ? "btn-success" : "btn-outline-success";
             return `
                 <div class="reply-comment-box comment-box" data-id="${reply.commentId}">
                     <div class="comment-header">
@@ -663,9 +664,9 @@ h2 {
                     </div>
                     <p class="comment-content">${reply.content}</p>
                     <div class="comment-footer">
-	                    <button id="commentLikeButton">
-					        추천
-					    </button>
+                   		 <button class="btn ${likedClass} like-btn" data-id="${reply.commentId}">
+                   			 👍 <span class="like-count">${reply.likeCount}</span>
+                		</button>
 	                    ${editButtonHtml}
 	                    ${deleteButtonHtml}
 	                </div>
@@ -856,6 +857,43 @@ h2 {
         // 페이지 로드 시 댓글 불러오기
         loadComments();
         
+    });
+    
+    $(document).on("click", ".like-btn", function () {
+        let button = $(this);
+        let commentId = button.data("id");
+        let userId = $("#userId").val(); // 로그인한 사용자 ID
+
+        if (!userId) {
+            alert("로그인이 필요합니다.");
+            window.location.href = "/foodhub/user/login";
+            return;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "/comments/like",
+            data: { commentId: commentId, userId: userId }, // `application/x-www-form-urlencoded` 방식
+            success: function (response) {
+                if (response.success) {
+                    let likeCount = response.likeCount;
+                    button.find(".like-count").text(likeCount);
+
+                    // 추천 버튼 색상 변경
+                    if (response.liked) {
+                        button.removeClass("btn-outline-success").addClass("btn-success");
+                    } else {
+                        button.removeClass("btn-success").addClass("btn-outline-success");
+                    }
+                } else {
+                    alert("추천 처리 실패");
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("추천 오류:", error);
+                alert("추천 처리 중 오류가 발생했습니다.");
+            }
+        });
     });
     
     // ✅ 북마크
