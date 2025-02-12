@@ -8,65 +8,68 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport">
 <title>통합게시판</title>
 <style>
-.comment-box {
-	background-color: #f8f9fa;
-	padding: 15px;
-	border-radius: 5px;
-	margin-bottom: 20px;
-}
+     .btn-custom {
+        background-color: white;
+        color: #0056b3;
+        border: 2px solid #0056b3;
+        padding: 10px 15px;
+        border-radius: 5px;
+        font-weight: bold;
+        transition: all 0.3s;
+    }
 
-.comment-header {
-	font-weight: bold;
-	margin-bottom: 10px;
-}
+    .btn-custom:hover {
+        background-color: #0056b3;
+        color: white;
+    }
 
-.comment-footer {
-	display: flex;
-	justify-content: space-between;
-	font-size: 0.9rem;
-}
+    .post-card {
+        background-color: #ffffff;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 15px;
+        border-left: 4px solid #0056b3;
+        transition: transform 0.2s;
+    }
 
-.comment-footer a {
-	color: #6c757d;
-	text-decoration: none;
-}
+    .post-card:hover {
+        transform: scale(1.02);
+    }
 
-.profile-img {
-	width: 40px;
-	height: 40px;
-	border-radius: 50%;
-	margin-right: 10px;
-}
+    .post-title {
+        font-size: 1.3rem;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 5px;
+    }
 
-.post-navigation a {
-	margin: 0 5px;
-}
+    .post-meta {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
 
-.pagination {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	margin-top: 20px;
-}
+    .pagination {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
 
-.pagination a {
-	padding: 8px 12px;
-	margin: 0 5px;
-	border: 1px solid #ccc;
-	border-radius: 4px;
-	text-decoration: none;
-	color: #333;
-}
+    .pagination a {
+        padding: 8px 12px;
+        margin: 0 5px;
+        border: 2px solid #0056b3;
+        border-radius: 4px;
+        text-decoration: none;
+        color: #0056b3;
+        background-color: white;
+        transition: 0.3s;
+    }
 
-.pagination a.active {
-	background-color: #007bff;
-	color: white;
-	border: 1px solid #007bff;
-}
-
-.pagination a:hover {
-	background-color: #ddd;
-}
+    .pagination a.active, .pagination a:hover {
+        background-color: #0056b3;
+        color: white;
+    }
 </style>
 <script>
 	$().ready(function() {
@@ -83,20 +86,25 @@
 		<main class="main">
 			<section id="board" class="board section">
 				<div class="container">
-					<div class="board-header mb-4">
-						<h2 class="mb-3">통합 게시판</h2>
-						<p>모든 사용자가 자유롭게 글을 작성하고 댓글을 달 수 있는 공간입니다.</p>
-						<a th:href="@{/foodhub/post/createPost}"
-							class="btn btn-primary mb-4">새 글 작성</a>
-					</div>
+					 <div class="board-header mb-4">
+                        <h2 class="mb-3">통합 게시판</h2>
+                        <p>모든 사용자가 자유롭게 글을 작성하고 댓글을 달 수 있는 공간입니다.</p>
+                        <a th:href="@{/foodhub/post/createPost}"
+                           class="btn btn-custom mb-4">새 글 작성</a>
+                    </div>
 
 					<div class="board-list">
 						<div class="list-group" th:if="${postCnt > 0}"
 							th:each="post : ${postListMap}">
+							
 							<a th:href="@{/foodhub/post/postDetail(postId=${post.postId})}"
-							   class="list-group-item list-group-item-action">
-							   <h5 class="mb-1 post-title"
-							       th:text="|[${post['subCateNm']}] ${post['title']}|"></h5>
+							   class="list-group-item list-group-item-action post-card">
+							   <h5><span class="mb-1 post-title"
+								    th:text="${#strings.length(#strings.concat('[', post['subCateNm'], '] ', post['title'])) > 100} 
+								             ? ${#strings.concat('[', post['subCateNm'], '] ', #strings.substring(post['title'], 0, 100 - #strings.length(post['subCateNm']) - 3), '...')} 
+								             : ${#strings.concat('[', post['subCateNm'], '] ', post['title'])}"
+								    th:title="${#strings.concat('[', post['subCateNm'], '] ', post['title'])}"></span>
+								</h5>
 							   <small class="text-muted">
 							       <span th:text="'작성자 : ' + ${post['nickname']}"></span>
 							       <span th:text="'| 작성일 : ' + ${#dates.format(post['createdAt'], 'yyyy-MM-dd HH:mm')}"></span>

@@ -378,6 +378,28 @@
   color: white;
 }
 
+/* 제목 스타일 */
+h2 {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+    max-width: 100%;
+}
+
+/* 본문 내용 스타일 */
+.content-box p {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+}
+
+/* 댓글도 자동 줄바꿈 */
+.comment-box p {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+}
+
 
 </style>
 
@@ -826,27 +848,23 @@
         loadComments();
         
     });
- // ✅ 북마크
+    
+    // ✅ 북마크
     $().ready(function() {
-        $('#bookmarkButton').click(function() {
-            var postId = $(this).data('post-id');
-            
+        $("#bookmarkButton").click(function() {
+            const postId = $(this).data("post-id");
+
             $.ajax({
-                url: '/foodhub/post/' + postId + '/bookmark',
-                type: 'POST',
+                type: "POST",
+                url: "/foodhub/post/toggleBookmark",
+                contentType: "application/json",
+                data: JSON.stringify({ postId: postId }),
                 success: function(response) {
-                    if (response === 'login_required') {
-                        alert("로그인이 필요합니다.");
-                    } else if (response === 'added') {
-                        $('#bookmarkButton').addClass('bookmarked');
-                        alert("북마크가 추가되었습니다.");
-                    } else if (response === 'removed') {
-                        $('#bookmarkButton').removeClass('bookmarked');
-                        alert("북마크가 제거되었습니다.");
-                    }
+                    alert(response.message); // 알림 메시지 표시
                 },
-                error: function() {
-                    alert("오류가 발생했습니다. 다시 시도해주세요.");
+                error: function(error) {
+                    console.error("Error:", error);
+                    alert("오류가 발생했습니다.");
                 }
             });
         });
@@ -925,11 +943,9 @@
 						<input type="hidden" id="userId" th:value="${session.userId}">
 						
 						<!-- 북마크 버튼 -->
-						<button id="bookmarkButton" th:data-post-id="${postMap.postId}" 
-		                        th:class="${isBookmarked} ? 'bookmarked' : ''"
-		                        th:disabled="${session.userId == null}">
+		                <button id="bookmarkButton" th:data-post-id="${postMap.postId}">
 		                   🔖 북마크
-		               </button>
+		                </button>
 					</div>
 
 					

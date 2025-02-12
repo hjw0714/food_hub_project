@@ -88,7 +88,64 @@
 
 	    toggleSubCategory(); // 초기 실행
 	    $("#categoryId").change(toggleSubCategory); // 변경 이벤트 핸들링
+	    
+	    
+	    
 	});
+	
+	function checkTitleLength() {
+        let titleInput = document.getElementById("postTitle");
+        let warningMessage = document.getElementById("titleWarning");
+
+        if (titleInput.value.length > 255) {
+        	
+            // 초과된 부분 잘라내기
+            titleInput.value = titleInput.value.substring(0, 255);
+            
+            // 화면에 경고 메시지 표시
+            warningMessage.style.display = "block";
+            
+        } else {
+            // 입력이 255자 이하이면 경고 메시지 숨김
+            warningMessage.style.display = "none";
+        }
+    }
+	
+	function checkContentLength() {
+	    let editor = CKEDITOR.instances["content"]; // CKEditor 인스턴스 가져오기
+	    let contentInput = editor.getData(); // CKEditor 내용 가져오기
+	    let warningMessage = document.getElementById("contentWarning");
+
+	    if (contentInput.length > 2500) {
+	        warningMessage.style.display = "block"; // 경고 메시지 표시
+
+	        // 🔹 이벤트 감지 비활성화 후 데이터 수정
+	        editor.fire("lockSnapshot"); // 현재 상태를 임시 저장 (무한 루프 방지)
+	        editor.setData(contentInput.substring(0, 2500), function () {
+	            // 🔹 setData 후 change 이벤트를 다시 활성화 (비동기 적용)
+	            setTimeout(function () {
+	                editor.fire("unlockSnapshot");
+	            }, 100);
+	        });
+
+	    } else {
+	        warningMessage.style.display = "none"; // 정상 범위일 때 경고 숨김
+	    }
+	}
+
+	// CKEditor 초기화 및 이벤트 리스너 추가
+	CKEDITOR.replace("content");
+
+	// CKEditor가 완전히 로드된 후 이벤트 리스너 등록
+	CKEDITOR.on("instanceReady", function (event) {
+	    let editor = event.editor;
+
+	    // 변경 감지 시 checkContentLength() 실행
+	    editor.on("change", function () {
+	        checkContentLength();
+	    });
+	});
+	
 </script>
 </head>
 <body class="single-post-page">
@@ -103,7 +160,9 @@
                     <input type="hidden" name="nickname" th:value="${session.nickname}"/>
                     <div class="form-group mb-4">
                         <label for="postTitle" class="form-label">제목</label>
-                        <input type="text" id="postTitle" name="title" class="form-control" th:value="${postMap.title}" required>
+                        <input type="text" id="postTitle" name="title" class="form-control" th:value="${postMap.title}" oninput="checkTitleLength()" required>
+						<span id="titleWarning" style="color: red; font-size: 0.9rem; display: none;">
+						    제목은 255자 이하로 작성해주세요.</span>
                     </div>
                     <div class="form-group mb-4">
 					    <label>게시판 카테고리</label>
@@ -153,10 +212,12 @@
                     <br/>
                     <div class="form-group mb-4">
                         <label>내용</label>
-                       <textarea id="content" name="content" class="form-control" rows="10" th:utext="${postMap.content}" ></textarea>
+                       <textarea id="content" name="content" class="form-control" rows="10" th:utext="${postMap.content}" oninput="checkContentLength()"></textarea>
                         <script>
                             CKEDITOR.replace("content");
                         </script>
+                        <span id="contentWarning" style="color: red; font-size: 0.9rem; display: none;">
+						    본문은 2500자 이하로 작성해주세요.</span>
                     </div>
                     <div class="form-group mb-4">
 					    <label for="postFile" class="form-label">첨부 파일</label>
@@ -190,7 +251,7 @@
 					</div>
 
                     <div class="text-center">
-                        <button type="submit" class="btn btn-primary">수정</button>
+                        <button type="submit" class="btn btn-primary" id="submitButton">수정</button>
                         <button type="button" class="btn btn-secondary" onclick="cancelPost()">취소</button>
                     </div>
                 </form>

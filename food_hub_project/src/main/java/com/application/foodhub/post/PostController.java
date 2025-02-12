@@ -1,16 +1,12 @@
 package com.application.foodhub.post;
 
 import java.io.IOException;
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.application.foodhub.bookmark.BookmarkService;
 import com.application.foodhub.comment.CommentService;
@@ -176,8 +171,7 @@ public class PostController {
 	 */
 	@GetMapping("/postDetail")
 	public String postDetail(Model model,
-			@RequestParam(value = "postId", required = false, defaultValue = "1") long postId,
-						 Principal principal) {
+			@RequestParam(value = "postId", required = false, defaultValue = "1") long postId) {
 
 		// 게시글 상세 정보 가져오기
 		Map<String, Object> postMap = postService.getPostDetail(postId, true);
@@ -196,12 +190,6 @@ public class PostController {
 		Long nextPostId = postService.getNextPostId(postId, categoryId);
 		model.addAttribute("prevPostId", prevPostId);
 		model.addAttribute("nextPostId", nextPostId);
-		
-		// 북마크 상태 확인
-		if (principal != null) {
-			boolean isBookmarked = bookmarkService.isBookmarked(postId, principal.getName());
-			model.addAttribute("isBookmarked", isBookmarked);
-		}
 
 		return "foodhub/post/postDetail";
 	}
@@ -391,17 +379,22 @@ public class PostController {
 	    }
 	    
 	}
-
+	
 	// 북마크
-	@PostMapping("/{postId}/bookmark")
+	@PostMapping("/toggleBookmark")
 	@ResponseBody
-	public String bookmarkPost(@PathVariable Long postId, Principal principal) {
-		if (principal == null) {
-			return "login_required";
-		}
-		String userId = principal.getName();
-		boolean isAdded = bookmarkService.toggleBookmark(postId, userId);
-		return isAdded ? "added" : "removed";
+	public ResponseEntity<Map<String, Object>> toggleBookmark(@RequestBody Map<String, Object> requestData, HttpSession session) {
+	    String userId = (String) session.getAttribute("userId");
+	    Long postId = Long.valueOf(requestData.get("postId").toString());
+
+	    boolean isBookmarked = bookmarkService.toggleBookmark(userId, postId);
+
+	    Map<String, Object> response = new HashMap<>();
+	    response.put("isBookmarked", isBookmarked);
+	    response.put("message", isBookmarked ? "북마크가 추가되었습니다." : "북마크가 삭제되었습니다.");
+
+	    return ResponseEntity.ok(response);
 	}
+
 }
 

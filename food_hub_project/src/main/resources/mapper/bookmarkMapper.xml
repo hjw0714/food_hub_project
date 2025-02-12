@@ -3,12 +3,13 @@
 
 <mapper namespace="com.application.foodhub.bookmark.BookmarkDAO">
 
+    <!-- 북마크 추가 -->
     <insert id="addBookmark">
         INSERT INTO BOOKMARKS (
-			POST_ID,
-			USER_ID, 
-			CREATED_AT
-		)
+        	POST_ID,
+        	USER_ID,
+        	CREATED_AT
+        )
         VALUES (
         	#{postId},
         	#{userId},
@@ -16,30 +17,32 @@
         )
     </insert>
 
+    <!-- 북마크 삭제 -->
     <delete id="removeBookmark">
-        DELETE FROM BOOKMARKS
-        WHERE  POST_ID = #{postId}
-        AND	   USER_ID = #{userId}
+        DELETE FROM BOOKMARKS 
+        WHERE 		POST_ID = #{postId} 
+        AND 		USER_ID = #{userId}
     </delete>
 
-    <select id="getBookmarksByUserId" resultType="BookmarkDTO">
-        SELECT	 B.BOOKMARK_ID	AS BOOKMARK_ID,
-        		 B.POST_ID		AS POST_ID,
-        		 B.USER_ID		AS USER_ID,
-        		 B.CREATED_AT	AS CREATED_AT,
-        		 P.TITLE		AS TITLE
-        FROM 	 BOOKMARKS B
-        JOIN 	 POST P
-        ON		 B.POST_ID = P.POST_ID
-        WHERE 	 B.USER_ID = #{userId}
-        ORDER BY B.CREATED_AT DESC
+    <!-- 특정 게시글의 북마크 여부 확인 -->
+    <select id="isBookmarked" resultType="boolean">
+        SELECT 	COUNT(*) > 0
+        FROM 	BOOKMARKS
+        WHERE 	POST_ID = #{postId} 
+        AND 	USER_ID = #{userId}
     </select>
 
-    <select id="isBookmarked" resultType="boolean">
-        SELECT  COUNT(*) > 0
-        FROM	BOOKMARKS
-        WHERE	POST_ID = #{postId}
-        AND 	USER_ID = #{userId}
+    <!-- 특정 유저의 북마크 리스트 가져오기 -->
+    <select id="getBookmarksByUserId" resultType="BookmarkDTO">
+        SELECT 	 B.BOOKMARK_ID 	AS BOOKMARK_ID,
+               	 B.POST_ID 		AS POST_ID,
+               	 B.USER_ID 		AS USER_ID,
+               	 B.CREATED_AT 	AS CREATED_AT,
+               	 P.TITLE		AS TITLE
+        FROM	 BOOKMARKS B
+        JOIN	 POST P ON B.POST_ID = P.POST_ID
+        WHERE	 B.USER_ID = #{userId}
+        ORDER BY B.CREATED_AT DESC
     </select>
 
 </mapper>
