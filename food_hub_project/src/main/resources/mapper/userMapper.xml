@@ -8,8 +8,6 @@
 	<insert id="register" parameterType="UserDTO">
 		INSERT INTO USER (
 			USER_ID,
-			PROFILE_ORIGINAL,
-			PROFILE_UUID,
 			NICKNAME,
 			EMAIL,
 			TEL,
@@ -26,8 +24,6 @@
 		) 
 		VALUES (
 			#{userId},
-			#{profileOriginal},
-			#{profileUUID},
 			#{nickname},
 			#{email},
 			#{tel},
