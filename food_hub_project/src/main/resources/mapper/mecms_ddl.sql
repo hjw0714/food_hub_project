@@ -3,8 +3,8 @@ USE MECMS;
 
 CREATE TABLE USER (
     USER_ID 			VARCHAR(255) PRIMARY KEY,     			-- 사용자 고유 ID
-    PROFILE_ORIGINAL	VARCHAR(255),                 			-- 프로필 원본 파일명 (철자 수정)
-    PROFILE_UUID 		VARCHAR(255),                    	 	-- 프로필 이미지 UUID
+    PROFILE_ORIGINAL	VARCHAR(255) DEFAULT "default_profile.png",                 			-- 프로필 원본 파일명 (철자 수정)
+    PROFILE_UUID 		VARCHAR(255) DEFAULT "default_profile.png",                    	 	-- 프로필 이미지 UUID
     NICKNAME 			VARCHAR(255) NOT NULL UNIQUE,           -- 닉네임
     PASSWD				VARCHAR(255) NOT NULL,					-- 패스워드
     EMAIL 				VARCHAR(255) UNIQUE NOT NULL,           -- 이메일 (유니크 제약 조건)

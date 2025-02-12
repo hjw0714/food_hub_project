@@ -25,13 +25,14 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void register(UserDTO userDTO) {
-
+		
 		if (userDTO.getEmailYn() == null)
 			userDTO.setEmailYn("N");
 		if (userDTO.getSmsYn() == null)
 			userDTO.setSmsYn("N");
 
 		userDTO.setPasswd(passwordEncoder.encode(userDTO.getPasswd()));
+		
 		userDAO.register(userDTO);
 	}
 

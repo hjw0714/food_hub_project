@@ -207,9 +207,7 @@
         <h1>마이 페이지</h1>
 
         <div class="profile-photo">
-		    <img th:src="${userDTO.profileUUID != null} 
-		                 ? @{/foodhub/user/thumbnails(fileName=${userDTO.profileUUID})} 
-		                 : @{/images/default-profile.png}"
+		    <img th:src="@{/foodhub/user/thumbnails(fileName=${userDTO.profileUUID})}"
 		         alt="프로필 사진">
 		</div>
 

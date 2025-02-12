@@ -869,9 +869,7 @@
 						<div class="post-meta">
 					    <div class="author-box">
 					        <img class="profile-img"
-					             th:src="${postMap.profileUUID == 'default-profile.png' ? 
-					                      '/images/default-profile.png' : 
-					                      '/foodhub/user/thumbnails?fileName=' + postMap.profileUUID}"
+					             th:src="${'/foodhub/user/thumbnails?fileName=' + postMap.profileUUID}"
 					             alt="프로필 사진">
 					        <span class="text-muted">작성자: <span id="nickname" th:text="${postMap.nickname}"></span></span>
 					    </div>

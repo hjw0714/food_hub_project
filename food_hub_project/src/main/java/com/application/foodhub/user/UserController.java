@@ -78,6 +78,25 @@ public class UserController {
 		return "foodhub/user/register";
 	}
 	
+	@PostMapping("/register")	//회원가입
+	@ResponseBody
+	public String register(@ModelAttribute UserDTO userDTO) {
+		
+		if (userDTO.getProfileOriginal() == null || userDTO.getProfileUUID() == null || userDTO.getProfileUUID().isEmpty()) {
+			
+		} 
+		
+		
+		userService.register(userDTO);
+		String jsScript = """
+				<script>
+					alert('회원가입 되었습니다.');
+					location.href = '/foodhub/user/login';
+				</script>""";
+		
+		return jsScript;	
+	}
+	
 	@PostMapping("/validId")	// 아이디 중복
 	@ResponseBody 
 	public String validId(@RequestParam("userId") String userId) {
@@ -96,18 +115,6 @@ public class UserController {
 		return userService.checkValidEmail(email);
 	}
 	
-	@PostMapping("/register")	//회원가입
-	@ResponseBody
-	public String register(@ModelAttribute UserDTO userDTO) {
-		userService.register(userDTO);
-		String jsScript = """
-				<script>
-					alert('회원가입 되었습니다.');
-					location.href = '/foodhub/user/login';
-				</script>""";
-			
-		return jsScript;	
-		}
 	
 
     @GetMapping("/myPage")
