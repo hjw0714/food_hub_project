@@ -3,6 +3,15 @@
 
 <mapper namespace="com.application.foodhub.postLike.PostLikeDAO">
 
+	<resultMap id="postLikeMap" type="hashmap">
+			<result column="POST_ID"  	   	property="postId"/>
+			<result column="TITLE" 	   		property="title"/>
+			<result	column="SUB_CATE_NM"	property="subCateNm"/>
+			<result column="NICKNAME"     	property="nickname"/>
+			<result column="CREATED_AT"		property="createdAt"/>
+			<result column="LIKE_COUNT"		property="likeCount"/>
+	</resultMap>
+	
 	<delete id="deletePostLike">
 	    DELETE 	FROM POST_LIKE 
 	    WHERE 	POST_ID = #{postId} 
@@ -35,4 +44,19 @@
 	    WHERE 	POST_ID = #{postId}
 	</select>
 	
+	<!-- 좋아요 많은 순 5개 뽑아오기 -->
+	<select id="getTopLikedPosts" resultMap="postLikeMap">
+		SELECT		P.POST_ID			AS POST_ID,
+					P.TITLE				AS TITLE,
+					P.NICKNAME			AS NICKNAME,
+					P.SUB_CATE_NM 		AS SUB_CATE_NM,
+					P.CREATED_AT 		AS CREATED_AT,
+					COALESCE(COUNT(PL.POST_ID), 0) AS LIKE_COUNT
+		FROM		POST P
+		LEFT JOIN 	POST_LIKE PL
+		ON			P.POST_ID = PL.POST_ID
+		GROUP BY 	P.POST_ID, P.TITLE, P.NICKNAME, P.SUB_CATE_NM, P.CREATED_AT
+		ORDER BY	LIKE_COUNT DESC, P.CREATED_AT DESC
+		
+	</select>
 </mapper>

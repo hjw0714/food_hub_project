@@ -791,6 +791,8 @@ section,
 --------------------------------------------------------------*/
 .slider {
   background-color: transparent;
+  margin-top: 0px; /* 슬라이더 상단 여백 제거 */
+  padding-top: 0px; /* 패딩 줄이기 */
 }
 
 .slider .swiper-pagination .swiper-pagination-bullet {
@@ -806,7 +808,7 @@ section,
 }
 
 .slider .swiper-slide {
-  min-height: 200px;
+  min-height: 250px;
   position: relative;
   display: flex;
   align-items: flex-end;
@@ -826,7 +828,7 @@ section,
 
 @media (max-width: 575px) {
   .slider .swiper-slide {
-    min-height: 300px;
+    min-height: 250;
   }
 }
 
@@ -1945,7 +1947,7 @@ section,
 # Widgets
 --------------------------------------------------------------*/
 .widgets-container {
-  margin: 40px 0 30px 0;
+  margin: 20px 0 10px 0;
 }
 
 .widget-title {

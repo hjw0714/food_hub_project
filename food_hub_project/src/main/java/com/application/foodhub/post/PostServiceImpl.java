@@ -108,4 +108,9 @@ public class PostServiceImpl implements PostService {
 		return postDAO.getCategoryName(categoryId);
 	}
 
+	@Override
+	public List<Map<String, Object>> getLatestPostsByCategoryId(int categoryId) {
+		return postDAO.getLatestPostsByCategoryId(categoryId);
+	}
+
 }

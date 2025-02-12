@@ -40,4 +40,7 @@ public interface PostDAO {
 	public long getPostCntByCategory(@Param("categoryId") Long categoryId);
 
 	public String getCategoryName(@Param("categoryId") Long categoryId);
+
+	// 카테고리별 최신글 2개 가져오기
+	public List<Map<String, Object>> getLatestPostsByCategoryId(@Param("categoryId") int categoryId);
 }

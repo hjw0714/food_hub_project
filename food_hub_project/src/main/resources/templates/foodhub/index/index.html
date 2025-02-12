@@ -13,7 +13,7 @@
         color: #333;
     }
     .main {
-        padding: 40px 0;
+        padding: 20px 0;
     }
     .swiper-slide {
         position: relative;
@@ -32,24 +32,7 @@
         padding: 15px;
         border-radius: 10px;
     }
-    .swiper-slide h2 {
-        font-size: 1.5rem;
-        margin: 0;
-    }
-    .swiper-slide p {
-        font-size: 1rem;
-    }
-    /* 배너 위아래 간격 조절 */
-	.slider {
-	    background: #222;
-	    padding: 10px 0; /* 기존 40px → 10px로 줄여서 위아래 여백 감소 */
-	}
-	
-	/* 슬라이드 높이 조절 */
-	.swiper-slide {
-	    min-height: 120px; /* 기존 150px에서 120px로 줄여서 크기 축소 */
-	    max-height: 120px;
-	}
+   
   
     .partners-banner {
         background: #222;
@@ -58,7 +41,8 @@
         padding: 60px 20px;
         border-radius: 10px;
     }
-  .post-category {
+    
+  	.post-category {
 	    background: #f1f1f1; /* 밝은 회색 배경 */
 	    padding: 20px;
 	    border-radius: 10px;
@@ -72,45 +56,53 @@
 	    padding-bottom: 5px;
 	}
 	
-	.post-entry {
-	    background: white;
-	    border-radius: 10px;
-	    padding: 20px;
-	    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-	    transition: all 0.3s ease-in-out;
-	    margin-bottom: 15px; /* 포스트 간 간격 */
+	/* 🔹 인기 게시글 디자인 개선 */
+	.top-liked-posts .post-entry.lg {
+	    background: #f9f9f9; /* 연한 배경색 추가 */
+	    padding: 12px 15px; /* 내부 여백 */
+	    border-radius: 10px; /* 카드형 스타일 */
+	    border: 1px solid #ddd; /* 테두리 추가 */
+	    margin-bottom: 12px; /* 게시글 간격 증가 */
+	    transition: all 0.3s ease-in-out; /* 부드러운 효과 */
 	}
 	
-	.post-entry:hover {
-	    transform: translateY(-5px);
+	/* 🔹 Hover 효과: 마우스를 올리면 강조 */
+	.top-liked-posts .post-entry.lg:hover {
+	    background: #f0f0f0; /* 더 진한 배경색 */
+	    transform: translateY(-3px); /* 약간 위로 올라가는 효과 */
+	    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 가벼운 그림자 */
 	}
 	
-	.post-entry img {
-	    border-radius: 10px;
-	    width: 100%;
-	    height: auto;
+	
+	/* 🔹 닉네임과 날짜 스타일 */
+	.top-liked-posts .name {
+	    font-weight: 700;
+	    color: #333;
 	}
+	
+	.top-liked-posts .post-meta {
+	    font-size: 0.9rem;
+	    color: #666;
+	}
+		
+	
 
-    .post-meta {
-        font-size: 0.9rem;
-        color: #888;
-    }
-    .post-entry h2 {
-        font-size: 1.2rem;
-        margin: 10px 0;
-    }
-    .author {
-        display: flex;
-        align-items: center;
-        margin-top: 10px;
-    }
-    .author img {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        margin-right: 10px;
-    }
 </style>
+<script>
+	$().ready(function() {
+		$.ajax({
+			type : "post",
+			url : "/foodhub/post/latestPosts",
+			contentType : "application/json",
+			data : JSON.stringify({
+				categoryId : $("#categoryId").val()
+			}),
+			success : function() {
+				
+			}
+		});
+	});
+</script>
 </head>
 <body>
 
@@ -143,23 +135,25 @@
       </script>
 	
 	      <div class="swiper-wrapper">
-	        <div class="swiper-slide" style="background-image: url('/assets/img/banner-1.jpg');">
-	          <div class="content">
-	            <h2><a href="event.html" style="color: #fff;">[이벤트] 신규 가입자 30% 할인 쿠폰 증정!</a></h2>
-	            <p>지금 가입하고 할인 혜택을 받아보세요.</p>
-	          </div>
-	        </div>
-	
+	      
 	        <div class="swiper-slide" style="background-image: url('/assets/img/banner-2.jpg');">
 	          <div class="content">
-	            <h2><a href="best-posts.html" style="color: #fff;">[베스트 글] 가장 인기 있는 게시물 모음!</a></h2>
+	            <h3><a th:href="@{/foodhub/post/postDetail(postId=${topLikedPosts[0].postId})}" style="color: #fff;">
+	            [베스트 글] 이번주 가장 많은 추천을 받은 게시글!</a></h3>
 	            <p>Food Hub 유저들이 추천하는 핫한 주제 TOP 5!</p>
+	          </div>
+	        </div>
+	        
+	        <div class="swiper-slide" style="background-image: url('/assets/img/banner-1.jpg');">
+	          <div class="content">
+	            <h3><a href="event.html" style="color: #fff;">[이벤트] 신규 가입자 30% 할인 쿠폰 증정!</a></h3>
+	            <p>지금 가입하고 할인 혜택을 받아보세요.</p>
 	          </div>
 	        </div>
 	
 	        <div class="swiper-slide" style="background-image: url('/assets/img/banner-3.jpg');">
 	          <div class="content">
-	            <h2><a href="store-promo.html" style="color: #fff;">[매장 홍보] 특별 할인 진행 중!</a></h2>
+	            <h3><a href="store-promo.html" style="color: #fff;">[매장 홍보] 특별 할인 진행 중!</a></h3>
 	            <p>지금 방문하면 추가 할인 혜택까지!</p>
 	          </div>
 	        </div>
@@ -176,47 +170,60 @@
 		<div class="container" data-aos="fade-up" data-aos-delay="100">
 			<div class="row g-5">
 				<div class="col-lg-4">
-					<div class="post-entry lg">
-						<a href="best-posts.html"><img
-							src="/assets/img/post-landscape-1.jpg" alt=""></a>
-						<div class="post-meta">자유게시판 • Jan 20th '25</div>
-						<h2>
-							<a href="best-posts.html">[베스트] 요즘 가장 핫한 주제 TOP 5</a>
-						</h2>
-						<p class="mb-4 d-block">현재 커뮤니티에서 가장 인기 있는 주제를 모아봤습니다. 뜨거운
-							논쟁부터 유익한 정보까지! 여러분도 참여해보세요!</p>
-						<div class="d-flex align-items-center author">
-							<div class="photo">
-								<img src="/assets/img/person-1.jpg" alt="">
+	              <div class="top-liked-posts post-entry">
+				    <h3 style="font-weight: 700;">🔥 인기 게시글 TOP 5</h3>
+				    <div th:each="post, iterStat : ${topLikedPosts}">
+				        <div class="post-entry lg" style="gap: 8px; font-weight: 600;">
+				            <a th:href="@{/foodhub/post/postDetail(postId=${post.postId})}"></a>
+				                <a th:href="@{/foodhub/post/postDetail(postId=${post.postId})}" 
+				                   th:text="|[${iterStat.index + 1}위] [${post.subCateNm}] 
+				                   ${#strings.length(post.title) > 20 ? #strings.substring(post.title, 0, 20) + '...' : post.title}|">
+			                </a>
+				                
+			                <div>
+			                	<span class="post-meta" th:text="${#dates.format(post.createdAt, 'yyyy-MM-dd HH:mm')}"></span>
+			                </div>
+				            <div class="d-flex align-items-center" style="gap: 8px; white-space: nowrap;">
+							    <strong class="name" th:text="${post.nickname}"></strong>
+							    <span>| 👍 :</span>
+							    <span class="like-count" th:text="${post.likeCount}"></span>
+							    
 							</div>
-							<div class="name">
-								<h3>Admin</h3>
-							</div>
-						</div>
-					</div>
+				        </div>
+				    </div>
 				</div>
+            </div>
+				
+				
 				<div class="col-lg-8">
 					<div class="row g-5">
 						<div class="col-lg-4 border-start custom-border">
+							<!-- 게시글 목록 -->
+				            <div class="post-entry" id="latestPostsContainer">
+				            	<input type="hidden" id="categoryId" value="1"/>
+				                <div th:each="post : ${latestPosts}">
+				                    <div class="post-entry">외식업 정보 게시판
+				                        <a th:href="@{/foodhub/post/postDetail(postId=${post.postId})}"></a>
+				                        <div class="post-meta">
+				                            <span th:text="|${post.subCateNm} • ${#dates.format(post.createdAt, 'MMM dd, yyyy')}|"></span>
+				                        </div>
+				                        <h2>
+				                            <a th:href="@{/foodhub/post/postDetail(postId=${post.postId})}"
+				                               th:text="${#strings.length(post.title) > 20 ? #strings.substring(post.title, 0, 20) + '...' : post.title}">
+				                            </a>
+				                        </h2>
+				                    </div>
+				                </div>
+				            </div>
 							<div class="post-entry">
-								<a href="job-board.html"><img
-									src="/assets/img/post-landscape-2.jpg" alt=""></a>
-								<div class="post-meta">알바공고 • Jan 20th '25</div>
-								<h2>
-									<a href="job-board.html">[알바공고] 신규 오픈 매장에서 직원을 찾습니다!</a>
-								</h2>
-							</div>
-							<div class="post-entry">
-								<a href="partners.html"><img
-									src="/assets/img/post-landscape-5.jpg" alt=""></a>
+								<a href="partners.html"></a>
 								<div class="post-meta">협력업체 • Jan 19th '25</div>
 								<h2>
 									<a href="partners.html">[협력업체] 최고의 재료를 제공합니다!</a>
 								</h2>
 							</div>
 							<div class="post-entry">
-								<a href="store-promo.html"><img
-									src="/assets/img/post-landscape-7.jpg" alt=""></a>
+								<a href="store-promo.html"></a>
 								<div class="post-meta">매장홍보 • Jan 18th '25</div>
 								<h2>
 									<a href="store-promo.html">[매장홍보] 특별 할인 이벤트 진행 중!</a>
@@ -225,16 +232,14 @@
 						</div>
 						<div class="col-lg-4 border-start custom-border">
 							<div class="post-entry">
-								<a href="questions.html"><img
-									src="/assets/img/post-landscape-3.jpg" alt=""></a>
+								<a href="questions.html"></a>
 								<div class="post-meta">질문 • Jan 17th '25</div>
 								<h2>
 									<a href="questions.html">[질문] 매장 운영 관련 꿀팁이 있을까요?</a>
 								</h2>
 							</div>
 							<div class="post-entry">
-								<a href="used-items.html"><img
-									src="/assets/img/post-landscape-6.jpg" alt=""></a>
+								<a href="used-items.html"></a>
 								<div class="post-meta">중고판매 • Jan 16th '25</div>
 								<h2>
 									<a href="used-items.html">[점포매도] 매장을 정리하려 합니다. 관심 있으신 분
@@ -242,8 +247,7 @@
 								</h2>
 							</div>
 							<div class="post-entry">
-								<a href="used-items.html"><img
-									src="/assets/img/post-landscape-8.jpg" alt=""></a>
+								<a href="used-items.html"></a>
 								<div class="post-meta">중고판매 • Jan 15th '25</div>
 								<h2>
 									<a href="used-items.html">[중고판매] 매장 가구 및 장비 일괄 판매합니다.</a>
@@ -251,8 +255,8 @@
 							</div>
 						</div>
 						<div class="col-lg-4 border-start custom-border">
-							<a th:href="@{/foodhub/post/notification}"><h3
-									class="section-title">공지사항</h3></a>
+							<a th:href="@{/foodhub/post/notification}">
+							<h3 class="section-title">공지사항</h3></a>
 							<div class="post-entry">
 								<a href="notice1.html"><img src="/assets/img/notice1.jpg"
 									alt="" class="img-fluid"></a>
