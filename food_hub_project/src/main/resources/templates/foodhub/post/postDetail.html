@@ -109,6 +109,12 @@
   color: #ffc107; /* 아이콘 색상 노란색 */
 }
 
+/* ✅ 북마크 버튼 활성화 상태 */
+#bookmarkButton.active {
+  background-color: #ffc107; /* 노란색 배경 */
+  color: white; /* 흰색 텍스트 */
+}
+
 /* ✅ 호버 효과 */
 #bookmarkButton:hover {
   background-color: #ffc107; /* 호버 시 노란색 배경 */
@@ -261,11 +267,16 @@
   color: #198754; /* 아이콘 초록색 */
 }
 
+/* ✅ 추천 버튼 활성화 상태 */
+#postLikeButton.active {
+  background-color: #198754; /* 초록색 배경 */
+  color: white; /* 흰색 텍스트 */
+}
+
 /* 호버 효과 */
 #postLikeButton:hover {
   background-color: #198754; /* 호버 시 초록색 배경 */
   color: white; /* 호버 시 글씨 색 흰색 */
-  border-color: #198754; /* 테두리 유지 */
 }
 
 /* 호버 시 아이콘 색상 변경 */
@@ -273,8 +284,8 @@
   color: white; /* 호버 시 아이콘 흰색 */
 }
 
-/* 버튼 클릭(active) 스타일 */
 #postLikeButton:active {
+/* 버튼 클릭(active) 스타일 */
   background-color: #146c43; /* 더 어두운 초록색 */
   border-color: #13653f;
   color: white;
@@ -400,7 +411,6 @@ h2 {
     white-space: normal;
 }
 
-
 </style>
 
 <script>
@@ -521,8 +531,7 @@ h2 {
 
 	    
 	});
-</script>
-<script>
+
 	document.addEventListener("DOMContentLoaded", function() {
 	    let attachmentSection = document.getElementById("attachmentSection");
 	
@@ -851,9 +860,16 @@ h2 {
     
     // ✅ 북마크
     $().ready(function() {
+    	let loginNickname = "[[${session.nickname}]]";
+    	let bookmarkButton = $("#bookmarkButton");
+    	
+    	if (loginNickname == "") {
+    		bookmarkButton.prop("disabled", true);
+	    }
+    	
         $("#bookmarkButton").click(function() {
             const postId = $(this).data("post-id");
-
+            
             $.ajax({
                 type: "POST",
                 url: "/foodhub/post/toggleBookmark",
@@ -867,6 +883,7 @@ h2 {
                     alert("오류가 발생했습니다.");
                 }
             });
+            
         });
     });
 </script>

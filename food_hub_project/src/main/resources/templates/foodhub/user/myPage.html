@@ -70,50 +70,44 @@
             line-height: 1.6;
         }
 
-        .section {
-            margin-bottom: 10px;
-        }
-
-        .section h2 {
-            font-size: 18px;
-            margin-bottom: 10px;
-            color: var(--accent-color);
-        }
-
-        .section ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .section ul li {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background: #fdfdfd;
-        }
-
-        .section ul li button {
-            padding: 5px 10px;
-            border: none;
-            background-color: var(--accent-color);
-            color: white;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .section ul li button:hover {
-            background-color: var(--accent-hover);
-        }
-        
-        .section ul li div span {
-		    margin-right: 8px;
+		/* 북마크 리스트의 각 항목 스타일 */
+		.section ul li {
+		    display: flex; /* 한 줄로 배치 */
+		    align-items: center; /* 세로 중앙 정렬 */
+		    padding: 10px;
+		    border: 1px solid #ddd;
+		    border-radius: 5px;
+		    background: #fdfdfd;
+		    margin-bottom: 10px;
+		}
+		
+		/* 번호와 제목 사이 기본 스타일 */
+		.section ul li span {
+		    margin-right: 8px; /* 번호와 제목 간 간격 */
 		    font-weight: bold;
+		}
+		
+		/* 제목 스타일 */
+		.section ul li a {
+		    flex-grow: 1; /* 제목이 가능한 공간을 차지하도록 설정 */
+		    text-decoration: none;
+		    color: var(--text-color);
+		}
+		
+		/* 북마크 해제 버튼 스타일 */
+		.section ul li button.remove-bookmark {
+		    margin-left: auto; /* 버튼을 오른쪽 끝으로 이동 */
+		    padding: 5px 5px;
+		    border: none;
+		    background-color: var(--accent-color);
+		    color: white;
+		    border-radius: 5px;
+		    cursor: pointer;
+		    transition: background-color 0.3s ease;
+		}
+		
+		.section ul li button.remove-bookmark:hover {
+		    background-color: var(--accent-hover); /* 버튼 호버 시 색상 변경 */
 		}
 
         .actions {
@@ -171,56 +165,64 @@
         
     </style>
     <script>
-	    $().ready(function () {
-	        // 서버에서 가져온 회원 유형 값 읽기
-	        let membershipType = "[[${userDTO.membershipType}]]"// text()로 가져오기
-	        console.log("회원 유형:", membershipType);  // 변수 값을 출력해야 함
-	
-	        // 회원 유형에 따라 창업일 표시 여부 결정
-	        if (membershipType == "COMMON") {
-	            $("#businessDate").hide();  // 창업일 숨김
-	            $("#businessType").hide();
-	            $("#membershipType").text("일반회원"); // mypage에서 COMMON을 일반회원으로 출력
-	        } else {
-	            $("#businessDate").show();  // 창업일 표시
-	            $("#businessType").show();
-	            $("#membershipType").text("사업자회원"); // mypage에서 BUSSI를 사업자회원으로 출력
-	        }
-	        
-	        let gender = $("#gender").text();
-	        if (gender == "M") {
-	        	$("#gender").text("남성");
-	        }
-	        else if (gender == "F") {
-	        	$("#gender").text("여성");
-	        }
-	      
+	    $().ready(function() {
+	        initMembershipType();
+	        initGender();
+	        initBookmark();
 	    });
 	    
-	    // 북마크
-	    $().ready(function() {
-	    	$(".remove-bookmark").click(function() {
-	    	       const postId = $(this).data("post-id");
-
-	    	       $.ajax({
-	    	           type: "POST",
-	    	           url: "/foodhub/post/toggleBookmark",
-	    	           contentType: "application/json",
-	    	           data: JSON.stringify({ postId: postId }),
-	    	           success: function(response) {
-	    	               alert(response.message); // 알림 메시지 표시
-
-	    	               if (!response.isBookmarked) {
-	    	                   location.reload(); // 페이지 새로고침으로 반영
-	    	               }
-	    	           },
-	    	           error: function(error) {
-	    	               console.error("Error:", error);
-	    	               alert("오류가 발생했습니다.");
-	    	           }
-	    	       });
-	    	   });
-	    });
+	    
+		function initMembershipType() {
+			// 서버에서 가져온 회원 유형 값 읽기
+			let membershipType = "[[${userDTO.membershipType}]]"// text()로 가져오기
+			
+			// 회원 유형에 따라 창업일 표시 여부 결정
+			if (membershipType == "COMMON") {
+				$("#businessDate").hide();  // 창업일 숨김
+				$("#businessType").hide();
+				$("#membershipType").text("일반회원"); // mypage에서 COMMON을 일반회원으로 출력
+			} 
+			else {
+				$("#businessDate").show();  // 창업일 표시
+				$("#businessType").show();
+				$("#membershipType").text("사업자회원"); // mypage에서 BUSSI를 사업자회원으로 출력
+			}
+		}
+	    
+		function initGender() {   
+			let gender = $("#gender").text();
+			if (gender == "M") {
+				$("#gender").text("남성");
+			}
+			else if (gender == "F") {
+				$("#gender").text("여성");
+			}
+		}
+	    
+		// 북마크
+		function initBookmark() {
+			$(".remove-bookmark").click(function() {
+				const postId = $(this).data("post-id");
+		
+				$.ajax({
+				   type: "POST",
+				   url: "/foodhub/post/toggleBookmark",
+				   contentType: "application/json",
+				   data: JSON.stringify({ postId: postId }),
+				   success: function(response) {
+				       alert(response.message); // 알림 메시지 표시
+				
+				       if (!response.isBookmarked) {
+				           location.reload(); // 페이지 새로고침으로 반영
+				       }
+				   },
+				   error: function(error) {
+				       console.error("Error:", error);
+				       alert("오류가 발생했습니다.");
+				   }
+				});
+			});
+		}
     </script>
 </head>
 <body>
@@ -258,13 +260,35 @@
         <div class="section">
 		   <h2>게시글 북마크 리스트</h2>
 		   <ul>
-		       <li th:each="bookmark, bookmarkList : ${bookmarks}">
+		       <li th:each="bookmark, iterStat : ${bookmarks}">
+		           <!-- 번호 -->
+		           <span th:text="${(currentBookmarkPage - 1) * 5 + iterStat.index + 1} + '.'"></span>
+		           <!-- 제목 -->
 		           <a th:href="@{/foodhub/post/postDetail(postId=${bookmark.postId})}" 
-		              th:text="${bookmark.title}"></a>
+		              th:text="${#strings.length(bookmark.title) > 15 ? #strings.substring(bookmark.title, 0, 15) + '...' : bookmark.title}">
+		           </a>
+		           <!-- 북마크 해제 버튼 -->
 		           <button class="remove-bookmark" th:data-post-id="${bookmark.postId}">북마크 해제</button>
 		       </li>
 		   </ul>
+		
+		   <!-- 페이징 버튼 -->
+		   <div class="pagination">
+		       <button th:if="${currentBookmarkPage > 1}"
+		               th:onclick="'location.href=\'/foodhub/user/myPage?bookmarkPage=' + @{${currentBookmarkPage - 1}} + '&postPage=' + @{${currentPostPage}} + '&commentPage=' + @{${currentCommentPage}} + '\''">
+		           이전
+		       </button>
+		
+		       <span th:text="|${currentBookmarkPage} / ${totalBookmarkPages}|" style="font-size: 16px; font-weight: bold;"></span>
+		
+		       <button th:if="${currentBookmarkPage < totalBookmarkPages}"
+		               th:onclick="'location.href=\'/foodhub/user/myPage?bookmarkPage=' + @{${currentBookmarkPage + 1}} + '&postPage=' + @{${currentPostPage}} + '&commentPage=' + @{${currentCommentPage}} + '\''">
+		           다음
+		       </button>
+		   </div>
 		</div>
+
+
 
         <!-- 나의 게시글 리스트 -->
        <div class="section">
@@ -274,7 +298,7 @@
 		            <div style="display: flex; align-items: center;">
 		                <span th:text="${(currentPostPage - 1) * 5 + postList.count} + '.'" style="margin-right: 8px;"></span>
 		                <a th:href="@{/foodhub/post/postDetail(postId=${post.postId})}" 
-		               		th:text="${#strings.length(post.title) > 30 ? #strings.substring(post.title, 0, 30) + '...' : post.title}">
+		               		th:text="${#strings.length(post.title) > 20 ? #strings.substring(post.title, 0, 20) + '...' : post.title}">
 	               		</a>
 		            </div>
 		        </li>
@@ -304,7 +328,7 @@
 		            <div style="display: flex; align-items: center;">
 		                <span th:text="${(currentCommentPage - 1) * 5 + commetList.count} + '.'" style="margin-right: 8px;"></span>
 		                <a th:href="@{/foodhub/post/postDetail(postId=${comment.postId})}"
-		                   th:text="${#strings.length(comment.content) > 40 ? #strings.substring(comment.content, 0, 40) + '...' : comment.content}">
+		                   th:text="${#strings.length(comment.content) > 20 ? #strings.substring(comment.content, 0, 20) + '...' : comment.content}">
 		                </a>
 		            </div>
 		        </li>
