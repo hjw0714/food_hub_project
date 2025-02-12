@@ -40,7 +40,8 @@
                	 B.CREATED_AT 	AS CREATED_AT,
                	 P.TITLE		AS TITLE
         FROM	 BOOKMARKS B
-        JOIN	 POST P ON B.POST_ID = P.POST_ID
+        JOIN	 POST P 
+        ON 		 B.POST_ID = P.POST_ID
         WHERE	 B.USER_ID = #{userId}
         ORDER BY B.CREATED_AT DESC
     </select>
