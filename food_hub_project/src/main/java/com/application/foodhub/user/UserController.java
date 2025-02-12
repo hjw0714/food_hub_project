@@ -121,6 +121,7 @@ public class UserController {
     public String myPage(Model model, HttpServletRequest request,
                          @RequestParam(value = "postPage", defaultValue = "1") int postPage,
                          @RequestParam(value = "commentPage", defaultValue = "1") int commentPage,
+                         @RequestParam(value = "bookmarkPage", defaultValue = "1") int bookmarkPage,
                          @RequestParam(value = "size", defaultValue = "5") int size) {
 
         HttpSession session = request.getSession();
@@ -147,7 +148,7 @@ public class UserController {
         int commentStartIndex = (commentPage - 1) * size;
         int commentEndIndex = Math.min(commentStartIndex + size, totalComments);
         List<Map<String, Object>> paginatedComments = allComments.subList(commentStartIndex, commentEndIndex);
-
+        
         model.addAttribute("userDTO", userService.getUserDetail(userId));
         model.addAttribute("myCommentList", paginatedComments);
         model.addAttribute("myPostList", paginatedPosts);
@@ -155,10 +156,20 @@ public class UserController {
         model.addAttribute("totalPostPages", totalPostPages);
         model.addAttribute("currentCommentPage", commentPage);
         model.addAttribute("totalCommentPages", totalCommentPages);
-
-        // 북마크된 게시글 목록 가져오기 (기존 principal.getName()을 userId로 대체)
+        
+        // 로그인한 유저가 작성한 전체 북마크 가져오기
         List<BookmarkDTO> bookmarks = bookmarkService.getBookmarksByUserId(userId);
+        Collections.reverse(bookmarks);
+        int totalBookmarks = bookmarks.size();
+        int totalBookmarkPages = (int) Math.ceil((double) totalBookmarks / size);
+        int bookmarkStartIndex = (bookmarkPage - 1) * size;
+        int bookmarkEndIndex = Math.min(bookmarkStartIndex + size, totalBookmarks);
+        List<BookmarkDTO> paginatedBookmarks = bookmarks.subList(bookmarkStartIndex, bookmarkEndIndex);
+        
         model.addAttribute("bookmarks", bookmarks);
+        model.addAttribute("bookmarks", paginatedBookmarks); // 현재 페이지의 북마크 리스트
+        model.addAttribute("currentBookmarkPage", bookmarkPage); // 현재 북마크 페이지
+        model.addAttribute("totalBookmarkPages", totalBookmarkPages); // 총 북마크 페이지 수
 
         return "foodhub/user/myPage";
     }

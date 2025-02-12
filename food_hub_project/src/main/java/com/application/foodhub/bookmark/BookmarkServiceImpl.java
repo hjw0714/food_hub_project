@@ -1,6 +1,8 @@
 package com.application.foodhub.bookmark;
 
+
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,39 +10,34 @@ import org.springframework.stereotype.Service;
 @Service
 public class BookmarkServiceImpl implements BookmarkService {
 
-	@Autowired 
-	private BookmarkDAO bookmarkDAO;
+	@Autowired
+    private BookmarkDAO bookmarkDAO;
+
+    @Override
+    public boolean toggleBookmark(String userId, Long postId) {
+        // 북마크 여부 확인 후 토글 처리
+        boolean isBookmarked = bookmarkDAO.isBookmarked(postId, userId);
+
+        if (isBookmarked) {
+            // 이미 북마크된 경우 삭제
+            bookmarkDAO.removeBookmark(postId, userId);
+            return false; // 삭제된 경우 false 반환
+        } 
+        else {
+            // 북마크 추가
+            bookmarkDAO.addBookmark(postId, userId);
+            return true; // 추가된 경우 true 반환
+        }
+    }
+
+    @Override
+    public List<BookmarkDTO> getBookmarksByUserId(String userId) {
+        return bookmarkDAO.getBookmarksByUserId(userId);
+    }
 
 	@Override
-	public void addBookmark(Long postId, String userId) {
-		bookmarkDAO.addBookmark(postId, userId);
+	public List<Map<String, Object>> myBookmarkList(String userId) {
+		return bookmarkDAO.myBookmarkList(userId);
 	}
-
-	@Override
-	public void removeBookmark(Long postId, String userId) {
-		bookmarkDAO.removeBookmark(postId, userId);
-	}
-
-	@Override
-	public List<BookmarkDTO> getBookmarksByUserId(String userId) {
-		return bookmarkDAO.getBookmarksByUserId(userId);
-	}
-
-	@Override
-	public boolean isBookmarked(Long postId, String userId) {
-		return bookmarkDAO.isBookmarked(postId, userId);
-	}
-
-	@Override
-	public boolean toggleBookmark(Long postId, String userId) {
-	    if (isBookmarked(postId, userId)) {
-	        removeBookmark(postId, userId);
-	        return false;
-	    } else {
-	        addBookmark(postId, userId);
-	        return true;
-	    }
-	}
-
-
+	
 }

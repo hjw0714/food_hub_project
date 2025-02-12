@@ -1,13 +1,12 @@
 package com.application.foodhub.bookmark;
 
 import java.util.List;
+import java.util.Map;
 
 public interface BookmarkService {
 
-	public void addBookmark(Long postId, String userId);
-	public void removeBookmark(Long postId, String userId);
-	List<BookmarkDTO> getBookmarksByUserId(String userId);
-	boolean isBookmarked(Long postId, String userId);
-	public boolean toggleBookmark(Long postId, String userId);
+	public boolean toggleBookmark(String userId, Long postId);
+	public List<BookmarkDTO> getBookmarksByUserId(String userId);
+	public List<Map<String, Object>> myBookmarkList(String userId);
 
 }

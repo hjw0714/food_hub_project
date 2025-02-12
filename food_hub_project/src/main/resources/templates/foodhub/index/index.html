@@ -1,181 +1,298 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	  layout:decorate="~{foodhub/index/headerAndFooter.html}">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{foodhub/index/headerAndFooter.html}">
 <head>
 <meta charset="UTF-8">
 <title>Food Hub</title>
+<style>
+
+	body {
+        font-family: 'Noto Sans KR', sans-serif;
+        background-color: #f8f9fa;
+        color: #333;
+    }
+    .main {
+        padding: 40px 0;
+    }
+    .swiper-slide {
+        position: relative;
+        background-size: cover;
+        background-position: center;
+        border-radius: 10px;
+        overflow: hidden;
+        min-height: 100px;
+    }
+    .swiper-slide .content {
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+        color: white;
+        background: rgba(0, 0, 0, 0.6);
+        padding: 15px;
+        border-radius: 10px;
+    }
+    .swiper-slide h2 {
+        font-size: 1.5rem;
+        margin: 0;
+    }
+    .swiper-slide p {
+        font-size: 1rem;
+    }
+    /* 배너 위아래 간격 조절 */
+	.slider {
+	    background: #222;
+	    padding: 10px 0; /* 기존 40px → 10px로 줄여서 위아래 여백 감소 */
+	}
+	
+	/* 슬라이드 높이 조절 */
+	.swiper-slide {
+	    min-height: 120px; /* 기존 150px에서 120px로 줄여서 크기 축소 */
+	    max-height: 120px;
+	}
+  
+    .partners-banner {
+        background: #222;
+        color: white;
+        text-align: center;
+        padding: 60px 20px;
+        border-radius: 10px;
+    }
+  .post-category {
+	    background: #f1f1f1; /* 밝은 회색 배경 */
+	    padding: 20px;
+	    border-radius: 10px;
+	    margin-bottom: 30px;
+	}
+	
+	.post-category h3 {
+	    font-size: 1.5rem;
+	    margin-bottom: 15px;
+	    border-bottom: 2px solid #ddd; /* 제목 하단 구분선 */
+	    padding-bottom: 5px;
+	}
+	
+	.post-entry {
+	    background: white;
+	    border-radius: 10px;
+	    padding: 20px;
+	    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	    transition: all 0.3s ease-in-out;
+	    margin-bottom: 15px; /* 포스트 간 간격 */
+	}
+	
+	.post-entry:hover {
+	    transform: translateY(-5px);
+	}
+	
+	.post-entry img {
+	    border-radius: 10px;
+	    width: 100%;
+	    height: auto;
+	}
+
+    .post-meta {
+        font-size: 0.9rem;
+        color: #888;
+    }
+    .post-entry h2 {
+        font-size: 1.2rem;
+        margin: 10px 0;
+    }
+    .author {
+        display: flex;
+        align-items: center;
+        margin-top: 10px;
+    }
+    .author img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        margin-right: 10px;
+    }
+</style>
 </head>
 <body>
 
 <div layout:fragment="content">
 
-	<main class="main">
-
-		<section id="partners-banner" class="partners-banner section dark-background">
-
-			<div class="container partners-container" data-aos="fade-up" data-aos-delay="100">
-    
-				<div class="swiper init-swiper">
-    
-					<script type="application/json" class="swiper-config">
-						{
-              				"loop": true,
-              				"speed": 600,
-              				"autoplay": {
-                				"delay": 5000
-              				},
-              				"slidesPerView": "auto",
-              				"centeredSlides": true,
-              				"pagination": {
-                				"el": ".swiper-pagination",
-                				"type": "bullets",
-                				"clickable": true
-              				},
-              				"navigation": {
-                				"nextEl": ".swiper-button-next",
-                				"prevEl": ".swiper-button-prev"
-              				}
-            			}
-          			</script>
-    
-	          		<div class="swiper-wrapper">
-	    
-		            	<div class="swiper-slide" style="background-image: url('/assets/img/partners-banner-1.jpg');">
-		              		<div class="content">
-			                	<h2><a href="partner-details.html">당신의 제품, 더 많은 고객에게 다가갈 기회!</a></h2>
-			                	<p>Food Hub와 협력하여 당신의 브랜드를 성장시키세요. 지금 신청하세요!</p>
-		              		</div>
-		            	</div>
-		    
-			            <div class="swiper-slide" style="background-image: url('/assets/img/partners-banner-2.jpg');">
-			            	<div class="content">
-			                	<h2><a href="partner-details.html">최고의 식재료를 찾고 계신가요?</a></h2>
-			                	<p>저희와 함께 협력해보세요. 지속 가능한 비즈니스를 위해 최선을 다하겠습니다.</p>
-			              	</div>
-			            </div>
-		    
-		            	<div class="swiper-slide" style="background-image: url('/assets/img/partners-banner-3.jpg');">
-		              		<div class="content">
-		                		<h2><a href="partner-details.html">새로운 비즈니스 파트너를 찾으세요?</a></h2>
-		                		<p>Food Hub는 당신의 제품과 서비스를 고객에게 연결합니다.</p>
-		              		</div>
-		           		 </div>
-		    
-		            	<div class="swiper-slide" style="background-image: url('/assets/img/partners-banner-4.jpg');">
-		              		<div class="content">
-		                		<h2><a href="partner-details.html">함께 성장할 파트너를 모집합니다</a></h2>
-		                		<p>지금 신청하고 Food Hub의 파트너 네트워크에 합류하세요!</p>
-		              		</div>
-		            	</div>
-		            	
-	          		</div>
-	    
-			        <div class="swiper-button-next"></div>
-			        <div class="swiper-button-prev"></div>
-			    
-			        <div class="swiper-pagination"></div>
-			        
-       			</div>
-    
-      		</div>
-    
-    	</section><!-- /Partners Banner -->
-    
-
-    	<!-- Trending Category Section -->
-    	<section id="trending-category" class="trending-category section">
-
-      		<div class="container" data-aos="fade-up" data-aos-delay="100">
-
-        		<div class="container" data-aos="fade-up">
-          			<div class="row g-5">
-            			<div class="col-lg-4">
-
-	              			<div class="post-entry lg">
-	                			<a href="best-posts.html"><img src="/assets/img/post-landscape-1.jpg" alt="" class="img-fluid"></a>
-	                			<div class="post-meta"><span class="date">자유게시판</span> <span class="mx-1">•</span> <span>Jan 20th '25</span></div>
-	                			<h2><a href="best-posts.html">[베스트] 요즘 가장 핫한 주제 TOP 5</a></h2>
-	                			<p class="mb-4 d-block">현재 커뮤니티에서 가장 인기 있는 주제를 모아봤습니다. 뜨거운 논쟁부터 유익한 정보까지! 여러분도 참여해보세요!</p>
-	              
-	                			<div class="d-flex align-items-center author">
-	                  				<div class="photo"><img src="/assets/img/person-1.jpg" alt="" class="img-fluid"></div>
-	                  				<div class="name">
-	                    				<h3 class="m-0 p-0">Admin</h3>
-	                  				</div>
-	                			</div>
-	              			</div>
-
-            			</div>
-
-            			<div class="col-lg-8">
-              				<div class="row g-5">
-                				<div class="col-lg-4 border-start custom-border">
-                  					<div class="post-entry">
-                    					<a href="job-board.html"><img src="/assets/img/post-landscape-2.jpg" alt="" class="img-fluid"></a>
-                    					<div class="post-meta"><span class="date">알바공고</span> <span class="mx-1">•</span> <span>Jan 20th '25</span></div>
-                    					<h2><a href="job-board.html">[알바공고] 신규 오픈 매장에서 직원을 찾습니다!</a></h2>
-                  					</div>
-                  					<div class="post-entry">
-                    					<a href="partners.html"><img src="/assets/img/post-landscape-5.jpg" alt="" class="img-fluid"></a>
-                    					<div class="post-meta"><span class="date">협력업체</span> <span class="mx-1">•</span> <span>Jan 19th '25</span></div>
-                    					<h2><a href="partners.html">[협력업체] 최고의 재료를 제공합니다!</a></h2>
-                  					</div>
-                  					<div class="post-entry">
-                    					<a href="store-promo.html"><img src="/assets/img/post-landscape-7.jpg" alt="" class="img-fluid"></a>
-					                    <div class="post-meta"><span class="date">매장홍보</span> <span class="mx-1">•</span> <span>Jan 18th '25</span></div>
-					                    <h2><a href="store-promo.html">[매장홍보] 특별 할인 이벤트 진행 중!</a></h2>
-                  					</div>
-                				</div>
-                				<div class="col-lg-4 border-start custom-border">
-                  					<div class="post-entry">
-					                    <a href="questions.html"><img src="/assets/img/post-landscape-3.jpg" alt="" class="img-fluid"></a>
-					                    <div class="post-meta"><span class="date">질문</span> <span class="mx-1">•</span> <span>Jan 17th '25</span></div>
-					                    <h2><a href="questions.html">[질문] 매장 운영 관련 꿀팁이 있을까요?</a></h2>
-                  					</div>
-                  					<div class="post-entry">
-					                    <a href="used-items.html"><img src="/assets/img/post-landscape-6.jpg" alt="" class="img-fluid"></a>
-					                    <div class="post-meta"><span class="date">중고판매</span> <span class="mx-1">•</span> <span>Jan 16th '25</span></div>
-					                    <h2><a href="used-items.html">[점포매도] 매장을 정리하려 합니다. 관심 있으신 분 연락 부탁드립니다.</a></h2>
-                  					</div>
-                  					<div class="post-entry">
-					                    <a href="used-items.html"><img src="/assets/img/post-landscape-8.jpg" alt="" class="img-fluid"></a>
-					                    <div class="post-meta"><span class="date">중고판매</span> <span class="mx-1">•</span> <span>Jan 15th '25</span></div>
-					                    <h2><a href="used-items.html">[중고판매] 매장 가구 및 장비 일괄 판매합니다.</a></h2>
-                  					</div>
-                  
-                				</div>
-                				<div class="col-lg-4 border-start custom-border">
-                  					<a th:href="@{/foodhub/post/notification}"><h3 class="section-title">공지사항</h3></a>
-              						<div class="post-entry">
-					                    <a href="notice1.html"><img src="/assets/img/notice1.jpg" alt="" class="img-fluid"></a>
-					                    <div class="post-meta"><span class="date">공지</span> <span class="mx-1">•</span> <span>Jan 22nd '25</span></div>
-					                    <h2><a href="notice1.html">[공지] 새로운 커뮤니티 기능 업데이트 안내</a></h2>
-              						</div>
-					                <div class="post-entry">
-						            	<a href="notice2.html"><img src="/assets/img/notice2.jpg" alt="" class="img-fluid"></a>
-						                <div class="post-meta"><span class="date">공지</span> <span class="mx-1">•</span> <span>Jan 20th '25</span></div>
-						                <h2><a href="notice2.html">[공지] 서비스 점검 일정 안내</a></h2>
-					                </div>
-					                <div class="post-entry">
-						                <a href="notice3.html"><img src="/assets/img/notice3.jpg" alt="" class="img-fluid"></a>
-						                <div class="post-meta"><span class="date">공지</span> <span class="mx-1">•</span> <span>Jan 18th '25</span></div>
-						                <h2><a href="notice3.html">[공지] 회원가입 이벤트 진행 중!</a></h2>
-					                </div>
-                				</div>
-              				</div>
-            			</div>
-            
-                	<!-- Trending Section -->
-                
-                	</div> <!-- End Trending Section -->
-              	</div>
-            </div>
-
-		</section>
-		
-	</main>
-
+<main class="main">
+	<!-- Slider Section -->
+	<section id="slider" class="slider section dark-background">
+	  <div class="container" data-aos="fade-up" data-aos-delay="100">
+	    <div class="swiper init-swiper">
+	      <script type="application/json" class="swiper-config">
+        {
+          "loop": true,
+          "speed": 600,
+          "autoplay": {
+            "delay": 5000
+          },
+          "slidesPerView": "auto",
+          "centeredSlides": true,
+          "pagination": {
+            "el": ".swiper-pagination",
+            "type": "bullets",
+            "clickable": true
+          },
+          "navigation": {
+            "nextEl": ".swiper-button-next",
+            "prevEl": ".swiper-button-prev"
+          }
+        }
+      </script>
+	
+	      <div class="swiper-wrapper">
+	        <div class="swiper-slide" style="background-image: url('/assets/img/banner-1.jpg');">
+	          <div class="content">
+	            <h2><a href="event.html" style="color: #fff;">[이벤트] 신규 가입자 30% 할인 쿠폰 증정!</a></h2>
+	            <p>지금 가입하고 할인 혜택을 받아보세요.</p>
+	          </div>
+	        </div>
+	
+	        <div class="swiper-slide" style="background-image: url('/assets/img/banner-2.jpg');">
+	          <div class="content">
+	            <h2><a href="best-posts.html" style="color: #fff;">[베스트 글] 가장 인기 있는 게시물 모음!</a></h2>
+	            <p>Food Hub 유저들이 추천하는 핫한 주제 TOP 5!</p>
+	          </div>
+	        </div>
+	
+	        <div class="swiper-slide" style="background-image: url('/assets/img/banner-3.jpg');">
+	          <div class="content">
+	            <h2><a href="store-promo.html" style="color: #fff;">[매장 홍보] 특별 할인 진행 중!</a></h2>
+	            <p>지금 방문하면 추가 할인 혜택까지!</p>
+	          </div>
+	        </div>
+	      </div>
+	
+	      <div class="swiper-button-next"></div>
+	      <div class="swiper-button-prev"></div>
+	      <div class="swiper-pagination"></div>
+	    </div>
+	  </div>
+	</section>
+	
+	<section id="trending-category" class="trending-category section">
+		<div class="container" data-aos="fade-up" data-aos-delay="100">
+			<div class="row g-5">
+				<div class="col-lg-4">
+					<div class="post-entry lg">
+						<a href="best-posts.html"><img
+							src="/assets/img/post-landscape-1.jpg" alt=""></a>
+						<div class="post-meta">자유게시판 • Jan 20th '25</div>
+						<h2>
+							<a href="best-posts.html">[베스트] 요즘 가장 핫한 주제 TOP 5</a>
+						</h2>
+						<p class="mb-4 d-block">현재 커뮤니티에서 가장 인기 있는 주제를 모아봤습니다. 뜨거운
+							논쟁부터 유익한 정보까지! 여러분도 참여해보세요!</p>
+						<div class="d-flex align-items-center author">
+							<div class="photo">
+								<img src="/assets/img/person-1.jpg" alt="">
+							</div>
+							<div class="name">
+								<h3>Admin</h3>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-8">
+					<div class="row g-5">
+						<div class="col-lg-4 border-start custom-border">
+							<div class="post-entry">
+								<a href="job-board.html"><img
+									src="/assets/img/post-landscape-2.jpg" alt=""></a>
+								<div class="post-meta">알바공고 • Jan 20th '25</div>
+								<h2>
+									<a href="job-board.html">[알바공고] 신규 오픈 매장에서 직원을 찾습니다!</a>
+								</h2>
+							</div>
+							<div class="post-entry">
+								<a href="partners.html"><img
+									src="/assets/img/post-landscape-5.jpg" alt=""></a>
+								<div class="post-meta">협력업체 • Jan 19th '25</div>
+								<h2>
+									<a href="partners.html">[협력업체] 최고의 재료를 제공합니다!</a>
+								</h2>
+							</div>
+							<div class="post-entry">
+								<a href="store-promo.html"><img
+									src="/assets/img/post-landscape-7.jpg" alt=""></a>
+								<div class="post-meta">매장홍보 • Jan 18th '25</div>
+								<h2>
+									<a href="store-promo.html">[매장홍보] 특별 할인 이벤트 진행 중!</a>
+								</h2>
+							</div>
+						</div>
+						<div class="col-lg-4 border-start custom-border">
+							<div class="post-entry">
+								<a href="questions.html"><img
+									src="/assets/img/post-landscape-3.jpg" alt=""></a>
+								<div class="post-meta">질문 • Jan 17th '25</div>
+								<h2>
+									<a href="questions.html">[질문] 매장 운영 관련 꿀팁이 있을까요?</a>
+								</h2>
+							</div>
+							<div class="post-entry">
+								<a href="used-items.html"><img
+									src="/assets/img/post-landscape-6.jpg" alt=""></a>
+								<div class="post-meta">중고판매 • Jan 16th '25</div>
+								<h2>
+									<a href="used-items.html">[점포매도] 매장을 정리하려 합니다. 관심 있으신 분
+										연락 부탁드립니다.</a>
+								</h2>
+							</div>
+							<div class="post-entry">
+								<a href="used-items.html"><img
+									src="/assets/img/post-landscape-8.jpg" alt=""></a>
+								<div class="post-meta">중고판매 • Jan 15th '25</div>
+								<h2>
+									<a href="used-items.html">[중고판매] 매장 가구 및 장비 일괄 판매합니다.</a>
+								</h2>
+							</div>
+						</div>
+						<div class="col-lg-4 border-start custom-border">
+							<a th:href="@{/foodhub/post/notification}"><h3
+									class="section-title">공지사항</h3></a>
+							<div class="post-entry">
+								<a href="notice1.html"><img src="/assets/img/notice1.jpg"
+									alt="" class="img-fluid"></a>
+								<div class="post-meta">
+									<span class="date">공지</span> <span class="mx-1">•</span> <span>Jan
+										22nd '25</span>
+								</div>
+								<h2>
+									<a href="notice1.html">[공지] 새로운 커뮤니티 기능 업데이트 안내</a>
+								</h2>
+							</div>
+							<div class="post-entry">
+								<a href="notice2.html"><img src="/assets/img/notice2.jpg"
+									alt="" class="img-fluid"></a>
+								<div class="post-meta">
+									<span class="date">공지</span> <span class="mx-1">•</span> <span>Jan
+										20th '25</span>
+								</div>
+								<h2>
+									<a href="notice2.html">[공지] 서비스 점검 일정 안내</a>
+								</h2>
+							</div>
+							<div class="post-entry">
+								<a href="notice3.html"><img src="/assets/img/notice3.jpg"
+									alt="" class="img-fluid"></a>
+								<div class="post-meta">
+									<span class="date">공지</span> <span class="mx-1">•</span> <span>Jan
+										18th '25</span>
+								</div>
+								<h2>
+									<a href="notice3.html">[공지] 회원가입 이벤트 진행 중!</a>
+								</h2>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</main>
 </div>
 
 </body>
