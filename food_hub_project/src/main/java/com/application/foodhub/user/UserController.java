@@ -109,60 +109,6 @@ public class UserController {
 		return jsScript;	
 		}
 	
-//	@GetMapping("/myPage")
-//	public String myPage(Model model , HttpServletRequest request, Principal principal,
-//						@RequestParam(value = "postPage", defaultValue = "1") int postPage,
-//						//@RequestParam(value = "bookmarkPage", defaultValue = "1") int bookmarkPage,
-//						@RequestParam(value = "commentPage", defaultValue = "1") int commentPage,
-//		    			@RequestParam(value = "size", defaultValue = "5") int size) {
-//		
-//		HttpSession session = request.getSession();
-//		String userId = (String)session.getAttribute("userId");
-//	      
-//	    // 로그인한 유저가 쓴 전체 게시글 가져오기
-//	    List<Map<String, Object>> allPosts = postService.myPostList(userId);
-//	    
-//	    // 게시글을 역순으로 정렬
-//	    Collections.reverse(allPosts);
-//	    
-//	    int totalPosts = allPosts.size();
-//	    int totalPostPages = (int) Math.ceil((double) totalPosts / size);
-//	    
-//	    // 페이지에 해당하는 게시글만 가져오기
-//	    int startIndex = (postPage - 1) * size;
-//	    int endIndex = Math.min(startIndex + size, totalPosts);
-//	    List<Map<String, Object>> paginatedPosts = allPosts.subList(startIndex, endIndex);
-//	    
-//	    // 로그인한 유저가 작성한 전체 댓글 가져오기
-//	    List<Map<String, Object>> allComments = commentService.myCommentList(userId);
-//	    
-//	    //댓글을 역순으로 정렬
-//	    Collections.reverse(allComments);
-//	    
-//	    int totalComments = allComments.size();
-//	    int totalCommentPages = (int) Math.ceil((double) totalComments / size);
-//
-//	    // 페이지에 해당하는 댓글만 가져오기
-//	    int commentStartIndex = (commentPage - 1) * size;
-//	    int commentEndIndex = Math.min(commentStartIndex + size, totalComments);
-//	    List<Map<String, Object>> paginatedComments = allComments.subList(commentStartIndex, commentEndIndex);
-//	      
-//	    model.addAttribute("userDTO" , userService.getUserDetail(userId));    // 유저 정보
-//	    //model.addAttribute("myBookmarkList" , bookmarkService.myBookmark(userId));   // 유저 북마크 리스트
-//	    model.addAttribute("myCommentList" , paginatedComments); // 유저 댓글 리스트
-//	    model.addAttribute("myPostList", paginatedPosts); // 유저 게시글 리스트
-//	    model.addAttribute("currentPostPage", postPage);
-//	    model.addAttribute("totalPostPages", totalPostPages);
-//	    model.addAttribute("currentCommentPage", commentPage);
-//	    model.addAttribute("totalCommentPages", totalCommentPages);
-//	    model.addAttribute("totalCommentPages", totalCommentPages);
-//	    
-//	    // 북마크된 게시글 목록 가져오기
-//	    List<BookmarkDTO> bookmarks = bookmarkService.getBookmarksByUserId(principal.getName());
-//	    model.addAttribute("bookmarks", bookmarks);
-//	      
-//	    return "foodhub/user/myPage";
-//	}
 
     @GetMapping("/myPage")
     public String myPage(Model model, HttpServletRequest request,
