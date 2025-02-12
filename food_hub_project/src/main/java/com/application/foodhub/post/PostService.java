@@ -3,6 +3,8 @@ package com.application.foodhub.post;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.application.foodhub.fileUpload.FileUploadDTO;
 
 public interface PostService {
@@ -33,5 +35,7 @@ public interface PostService {
 	public long getPostCntByCategory(Long categoryId);
 
 	public String getCategoryName(Long categoryId);
+	
+	public List<Map<String, Object>> getLatestPostsByCategoryId(int categoryId);
 
 }

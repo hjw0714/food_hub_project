@@ -47,10 +47,10 @@ public class PostController {
 
 	@Autowired
 	private PostLikeService postLikeService;
-	
+
 	@Autowired
 	private PostReportService postReportService;
-	
+
 	@Autowired
 	private BookmarkService bookmarkService;
 
@@ -193,7 +193,6 @@ public class PostController {
 
 		return "foodhub/post/postDetail";
 	}
-	
 
 	// 게시글 삭제
 	@GetMapping("/deletePost")
@@ -211,7 +210,6 @@ public class PostController {
 		model.addAttribute("postId", postId);
 		model.addAttribute("postMap", postService.getPostDetail(postId, false));
 		model.addAttribute("sessionNickname", sessionNickname);
-		
 
 		return "foodhub/post/deletePost";
 	}
@@ -333,68 +331,79 @@ public class PostController {
 
 	@PostMapping("/postLike")
 	public ResponseEntity<Integer> postLike(@RequestBody PostLikeDTO postLikeDTO) {
-	    
-	    long postId = postLikeDTO.getPostId();
-	    String userId = postLikeDTO.getUserId();
-	    
+
+		long postId = postLikeDTO.getPostId();
+		String userId = postLikeDTO.getUserId();
+
 //	    System.out.println("postId : " + postId);
 //	    System.out.println("userId : " + userId);
-	    
-	    postLikeService.togglePostLike(postId, userId);
-	    int likeCount = postLikeService.getPostLikeCount(postId);
 
-	    return ResponseEntity.ok(likeCount);
+		postLikeService.togglePostLike(postId, userId);
+		int likeCount = postLikeService.getPostLikeCount(postId);
+
+		return ResponseEntity.ok(likeCount);
 	}
-	
+
 	@PostMapping("/report")
 	@ResponseBody
 	public ResponseEntity<Map<String, Object>> report(@RequestBody PostReportDTO postReportDTO) {
-		
+
 		long postId = postReportDTO.getPostId();
 		String userId = postReportDTO.getUserId();
 		String content = postReportDTO.getContent();
-		
+
 //		System.out.println(postId);
 //		System.out.println(userId);
 //		System.out.println(content);
-		
+
 		boolean reportSuccess = postReportService.reportPost(postId, userId, content);
-		
+
 		Map<String, Object> response = new HashMap<>();
-		
+
 		// 이미 신고한 경우
-	    if (!reportSuccess) {
-	        response.put("success", false);
-	        response.put("message", "이미 신고한 게시글입니다.");
-	        response.put("redirectUrl", "/foodhub/post/postDetail?postId=" + postReportDTO.getPostId());
-	        return ResponseEntity.ok(response);  // 🚨 클라이언트가 알 수 있도록 JSON 반환
-	    }
-	    else{
-	    	// 신고 성공 시
-		    response.put("success", true);
-		    response.put("message", "게시글이 신고되었습니다.");
-		    response.put("redirectUrl", "/foodhub/post/postDetail?postId=" + postReportDTO.getPostId());
-		    
-		    return ResponseEntity.ok(response);
-	    }
-	    
+		if (!reportSuccess) {
+			response.put("success", false);
+			response.put("message", "이미 신고한 게시글입니다.");
+			response.put("redirectUrl", "/foodhub/post/postDetail?postId=" + postReportDTO.getPostId());
+			return ResponseEntity.ok(response); // 🚨 클라이언트가 알 수 있도록 JSON 반환
+		} else {
+			// 신고 성공 시
+			response.put("success", true);
+			response.put("message", "게시글이 신고되었습니다.");
+			response.put("redirectUrl", "/foodhub/post/postDetail?postId=" + postReportDTO.getPostId());
+
+			return ResponseEntity.ok(response);
+		}
+
 	}
-	
+
 	// 북마크
 	@PostMapping("/toggleBookmark")
 	@ResponseBody
-	public ResponseEntity<Map<String, Object>> toggleBookmark(@RequestBody Map<String, Object> requestData, HttpSession session) {
-	    String userId = (String) session.getAttribute("userId");
-	    Long postId = Long.valueOf(requestData.get("postId").toString());
+	public ResponseEntity<Map<String, Object>> toggleBookmark(@RequestBody Map<String, Object> requestData,
+			HttpSession session) {
+		String userId = (String) session.getAttribute("userId");
+		Long postId = Long.valueOf(requestData.get("postId").toString());
 
-	    boolean isBookmarked = bookmarkService.toggleBookmark(userId, postId);
+		boolean isBookmarked = bookmarkService.toggleBookmark(userId, postId);
 
-	    Map<String, Object> response = new HashMap<>();
-	    response.put("isBookmarked", isBookmarked);
-	    response.put("message", isBookmarked ? "북마크가 추가되었습니다." : "북마크가 삭제되었습니다.");
+		Map<String, Object> response = new HashMap<>();
+		response.put("isBookmarked", isBookmarked);
+		response.put("message", isBookmarked ? "북마크가 추가되었습니다." : "북마크가 삭제되었습니다.");
 
-	    return ResponseEntity.ok(response);
+		return ResponseEntity.ok(response);
+	}
+
+	// 카테고리별 최신글 2개 뽑기
+	@PostMapping("/latestPosts")
+	public String getLatestPostsByCategory(@RequestParam("categoryId") int categoryId, Model model) {
+		
+		System.out.println("categoryId: " + categoryId);
+
+		List<Map<String, Object>> latestPosts = postService.getLatestPostsByCategoryId(categoryId);
+		model.addAttribute("latestPosts", latestPosts);
+		
+		return "foodhub/index/index";
 	}
 
 }
-
