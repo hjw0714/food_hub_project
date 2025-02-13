@@ -411,6 +411,36 @@ h2 {
     white-space: normal;
 }
 
+/* 🚨 신고 버튼 스타일 */
+.report-comment-btn {
+    cursor: pointer;  /* 클릭 가능하도록 설정 */
+    font-size: 18px;  /* 크기 조정 */
+    margin-left: 8px; /* 여백 추가 */
+    transition: transform 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+/* 🚨 호버 효과 */
+.report-comment-btn:hover {
+    transform: scale(1.2);  /* 약간 확대 */
+    color: red;  /* 색상 강조 */
+}
+
+/* ✅ 정렬 옵션 텍스트 스타일 */
+.sort-text {
+    cursor: pointer;
+    font-size: 14px;
+    color: #6c757d;
+    transition: color 0.2s ease-in-out;
+}
+
+.sort-text:hover {
+    color: #000;
+}
+
+.sort-text.active {
+    font-weight: bold;
+    color: #000;
+}
 </style>
 
 <script>
@@ -554,16 +584,20 @@ h2 {
 	    }
 	});
     
-	$().ready(function () {
+	$(document).ready(function () {
         let postId = $("#postId").val();
         let userId = $("#userId").val();
+     // ✅ sortOrder를 localStorage에서 불러오기 (기본값: newest)
+        let sortOrder = localStorage.getItem("commentSortOrder") || "newest";
         
-        function loadComments() {
-            let postId = $("#postId").val();
-            let userId = $("#userId").val(); // 현재 로그인한 사용자 ID
-
-            $.ajax({
-                url: `/comments/post/${postId}/parents?userId=${userId}`,  // userId 추가
+        function loadComments(sortOrder) {
+        	 console.log("현재 정렬 기준:", sortOrder);
+            
+        	 // ✅ 정렬 상태를 localStorage에 저장
+             localStorage.setItem("commentSortOrder", sortOrder);
+        	 
+        	 $.ajax({
+                url: `/comments/post/${postId}/parents?userId=${userId}&sortOrder=${sortOrder}`,  // userId 추가
                 type: "GET",
                 dataType: "json",
                 success: function (parentComments) {
@@ -614,6 +648,12 @@ h2 {
             let deleteButtonHtml = comment.userId === currentUserId 
                 ? `<a href="javascript:void(0);" class="btn btn-outline-danger btn-sm delete-btn" data-id="${comment.commentId}">삭제</a>`
                 : '';
+                
+                let reportButtonHtml = comment.userId !== currentUserId  
+                ? `<span class="report-comment-btn" data-id="${comment.commentId}" title="신고">
+                        🚨
+                   </span>`
+                : '';   
             let likedClass = comment.likedByUser ? "btn-success" : "btn-outline-success";
             return `
                 <div class="comment-box" data-id="${comment.commentId}">
@@ -621,7 +661,8 @@ h2 {
                         <img class="profile-img" src="${profileImgSrc}" alt="프로필">
                         <span>${displayName}</span>
                         <span class="text-muted">${comment.createdAt}</span>
-                    </div>
+                        ${reportButtonHtml}
+                        </div>
                     <p class="comment-content">${comment.content}</p>
                     
                     <div class="comment-footer">
@@ -654,6 +695,11 @@ h2 {
             let deleteButtonHtml = reply.userId === currentUserId 
                 ? `<a href="javascript:void(0);" class="btn btn-outline-danger btn-sm delete-btn" data-id="${reply.commentId}">삭제</a>`
                 : '';
+            let reportButtonHtml = reply.userId !== currentUserId  
+                ? `<span class="report-comment-btn" data-id="${reply.commentId}" title="신고">
+                        🚨
+                   </span>`
+                : '';
             let likedClass = reply.likedByUser ? "btn-success" : "btn-outline-success";
             return `
                 <div class="reply-comment-box comment-box" data-id="${reply.commentId}">
@@ -661,6 +707,7 @@ h2 {
                         <img class="profile-img" src="${profileImgSrc}" alt="프로필">
                         <span>${displayName}</span>
                         <span class="text-muted">${reply.createdAt}</span>
+                        ${reportButtonHtml}
                     </div>
                     <p class="comment-content">${reply.content}</p>
                     <div class="comment-footer">
@@ -716,11 +763,9 @@ h2 {
             let commentBox = $(this).closest(".comment-box");
             let replyBox = commentBox.find(".reply-box");
 
-            if (replyBox.find(".reply-form").length > 0) {
-                replyBox.find(".reply-form").remove();
-                return;
-            }
-
+         // 기존에 있던 입력창이 있으면 제거
+            $(".reply-form").remove();
+         
             let replyFormHtml = `
             	
                 <div class="reply-form">
@@ -729,7 +774,13 @@ h2 {
                     <button class="btn btn-sm btn-secondary cancel-reply">취소</button>
                 </div>
             `;
-            replyBox.append(replyFormHtml);
+            // 🔹 대댓글이 이미 존재하는 경우, 첫 번째 대댓글 위에 삽입
+    if (replyBox.children(".reply-comment-box").length > 0) {
+        replyBox.children(".reply-comment-box").first().before(replyFormHtml);
+    } else {
+        // 🔹 대댓글이 없을 경우, 그냥 replyBox 안에 삽입
+        replyBox.append(replyFormHtml);
+    }
         });
 
 
@@ -809,7 +860,8 @@ h2 {
             },
             success: function (response) {
                 alert(response); // 수정 성공 메시지 표시
-                loadComments(); // 다시 로드하여 수정 반영
+                let currentSortOrder = localStorage.getItem("commentSortOrder") || "newest";
+                loadComments(currentSortOrder); // 다시 로드하여 수정 반영
             },
             error: function (xhr, status, error) {
                 console.error("댓글 수정 오류:", error);
@@ -853,12 +905,46 @@ h2 {
             }
         });
     });
-
-        // 페이지 로드 시 댓글 불러오기
-        loadComments();
-        
-    });
     
+    $(document).on("click", ".report-comment-btn", function () {
+        let commentId = $(this).data("id");  // 클릭한 버튼의 댓글 ID 가져오기
+        console.log("🚨 신고할 댓글 ID:", commentId);
+        $("#commentId").val(commentId);      // 신고할 댓글 ID 저장
+        $("#reportReason2").val("");
+        $("#reportModal2").modal("show");    // 모달 띄우기
+    });
+
+    // ✅ 신고 제출 버튼 클릭 시 AJAX 요청
+    $("#submitReport2").click(function () {
+        let commentId = $("#commentId").val(); // 신고할 댓글 ID 가져오기
+        let userId = $("#userId").val();
+        let content = $("#reportReason2").val().trim();
+
+        if (!content) {
+            alert("신고 사유를 입력해주세요.");
+            return;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "/comments/report",
+            contentType: "application/json",
+            data: JSON.stringify({
+                commentId: commentId,
+                userId: userId,
+                content: content
+            }),
+            success: function (response) {
+                alert(response.message);
+                $("#reportModal2").modal("hide"); // 모달 닫기
+            },
+            error: function (xhr, status, error) {
+                console.error("신고 처리 오류:", error);
+                alert("신고 처리 중 오류가 발생했습니다.");
+            }
+        });
+    });
+
     $(document).on("click", ".like-btn", function () {
         let button = $(this);
         let commentId = button.data("id");
@@ -896,6 +982,30 @@ h2 {
         });
     });
     
+    // 댓글 정렬 클릭 이벤트
+    $("#sortOldest").click(function () {
+        sortOrder = "oldest";
+        localStorage.setItem("commentSortOrder", sortOrder);
+        loadComments(sortOrder);
+        $("#sortOldest").addClass("active");
+        $("#sortNewest").removeClass("active");
+        console.log("✅ 작성일 순 클릭됨, sortOrder:", sortOrder); // 🚀 디버깅용 로그 추가
+    });
+
+    $("#sortNewest").click(function () {
+        sortOrder = "newest";
+        localStorage.setItem("commentSortOrder", sortOrder);
+        loadComments(sortOrder);
+        $("#sortNewest").addClass("active");
+        $("#sortOldest").removeClass("active");
+        console.log("✅ 최신순 클릭됨, sortOrder:", sortOrder); // 🚀 디버깅용 로그 추가
+    });
+        loadComments(sortOrder);
+        
+    });
+    
+    
+    
     // ✅ 북마크
     $().ready(function() {
     	let loginNickname = "[[${session.nickname}]]";
@@ -923,6 +1033,9 @@ h2 {
             });
             
         });
+        
+        
+        
     });
 </script>
 </head>
@@ -1024,7 +1137,7 @@ h2 {
 					    </button>
 					</div>
 					
-					<!-- 신고 모달 -->
+					<!-- 게시글 신고 모달 -->
 					<div id="reportModal" class="modal fade" tabindex="-1" aria-hidden="true">
 					    <div class="modal-dialog">
 					        <div class="modal-content">
@@ -1043,12 +1156,39 @@ h2 {
 					        </div>
 					    </div>
 					</div>
+					
+					<!-- 댓글 신고 모달 -->
+					<div id="reportModal2" class="modal fade" tabindex="-1" aria-hidden="true">
+					    <div class="modal-dialog">
+					        <div class="modal-content">
+					            <div class="modal-header">
+					                <h5 class="modal-title">댓글 신고</h5>
+					                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					            </div>
+					            <div class="modal-body">
+					                <p>신고 사유를 입력해주세요:</p>
+					                <textarea id="reportReason2" class="form-control" rows="4" placeholder="신고 사유를 입력하세요..."></textarea>
+					           		<input type="hidden" id="commentId">
+					            </div>
+					            <div class="modal-footer">
+					                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+					                <button type="button" id="submitReport2" class="btn btn-danger">신고 제출</button>
+					            </div>
+					        </div>
+					    </div>
+					</div>
 										
 
 					<!-- 댓글 섹션 -->
-					<section id="comments" class="comments section">
-						<h3>댓글</h3>
-
+<section id="comments" class="comments section">
+    <div class="d-flex align-items-center justify-content-between mb-3">
+        <h3 class="mb-0">댓글</h3>
+        <div class="d-flex align-items-center">
+            <span id="sortOldest" class="sort-text">작성일 순</span>
+            <span class="mx-2">|</span>
+            <span id="sortNewest" class="sort-text active">최신순</span>
+        </div>
+    </div>
 						<!-- 댓글 입력 폼 -->
 						<div class="comment-box">
 							<form id="commentForm">

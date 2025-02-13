@@ -5,14 +5,18 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.application.foodhub.commentReport.CommentReportDTO;
+import com.application.foodhub.commentReport.CommentReportService;
 import com.application.foodhub.user.UserService;
 
 @Controller
@@ -24,6 +28,9 @@ public class CommentController {
 
 	@Autowired
 	private CommentService commentService;
+	
+	@Autowired
+	private CommentReportService commentReportService;
 
 	// 특정 게시글의 모든 댓글 조회 (원댓글 + 대댓글 포함)
 	@GetMapping("/post/{postId}")
@@ -34,8 +41,8 @@ public class CommentController {
 
 	@GetMapping("/post/{postId}/parents")
 	@ResponseBody
-	public List<CommentDTO> getParentComments(@PathVariable("postId") Long postId ,  @RequestParam(value = "userId", required = false) String userId) {
-		return commentService.getParentComments(postId , userId);
+	public List<CommentDTO> getParentComments(@PathVariable("postId") Long postId ,  @RequestParam(value = "userId", required = false) String userId , @RequestParam(value = "sortOrder", required = false, defaultValue = "oldest") String sortOrder) {  
+	    return commentService.getParentComments(postId, userId, sortOrder);
 	}
 
 	// 특정 댓글의 대댓글 조회
@@ -122,6 +129,32 @@ public class CommentController {
         response.put("likeCount", likeCount);
         return response;
     }
+	
+	@PostMapping("/report")
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> report(@RequestBody CommentReportDTO commentReportDTO) {
+		long commentId = commentReportDTO.getCommentId();
+		String userId = commentReportDTO.getUserId();
+		String content = commentReportDTO.getContent();
+		
+		boolean reportSuccess = commentReportService.reportComment(commentId, userId, content);
+		
+		Map<String, Object> response = new HashMap<>();
+		
+		if (!reportSuccess) {
+			response.put("success", false);
+			response.put("message", "이미 신고한 댓글입니다.");
+			response.put("redirectUrl", "/foodhub/post/postDetail?postId=" + commentReportDTO.getCommentId());
+			return ResponseEntity.ok(response); // 🚨 클라이언트가 알 수 있도록 JSON 반환
+		} else {
+			// 신고 성공 시
+			response.put("success", true);
+			response.put("message", "댓글이 신고되었습니다.");
+			response.put("redirectUrl", "/foodhub/post/postDetail?postId=" + commentReportDTO.getCommentId());
+
+			return ResponseEntity.ok(response);
+		}
+	}
 	
 
 }

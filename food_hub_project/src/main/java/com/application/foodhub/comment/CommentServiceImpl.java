@@ -20,10 +20,11 @@ public class CommentServiceImpl implements CommentService {
 	}
 
 	@Override
-	public List<CommentDTO> getParentComments(Long postId, String userId) {
+	public List<CommentDTO> getParentComments(Long postId, String userId, String sortOrder) {
 	    Map<String, Object> params = new HashMap<>();
 	    params.put("postId", postId);
 	    params.put("userId", userId);
+	    params.put("sortOrder", sortOrder);
 	    
 	    List<CommentDTO> comments = commentDAO.getParentComments(params);
 	    return comments.stream().filter(comment -> !"DELETED".equals(comment.getStatus())).toList();
@@ -97,6 +98,11 @@ public class CommentServiceImpl implements CommentService {
             commentDAO.insertCommentLike(params);
             return true; // 추천 추가됨
         }
+    }
+    
+    @Override
+    public boolean isCommentDeleted(long commentId) {
+        return commentDAO.existsByCommentId(commentId) > 0;
     }
 
 }
