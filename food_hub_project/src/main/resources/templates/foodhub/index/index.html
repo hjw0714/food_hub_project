@@ -224,7 +224,7 @@
 									class="post-entry">
 									<a th:href="@{/foodhub/post/postDetail(postId=${post.postId})}"
 										class="post-title"> <span
-										th:utext="|[${iterStat.index + 1}위] <br> [${post.subCateNm}] ${#strings.length(post.title) > 20 ? #strings.substring(post.title, 0, 20) + '...' : post.title}|"></span>
+										th:utext="|[${iterStat.index + 1}위] <br> [${post.subCateNm}] ${#strings.length(post.title) > 25 ? #strings.substring(post.title, 0, 25) + '...' : post.title}|"></span>
 									</a>
 									<div class="d-flex align-items-center"
 										style="gap: 8px; white-space: nowrap;">
@@ -265,7 +265,7 @@
 												<a
 													th:href="@{/foodhub/post/postDetail(postId=${post.postId})}"
 													class="post-title"> <span
-													th:text="|[${post.subCateNm}] ${#strings.length(post.title) > 20 ? #strings.substring(post.title, 0, 20) + '...' : post.title}|"></span>
+													th:text="|[${post.subCateNm}] ${#strings.length(post.title) > 25 ? #strings.substring(post.title, 0, 25) + '...' : post.title}|"></span>
 												</a>
 												<div class="post-meta">
 													<span class="nickname" th:text="${post.nickname}"></span> <span
@@ -282,49 +282,29 @@
 						</div>
 
 						<div class="col-lg-3">
-							<div class="post-category"> <!-- 기존과 일관성을 위해 post-category 추가 -->
-								<h3 class="category-title">
-									<a th:href="@{/foodhub/post/notification}"> 📣공지사항</a>
-								</h3>
-								<div class="post-list">
-									<div class="post-entry">
-										<a href="notice1.html">
-											<img src="/assets/img/notice1.jpg" alt="" class="img-fluid">
-										</a>
-										<div class="post-meta">
-											<span class="date">공지</span> <span class="mx-1">•</span> <span>Jan 22nd '25</span>
-										</div>
-										<h2>
-											<a href="notice1.html">[공지] 새로운 커뮤니티 기능 업데이트 안내</a>
-										</h2>
-									</div>
-									<div class="post-entry">
-										<a href="notice2.html">
-											<img src="/assets/img/notice2.jpg" alt="" class="img-fluid">
-										</a>
-										<div class="post-meta">
-											<span class="date">공지</span> <span class="mx-1">•</span> <span>Jan 20th '25</span>
-										</div>
-										<h2>
-											<a href="notice2.html">[공지] 서비스 점검 일정 안내</a>
-										</h2>
-									</div>
-									<div class="post-entry">
-										<a href="notice3.html">
-											<img src="/assets/img/notice3.jpg" alt="" class="img-fluid">
-										</a>
-										<div class="post-meta">
-											<span class="date">공지</span> <span class="mx-1">•</span> <span>Jan 18th '25</span>
-										</div>
-										<h2>
-											<a href="notice3.html">[공지] 회원가입 이벤트 진행 중!</a>
-										</h2>
-									</div>
-								</div>
-							</div>
+						    <div class="post-category">
+						        <h3>
+						            <a class="category-title" th:href="@{/foodhub/post/category/0}">📣 공지사항</a>
+						        </h3>
+						        <br>
+						        <div class="post-list">
+						            <div th:each="post, iterStat : ${noticePosts}" class="post-entry" th:if="${iterStat.index < 4}">
+						                <a th:href="@{/foodhub/post/postDetail(postId=${post.postId})}" class="post-title">
+						                    <span th:text="|[${post.subCateNm}] ${#strings.length(post.title) > 25 ? #strings.substring(post.title, 0, 25) + '...' : post.title}|"></span>
+						                </a>
+						                <div class="post-meta">
+						                    <span class="nickname" th:text="${post.nickname}"></span>
+						                    <span class="date" th:text="${#dates.format(post.createdAt, 'yyyy-MM-dd HH:mm')}"></span>
+						                </div>
+						            </div>
+						
+						            <!-- 공지사항이 없을 경우 -->
+						            <p th:if="${noticePosts == null or #lists.isEmpty(noticePosts)}" class="no-posts">
+						                현재 공지사항이 없습니다.
+						            </p>
+						        </div>
+						    </div>
 						</div>
-
-					
 					</div>
 				</div>
     </section>

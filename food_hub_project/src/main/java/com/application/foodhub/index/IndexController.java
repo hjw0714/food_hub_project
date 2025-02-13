@@ -1,5 +1,7 @@
 package com.application.foodhub.index;
 
+
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -43,6 +45,7 @@ public class IndexController {
 		Map<Integer, String> categoryNames = new HashMap<>(); // 카테고리 ID와 이름 매핑
 
 		// 카테고리 이름 설정
+		
 		categoryNames.putIfAbsent(1, "🍽️외식업정보게시판");
 		categoryNames.putIfAbsent(2, "💬자유게시판");
 		categoryNames.putIfAbsent(3, "🛎️알바공고게시판");
@@ -53,7 +56,7 @@ public class IndexController {
 
 		// 1~7번 카테고리별 최신 게시글 2개씩 가져오기
 		for (int categoryId = 1; categoryId <= 7; categoryId++) {
-			List<Map<String, Object>> latestPosts = postService.getLatestPostsByCategoryId(categoryId);
+			List<Map<String, Object>> latestPosts = postService.getLatestPostsByCategoryId(categoryId, 2);
 
 			// 카테고리에 데이터가 없을 경우 빈 리스트 추가
 			if (latestPosts == null || latestPosts.isEmpty()) {
@@ -62,9 +65,16 @@ public class IndexController {
 			categoryLatestPosts.put(categoryId, latestPosts);
 
 		}
+		
+		// 공지사항은 따로
+		List<Map<String, Object>> noticePosts = postService.getLatestPostsByCategoryId(0, 4);
+		if (noticePosts == null || noticePosts.isEmpty()) {
+			noticePosts = new ArrayList<>();
+		}
 
 		model.addAttribute("categoryLatestPosts", categoryLatestPosts);
 		model.addAttribute("categoryNames", categoryNames);
+		model.addAttribute("noticePosts", noticePosts);
 
 		return "foodhub/index/index";
 	}

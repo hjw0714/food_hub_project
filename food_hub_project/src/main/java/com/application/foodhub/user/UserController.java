@@ -1,5 +1,7 @@
 package com.application.foodhub.user;
 
+
+
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Collections;
@@ -65,8 +67,13 @@ public class UserController {
 	        // 🔹 닉네임을 DB에서 가져와서 세션에 저장
 	        String nickname = userService.findNicknameByUserId(userDTO.getUserId());
 	        session.setAttribute("nickname", nickname);
+	        
+	        // ✅ 유저 정보 조회하여 membershipType 가져오기
+	        UserDTO userInfo = userService.getUserDetail(userDTO.getUserId()); // DB에서 전체 정보 가져오기
+	        String membershipType = userInfo.getMembershipType(); // DB에서 가져온 값 사용
+	        session.setAttribute("membershipType", membershipType); // 세션에 저장
 
-	        System.out.println("로그인 성공 - UserId: " + userDTO.getUserId() + ", 닉네임: " + nickname);
+	        System.out.println("로그인 성공 - UserId: " + userDTO.getUserId() + ", 닉네임: " + nickname + ", 회원 타입: " + membershipType);
 
 	        isValidUser = "y";
 	    }

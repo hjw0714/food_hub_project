@@ -1,5 +1,7 @@
 package com.application.foodhub.post;
 
+
+
 import java.util.List;
 import java.util.Map;
 
@@ -36,7 +38,7 @@ public interface PostService {
 
 	public String getCategoryName(Long categoryId);
 	
-	public List<Map<String, Object>> getLatestPostsByCategoryId(long categoryId);
+	public List<Map<String, Object>> getLatestPostsByCategoryId(long categoryId, int limit);
 	
 	public List<Map<String, Object>> searchPostsByTitle(String keyword, int pageSize, int offset);
 	public long countPostsByTitle(String keyword);

@@ -4,140 +4,144 @@
       layout:decorate="~{foodhub/index/headerAndFooter.html}">
 
 <head>
-    <meta charset="utf-8">
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>통합게시판</title>
-    <style>
-    
-        .btn-custom {
-            background-color: white;
-            color: #0056b3;
-            border: 2px solid #0056b3;
-            padding: 10px 15px;
-            border-radius: 5px;
-            font-weight: bold;
-            transition: all 0.3s;
-        }
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>통합게시판</title>
+<style>
+.btn-custom {
+	background-color: white;
+	color: #0056b3;
+	border: 2px solid #0056b3;
+	padding: 10px 15px;
+	border-radius: 5px;
+	font-weight: bold;
+	transition: all 0.3s;
+}
 
-        .btn-custom:hover {
-            background-color: #0056b3;
-            color: white;
-        }
+.btn-custom:hover {
+	background-color: #0056b3;
+	color: white;
+}
 
-        .post-card {
-            background-color: #ffffff;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            margin-bottom: 15px;
-            border-left: 4px solid #0056b3;
-            transition: transform 0.2s;
-        }
+.post-card {
+	background-color: #ffffff;
+	padding: 15px;
+	border-radius: 8px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+	margin-bottom: 15px;
+	border-left: 4px solid #0056b3;
+	transition: transform 0.2s;
+}
 
-        .post-card:hover {
-            transform: scale(1.02);
-        }
+.post-card:hover {
+	transform: scale(1.02);
+}
 
-        .post-title {
-            font-size: 1.3rem;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 5px;
-        }
+.post-title {
+	font-size: 1.3rem;
+	font-weight: bold;
+	color: #333;
+	margin-bottom: 5px;
+}
 
-        .post-meta {
-            font-size: 0.9rem;
-            color: #6c757d;
-        }
+.post-meta {
+	font-size: 0.9rem;
+	color: #6c757d;
+}
 
-        .pagination {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-        }
+.pagination {
+	display: flex;
+	justify-content: center;
+	margin-top: 20px;
+}
 
-        .pagination a {
-            padding: 8px 12px;
-            margin: 0 5px;
-            border: 2px solid #0056b3;
-            border-radius: 4px;
-            text-decoration: none;
-            color: #0056b3;
-            background-color: white;
-            transition: 0.3s;
-        }
+.pagination a {
+	padding: 8px 12px;
+	margin: 0 5px;
+	border: 2px solid #0056b3;
+	border-radius: 4px;
+	text-decoration: none;
+	color: #0056b3;
+	background-color: white;
+	transition: 0.3s;
+}
 
-        .pagination a.active, .pagination a:hover {
-            background-color: #0056b3;
-            color: white;
-        }
-        	.search-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    gap: 10px;
+.pagination a.active, .pagination a:hover {
+	background-color: #0056b3;
+	color: white;
+}
+
+.search-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-top: 20px;
+	margin-bottom: 20px;
+	gap: 10px;
 }
 
 .search-box {
-    display: flex;
-    align-items: center;
-    border: 2px solid #0056b3;
-    border-radius: 5px;
-    overflow: hidden;
-    width: 550px;
-    background-color: white;
+	display: flex;
+	align-items: center;
+	border: 2px solid #0056b3;
+	border-radius: 5px;
+	overflow: hidden;
+	width: 550px;
+	background-color: white;
 }
 
 .search-box input {
-    border: none;
-    padding: 10px;
-    width: 100%;
-    outline: none;
+	border: none;
+	padding: 10px;
+	width: 100%;
+	outline: none;
 }
 
 .search-box select {
-    border: none;
-    background-color: #f8f9fa;
-    padding: 10px;
-    font-size: 14px;
-    outline: none;
-    border-right: 1px solid #ddd;
+	border: none;
+	background-color: #f8f9fa;
+	padding: 10px;
+	font-size: 14px;
+	outline: none;
+	border-right: 1px solid #ddd;
 }
 
 .search-box button {
-    background-color: #0056b3;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    cursor: pointer;
-    transition: 0.3s;
+	background-color: #0056b3;
+	color: white;
+	border: none;
+	padding: 10px 15px;
+	cursor: pointer;
+	transition: 0.3s;
 }
 
 .search-box button:hover {
-    background-color: #004494;
+	background-color: #004494;
 }
-    </style>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            function searchPosts() {
-                let searchType = document.getElementById("searchType").value;
-                let keyword = document.getElementById("searchKeyword").value.trim();
+</style>
+<script>
+	document.addEventListener("DOMContentLoaded",function() {
+						function searchPosts() {
+							let searchType = document
+									.getElementById("searchType").value;
+							let keyword = document
+									.getElementById("searchKeyword").value
+									.trim();
 
-                if (keyword === "") {
-                    alert("검색어를 입력하세요.");
-                    return;
-                }
+							if (keyword === "") {
+								alert("검색어를 입력하세요.");
+								return;
+							}
 
-                let url = `/foodhub/post/allPostList?page=1&searchType=${searchType}&keyword=${encodeURIComponent(keyword)}`;
-                window.location.href = url;
-            }
+							let url = `/foodhub/post/allPostList?page=1&searchType=${searchType}&keyword=${encodeURIComponent(keyword)}`;
+							window.location.href = url;
+						}
 
-            // 검색 버튼 클릭 이벤트 추가
-            document.getElementById("searchBtn").addEventListener("click", searchPosts);
-        });
-    </script>
+						// 검색 버튼 클릭 이벤트 추가
+						document.getElementById("searchBtn").addEventListener(
+								"click", searchPosts);
+					});
+</script>
 </head>
 
 <body class="board-page">

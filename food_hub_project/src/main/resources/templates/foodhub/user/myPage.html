@@ -188,6 +188,11 @@
 				$("#businessType").hide();
 				$("#membershipType").text("일반회원"); // mypage에서 COMMON을 일반회원으로 출력
 			} 
+			else if (membershipType =="ADMIN") {
+				$("#businessDate").hide();  // 창업일 숨김
+				$("#businessType").hide();
+				$("#membershipType").text("관리자회원"); // mypage에서 COMMON을 일반회원으로 출력
+			}
 			else {
 				$("#businessDate").show();  // 창업일 표시
 				$("#businessType").show();
