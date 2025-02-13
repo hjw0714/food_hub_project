@@ -1,5 +1,7 @@
 package com.application.foodhub.post;
 
+
+
 import java.util.List;
 import java.util.Map;
 
@@ -109,9 +111,10 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public List<Map<String, Object>> getLatestPostsByCategoryId(long categoryId) {
-		return postDAO.getLatestPostsByCategoryId(categoryId);
+	public List<Map<String, Object>> getLatestPostsByCategoryId(long categoryId, int limit) {
+		return postDAO.getLatestPostsByCategoryId(categoryId, limit);
 	}
+	
 
 	@Override
 	public List<Map<String, Object>> searchPostsByTitle(String keyword, int pageSize, int offset) {
