@@ -394,16 +394,6 @@ public class PostController {
 		return ResponseEntity.ok(response);
 	}
 
-	// 카테고리별 최신글 2개 뽑기
-	@PostMapping("/latestPosts")
-	public String getLatestPostsByCategory(@RequestParam("categoryId") int categoryId, Model model) {
-		
-		System.out.println("categoryId: " + categoryId);
 
-		List<Map<String, Object>> latestPosts = postService.getLatestPostsByCategoryId(categoryId);
-		model.addAttribute("latestPosts", latestPosts);
-		
-		return "foodhub/index/index";
-	}
 
 }

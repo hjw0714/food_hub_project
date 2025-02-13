@@ -42,67 +42,105 @@
         border-radius: 10px;
     }
     
-  	.post-category {
-	    background: #f1f1f1; /* 밝은 회색 배경 */
-	    padding: 20px;
-	    border-radius: 10px;
-	    margin-bottom: 30px;
-	}
-	
-	.post-category h3 {
-	    font-size: 1.5rem;
-	    margin-bottom: 15px;
-	    border-bottom: 2px solid #ddd; /* 제목 하단 구분선 */
-	    padding-bottom: 5px;
-	}
-	
-	/* 🔹 인기 게시글 디자인 개선 */
-	.top-liked-posts .post-entry.lg {
-	    background: #f9f9f9; /* 연한 배경색 추가 */
-	    padding: 12px 15px; /* 내부 여백 */
-	    border-radius: 10px; /* 카드형 스타일 */
-	    border: 1px solid #ddd; /* 테두리 추가 */
-	    margin-bottom: 12px; /* 게시글 간격 증가 */
-	    transition: all 0.3s ease-in-out; /* 부드러운 효과 */
-	}
-	
-	/* 🔹 Hover 효과: 마우스를 올리면 강조 */
-	.top-liked-posts .post-entry.lg:hover {
-	    background: #f0f0f0; /* 더 진한 배경색 */
-	    transform: translateY(-3px); /* 약간 위로 올라가는 효과 */
-	    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 가벼운 그림자 */
-	}
-	
-	
-	/* 🔹 닉네임과 날짜 스타일 */
-	.top-liked-posts .name {
-	    font-weight: 700;
+  	 /* 🔹 게시판 스타일 개선 */
+    .post-category {
+        background: #fff;
+        padding: 25px;
+        border-radius: 12px;
+        border: 1px solid #ddd;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease-in-out;
+    }
+    
+    .category-title {
+	    font-size: 1.4rem;
+	    font-weight: bold;
 	    color: #333;
+	    display: flex; /* 🔹 부모 요소가 전체 너비를 차지하도록 설정 */
+	    align-items: center; /* 🔹 가운데 정렬 */
+	    position: relative; /* 🔹 가상 요소를 위한 기준점 */
+	    padding-bottom: 12px;  
+	    margin-bottom: 25px;  
 	}
 	
-	.top-liked-posts .post-meta {
-	    font-size: 0.9rem;
-	    color: #666;
+	.category-title::after {
+	    content: '';  /* 가상 요소 생성 */
+	    position: absolute;
+	    left: 0;
+	    bottom: 0;
+	    width: 100%;  /* 🔹 너비를 100%로 설정하여 끝까지 border 확장 */
+	    height: 3px;  /* 🔹 border 두께 */
+	    background-color: #0056b3;  /* 기존 border 색상 유지 */
 	}
+
+    
+    /* 🔹 게시글 스타일 개선 */
+    .post-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .post-entry {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .post-title {
+	    font-size: 1.2rem; /* 원하는 크기로 조정 */
+	    font-weight: 700; /* 글씨 두께 조정 (선택 사항) */
+	    color: #333;
+	    text-decoration: none;
+	    transition: color 0.2s ease-in-out;
+	}
+    
+    .post-title:hover {
+        color: #555;
+    }
+    
+    .post-meta {
+        font-size: 0.9rem;
+        color: #666;
+        display: flex;
+        justify-content: space-between;
+    }
+    
+    .no-posts {
+        font-size: 0.9rem;
+        color: #aaa;
+        text-align: center;
+    }
+    
+    /* 🔹 인기 게시글 스타일 개선 */
+    .top-liked-posts .post-entry.lg {
+        background: #f9f9f9;
+        padding: 15px;
+        border-radius: 12px;
+        border: 1px solid #ddd;
+        margin-bottom: 15px;
+        transition: all 0.3s ease-in-out;
+    }
+    
+    .top-liked-posts .post-entry.lg:hover {
+        background: #f0f0f0;
+        transform: translateY(-3px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .top-liked-posts .name {
+        font-weight: 700;
+        color: #333;
+    }
+    
+    .top-liked-posts .post-meta {
+        font-size: 0.9rem;
+        color: #666;
+    }
 		
 	
 
 </style>
-<script>
-	$().ready(function() {
-		$.ajax({
-			type : "post",
-			url : "/foodhub/post/latestPosts",
-			contentType : "application/json",
-			data : JSON.stringify({
-				categoryId : $("#categoryId").val()
-			}),
-			success : function() {
-				
-			}
-		});
-	});
-</script>
 </head>
 <body>
 
@@ -175,135 +213,121 @@
 	</section>
 	
 	<section id="trending-category" class="trending-category section">
-		<div class="container" data-aos="fade-up" data-aos-delay="100">
-			<div class="row g-5">
-				<div class="col-lg-4">
-	              <div class="top-liked-posts post-entry">
-				    <h3 style="font-weight: 700;">🔥 인기 게시글 TOP 5</h3>
-				    <div th:each="post, iterStat : ${topLikedPosts}">
-				        <div class="post-entry lg" style="gap: 8px; font-weight: 600;">
-				            <a th:href="@{/foodhub/post/postDetail(postId=${post.postId})}"></a>
-				                <a th:href="@{/foodhub/post/postDetail(postId=${post.postId})}" 
-				                   th:text="|[${iterStat.index + 1}위] [${post.subCateNm}] 
-				                   ${#strings.length(post.title) > 20 ? #strings.substring(post.title, 0, 20) + '...' : post.title}|">
-			                </a>
-				                
-			                <div>
-			                	<span class="post-meta" th:text="${#dates.format(post.createdAt, 'yyyy-MM-dd HH:mm')}"></span>
-			                </div>
-				            <div class="d-flex align-items-center" style="gap: 8px; white-space: nowrap;">
-							    <strong class="name" th:text="${post.nickname}"></strong>
-							    <span>| 👍 :</span>
-							    <span class="like-count" th:text="${post.likeCount}"></span>
-							    
-							</div>
-				        </div>
-				    </div>
-				</div>
-            </div>
-				
-				
-				<div class="col-lg-8">
-					<div class="row g-5">
-						<div class="col-lg-4 border-start custom-border">
-							<!-- 게시글 목록 -->
-				            <div class="post-entry" id="latestPostsContainer">
-				            	<input type="hidden" id="categoryId" value="1"/>
-				                <div th:each="post : ${latestPosts}">
-				                    <div class="post-entry">외식업 정보 게시판
-				                        <a th:href="@{/foodhub/post/postDetail(postId=${post.postId})}"></a>
-				                        <div class="post-meta">
-				                            <span th:text="|${post.subCateNm} • ${#dates.format(post.createdAt, 'MMM dd, yyyy')}|"></span>
-				                        </div>
-				                        <h2>
-				                            <a th:href="@{/foodhub/post/postDetail(postId=${post.postId})}"
-				                               th:text="${#strings.length(post.title) > 20 ? #strings.substring(post.title, 0, 20) + '...' : post.title}">
-				                            </a>
-				                        </h2>
-				                    </div>
-				                </div>
-				            </div>
-							<div class="post-entry">
-								<a href="partners.html"></a>
-								<div class="post-meta">협력업체 • Jan 19th '25</div>
-								<h2>
-									<a href="partners.html">[협력업체] 최고의 재료를 제공합니다!</a>
-								</h2>
-							</div>
-							<div class="post-entry">
-								<a href="store-promo.html"></a>
-								<div class="post-meta">매장홍보 • Jan 18th '25</div>
-								<h2>
-									<a href="store-promo.html">[매장홍보] 특별 할인 이벤트 진행 중!</a>
-								</h2>
+        <div class="container" data-aos="fade-up" data-aos-delay="100">
+					<div class="row">
+
+						<!-- 🔥 인기 게시글 TOP 5 -->
+						<div class="col-lg-3">
+							<div class="top-liked-posts post-category">
+								<h3 class="category-title">🔥 인기 게시글 🔥</h3>
+								<div th:each="post, iterStat : ${topLikedPosts}"
+									class="post-entry">
+									<a th:href="@{/foodhub/post/postDetail(postId=${post.postId})}"
+										class="post-title"> <span
+										th:utext="|[${iterStat.index + 1}위] <br> [${post.subCateNm}] ${#strings.length(post.title) > 20 ? #strings.substring(post.title, 0, 20) + '...' : post.title}|"></span>
+									</a>
+									<div class="d-flex align-items-center"
+										style="gap: 8px; white-space: nowrap;">
+										<strong class="name" th:text="${post.nickname}"></strong> <span>|
+											👍 :</span> <span class="like-count" th:text="${post.likeCount}"></span>
+
+									</div>
+									<div class="post-meta">
+										<span class="date"
+											th:text="${#dates.format(post.createdAt, 'yyyy-MM-dd HH:mm')}"></span>
+									</div>
+
+								</div>
+								<p th:if="${#lists.isEmpty(topLikedPosts)}" class="no-posts">현재
+									인기 게시글이 없습니다.</p>
 							</div>
 						</div>
-						<div class="col-lg-4 border-start custom-border">
-							<div class="post-entry">
-								<a href="questions.html"></a>
-								<div class="post-meta">질문 • Jan 17th '25</div>
-								<h2>
-									<a href="questions.html">[질문] 매장 운영 관련 꿀팁이 있을까요?</a>
-								</h2>
-							</div>
-							<div class="post-entry">
-								<a href="used-items.html"></a>
-								<div class="post-meta">중고판매 • Jan 16th '25</div>
-								<h2>
-									<a href="used-items.html">[점포매도] 매장을 정리하려 합니다. 관심 있으신 분
-										연락 부탁드립니다.</a>
-								</h2>
-							</div>
-							<div class="post-entry">
-								<a href="used-items.html"></a>
-								<div class="post-meta">중고판매 • Jan 15th '25</div>
-								<h2>
-									<a href="used-items.html">[중고판매] 매장 가구 및 장비 일괄 판매합니다.</a>
-								</h2>
+
+						<!-- 📌 카테고리별 최신 게시글 -->
+						<div class="col-lg-6">
+							<div class="row g-4">
+								<div th:each="postListEntry, iterStat : ${categoryLatestPosts}"
+									class="col-lg-6">
+									<div
+										th:with="categoryId=${postListEntry.key}, posts=${postListEntry.value}"
+										class="post-category">
+
+										<!-- 게시판 제목 -->
+										<h3>
+											<a class="category-title"
+												th:href="@{'/foodhub/post/category/' + ${iterStat.index + 1}}"
+												th:text="${categoryNames[iterStat.index+1]}"> </a>
+										</h3>
+										<br>
+										<!-- 게시글 목록 -->
+										<div class="post-list">
+											<div th:each="post : ${posts}" class="post-entry">
+												<a
+													th:href="@{/foodhub/post/postDetail(postId=${post.postId})}"
+													class="post-title"> <span
+													th:text="|[${post.subCateNm}] ${#strings.length(post.title) > 20 ? #strings.substring(post.title, 0, 20) + '...' : post.title}|"></span>
+												</a>
+												<div class="post-meta">
+													<span class="nickname" th:text="${post.nickname}"></span> <span
+														class="date"
+														th:text="${#dates.format(post.createdAt, 'yyyy-MM-dd HH:mm')}"></span>
+												</div>
+											</div>
+											<p th:if="${posts == null or #lists.isEmpty(posts)}"
+												class="no-posts">현재 게시글이 없습니다.</p>
+										</div>
+									</div>
+								</div>
 							</div>
 						</div>
-						<div class="col-lg-4 border-start custom-border">
-							<a th:href="@{/foodhub/post/notification}">
-							<h3 class="section-title">공지사항</h3></a>
-							<div class="post-entry">
-								<a href="notice1.html"><img src="/assets/img/notice1.jpg"
-									alt="" class="img-fluid"></a>
-								<div class="post-meta">
-									<span class="date">공지</span> <span class="mx-1">•</span> <span>Jan
-										22nd '25</span>
+
+						<div class="col-lg-3">
+							<div class="post-category"> <!-- 기존과 일관성을 위해 post-category 추가 -->
+								<h3 class="category-title">
+									<a th:href="@{/foodhub/post/notification}"> 📣공지사항</a>
+								</h3>
+								<div class="post-list">
+									<div class="post-entry">
+										<a href="notice1.html">
+											<img src="/assets/img/notice1.jpg" alt="" class="img-fluid">
+										</a>
+										<div class="post-meta">
+											<span class="date">공지</span> <span class="mx-1">•</span> <span>Jan 22nd '25</span>
+										</div>
+										<h2>
+											<a href="notice1.html">[공지] 새로운 커뮤니티 기능 업데이트 안내</a>
+										</h2>
+									</div>
+									<div class="post-entry">
+										<a href="notice2.html">
+											<img src="/assets/img/notice2.jpg" alt="" class="img-fluid">
+										</a>
+										<div class="post-meta">
+											<span class="date">공지</span> <span class="mx-1">•</span> <span>Jan 20th '25</span>
+										</div>
+										<h2>
+											<a href="notice2.html">[공지] 서비스 점검 일정 안내</a>
+										</h2>
+									</div>
+									<div class="post-entry">
+										<a href="notice3.html">
+											<img src="/assets/img/notice3.jpg" alt="" class="img-fluid">
+										</a>
+										<div class="post-meta">
+											<span class="date">공지</span> <span class="mx-1">•</span> <span>Jan 18th '25</span>
+										</div>
+										<h2>
+											<a href="notice3.html">[공지] 회원가입 이벤트 진행 중!</a>
+										</h2>
+									</div>
 								</div>
-								<h2>
-									<a href="notice1.html">[공지] 새로운 커뮤니티 기능 업데이트 안내</a>
-								</h2>
-							</div>
-							<div class="post-entry">
-								<a href="notice2.html"><img src="/assets/img/notice2.jpg"
-									alt="" class="img-fluid"></a>
-								<div class="post-meta">
-									<span class="date">공지</span> <span class="mx-1">•</span> <span>Jan
-										20th '25</span>
-								</div>
-								<h2>
-									<a href="notice2.html">[공지] 서비스 점검 일정 안내</a>
-								</h2>
-							</div>
-							<div class="post-entry">
-								<a href="notice3.html"><img src="/assets/img/notice3.jpg"
-									alt="" class="img-fluid"></a>
-								<div class="post-meta">
-									<span class="date">공지</span> <span class="mx-1">•</span> <span>Jan
-										18th '25</span>
-								</div>
-								<h2>
-									<a href="notice3.html">[공지] 회원가입 이벤트 진행 중!</a>
-								</h2>
 							</div>
 						</div>
+
+					
 					</div>
 				</div>
-			</div>
-		</div>
-	</section>
+    </section>
 </main>
 </div>
 
