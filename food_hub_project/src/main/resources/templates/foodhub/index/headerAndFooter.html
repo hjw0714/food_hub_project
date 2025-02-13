@@ -50,70 +50,91 @@
             <nav id="navmenu" class="navmenu">
                 <ul>
                     <li class="dropdown">
-                        <a th:href="@{/foodhub/post/allPostList}"><span>베스트 & 통합</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+                        <a><span>베스트 & 통합</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
                         <ul>
                             <li><a th:href="@{/foodhub/post/allPostList}">베스트 게시판</a></li>
                             <li><a th:href="@{/foodhub/post/allPostList}"><span>통합 게시판</span></a></li>
                         </ul>
-                    </li>&ensp;
+                    </li>&emsp;
                     <li class="dropdown">
-                        <a th:href="@{/foodhub/post/category/1}"><span>외식업 정보 게시판</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+                    <a><span>카테고리별 게시판</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
                         <ul>
-                            <li><a th:href="@{/foodhub/post/category/1}">업계뉴스</a></li>
-                            <li><a th:href="@{/foodhub/post/category/1}">업체소식</a></li>
-                            <li><a th:href="@{/foodhub/post/category/1}">트렌드</a></li>
-                            <li><a th:href="@{/foodhub/post/category/1}">업계분석</a></li>
-                            <li><a th:href="@{/foodhub/post/category/1}">새로운 맛집</a></li>
+                        	<li class="dropdown">
+					            <a th:href="@{/foodhub/post/category/1}"><span>외식업 정보 게시판</span> <i class="bi bi-chevron-right toggle-sub-dropdown"></i></a>
+					            <ul class="sub-dropdown">
+					                <li><a th:href="@{/foodhub/post/category/1}">업계뉴스</a></li>
+		                            <li><a th:href="@{/foodhub/post/category/1}">업체소식</a></li>
+		                            <li><a th:href="@{/foodhub/post/category/1}">트렌드</a></li>
+		                            <li><a th:href="@{/foodhub/post/category/1}">업계분석</a></li>
+		                            <li><a th:href="@{/foodhub/post/category/1}">새로운 맛집</a></li>
+					            </ul>
+					        </li>
+					        <li class="dropdown">
+					            <a th:href="@{/foodhub/post/category/2}"><span>자유게시판</span> <i class="bi bi-chevron-right toggle-sub-dropdown"></i></a>
+					            <ul class="sub-dropdown">
+					                <li><a th:href="@{/foodhub/post/category/2}">잡담</a></li>
+					                <li><a th:href="@{/foodhub/post/category/2}"><span>일상이야기</span></a></li>
+					                <li><a th:href="@{/foodhub/post/category/2}"><span>질문</span></a></li>
+					            </ul>
+					        </li>
+					        <li class="dropdown">
+					            <a th:href="@{/foodhub/post/category/3}"><span>알바공고 게시판</span> <i class="bi bi-chevron-right toggle-sub-dropdown"></i></a>
+					            <ul class="sub-dropdown">
+					                <li><a th:href="@{/foodhub/post/category/3}"><span>직원 구인</span></a></li>
+		                            <li><a th:href="@{/foodhub/post/category/3}"><span>알바 구인</span></a></li>
+		                            <li><a th:href="@{/foodhub/post/category/3}"><span>구직</span></a></li>
+					            </ul>
+					        </li>
+					        <li class="dropdown">
+					            <a th:href="@{/foodhub/post/category/4}"><span>질문게시판</span> <i class="bi bi-chevron-right toggle-sub-dropdown"></i></a>
+					            <ul class="sub-dropdown">
+					                <li><a th:href="@{/foodhub/post/category/4}"><span>업계 질문</span></a></li>
+		                            <li><a th:href="@{/foodhub/post/category/4}"><span>자유 질문</span></a></li>
+		                            <li><a th:href="@{/foodhub/post/category/4}"><span>도움 요청</span></a></li>
+		                            <li><a th:href="@{/foodhub/post/category/4}"><span>팁을 구합니다</span></a></li>
+					            </ul>
+					        </li>
+					        <li class="dropdown">
+					        	<a th:href="@{/foodhub/post/category/4}"><span>질문게시판</span> <i class="bi bi-chevron-right toggle-sub-dropdown"></i></a>
+					            <ul class="sub-dropdown">
+					                <li><a th:href="@{/foodhub/post/category/4}"><span>업계 질문</span></a></li>
+		                            <li><a th:href="@{/foodhub/post/category/4}"><span>자유 질문</span></a></li>
+		                            <li><a th:href="@{/foodhub/post/category/4}"><span>도움 요청</span></a></li>
+		                            <li><a th:href="@{/foodhub/post/category/4}"><span>팁을 구합니다</span></a></li>
+					            </ul>
+					        </li>
+					        <li class="dropdown">
+					        	<a th:href="@{/foodhub/post/category/5}"><span>중고장비 거래게시판</span> <i class="bi bi-chevron-right toggle-sub-dropdown"></i></a>
+					            <ul class="sub-dropdown">
+					                <li><a th:href="@{/foodhub/post/category/5}"><span>판매</span></a></li>
+		                            <li><a th:href="@{/foodhub/post/category/5}"><span>나눔</span></a></li>
+		                            <li><a th:href="@{/foodhub/post/category/5}"><span>교환</span></a></li>
+		                            <li><a th:href="@{/foodhub/post/category/5}"><span>구매희망</span></a></li>
+					            </ul>
+					        </li>
+					        <li class="dropdown">
+					        	<a th:href="@{/foodhub/post/category/6}"><span>매장홍보게시판</span> <i class="bi bi-chevron-right toggle-sub-dropdown"></i></a>
+					            <ul class="sub-dropdown">
+					                <li><a th:href="@{/foodhub/post/category/6}"><span>매장 소개</span></a></li>
+		                            <li><a th:href="@{/foodhub/post/category/6}"><span>신규 오픈</span></a></li>
+		                            <li><a th:href="@{/foodhub/post/category/6}"><span>이벤트</span></a></li>
+		                            <li><a th:href="@{/foodhub/post/category/6}"><span>맛집 추천</span></a></li>
+					            </ul>
+					        </li>
+					        <li class="dropdown">
+					        	<a th:href="@{/foodhub/post/category/7}"><span>협력업체게시판</span> <i class="bi bi-chevron-right toggle-sub-dropdown"></i></a>
+					            <ul class="sub-dropdown">
+					                <li><a th:href="@{/foodhub/post/category/7}"><span>업체 소개</span></a></li>
+                            		<li><a th:href="@{/foodhub/post/category/7}"><span>협력 요청</span></a></li>
+					            </ul>
+					        </li>
                         </ul>
-                    </li>&ensp;
+                    </li>&emsp;
                     <li class="dropdown">
-                        <a th:href="@{/foodhub/post/category/2}"><span>자유게시판</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+                    <a><span>공지사항 및 이벤트 게시판</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
                         <ul>
-                            <li><a th:href="@{/foodhub/post/category/2}">잡담</a></li>
-                            <li><a th:href="@{/foodhub/post/category/2}"><span>일상이야기</span></a></li>
-                            <li><a th:href="@{/foodhub/post/category/2}"><span>질문</span></a></li>
-                        </ul>
-                    </li>&ensp;
-                    <li class="dropdown">
-                        <a th:href="@{/foodhub/post/category/3}"><span>알바공고게시판</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-                        <ul>
-                            <li><a th:href="@{/foodhub/post/category/3}"><span>직원 구인</span></a></li>
-                            <li><a th:href="@{/foodhub/post/category/3}"><span>알바 구인</span></a></li>
-                            <li><a th:href="@{/foodhub/post/category/3}"><span>구직</span></a></li>
-                        </ul>
-                    </li>&ensp;
-                    <li class="dropdown">
-                        <a th:href="@{/foodhub/post/category/4}"><span>질문게시판</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-                        <ul>
-                            <li><a th:href="@{/foodhub/post/category/4}"><span>업계 질문</span></a></li>
-                            <li><a th:href="@{/foodhub/post/category/4}"><span>자유 질문</span></a></li>
-                            <li><a th:href="@{/foodhub/post/category/4}"><span>도움 요청</span></a></li>
-                            <li><a th:href="@{/foodhub/post/category/4}"><span>팁을 구합니다</span></a></li>
-                        </ul>
-                    </li>&ensp;
-                    <li class="dropdown">
-                        <a th:href="@{/foodhub/post/category/5}"><span>중고장비거래게시판</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-                        <ul>
-                            <li><a th:href="@{/foodhub/post/category/5}"><span>판매</span></a></li>
-                            <li><a th:href="@{/foodhub/post/category/5}"><span>나눔</span></a></li>
-                            <li><a th:href="@{/foodhub/post/category/5}"><span>교환</span></a></li>
-                            <li><a th:href="@{/foodhub/post/category/5}"><span>구매희망</span></a></li>
-                        </ul>
-                    </li>&ensp;
-                    <li class="dropdown">
-                        <a th:href="@{/foodhub/post/category/6}"><span>매장홍보게시판</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-                        <ul>
-                            <li><a th:href="@{/foodhub/post/category/6}"><span>매장 소개</span></a></li>
-                            <li><a th:href="@{/foodhub/post/category/6}"><span>신규 오픈</span></a></li>
-                            <li><a th:href="@{/foodhub/post/category/6}"><span>이벤트</span></a></li>
-                            <li><a th:href="@{/foodhub/post/category/6}"><span>맛집 추천</span></a></li>
-                        </ul>
-                    </li>&ensp;
-                    <li class="dropdown">
-                        <a th:href="@{/foodhub/post/category/7}"><span>협력업체게시판</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-                        <ul>
-                            <li><a th:href="@{/foodhub/post/category/7}"><span>업체 소개</span></a></li>
-                            <li><a th:href="@{/foodhub/post/category/7}"><span>협력 요청</span></a></li>
+                            <li><a th:href="@{/foodhub/post/notification}">공지사항</a></li>
+                            <li><a href="#">이벤트</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -183,62 +204,46 @@
 </body>
 <script>
 	
-	document.addEventListener("DOMContentLoaded", function () {
-	    document.querySelectorAll(".toggle-dropdown").forEach(function (toggle) {
-	        toggle.addEventListener("click", function (event) {
-	            event.preventDefault();
-	
-	            let parentDropdown = this.closest(".dropdown");
-	            let dropdownMenu = parentDropdown.querySelector("ul");
-	
-	            // 현재 활성화 상태 확인
-	            let isActive = parentDropdown.classList.contains("active");
-	
-	            // 모든 드롭다운 초기화
-	            document.querySelectorAll(".dropdown").forEach(function (dropdown) {
-	                dropdown.classList.remove("active");
-	                let menu = dropdown.querySelector("ul");
-	                if (menu) {
-	                    menu.style.display = "none";
-	                    menu.style.visibility = "hidden";
-	                    menu.style.opacity = "0";
-	                    menu.style.height = "0";
-	                }
-	            });
-	
-	            // 클릭한 드롭다운만 활성화
-	            if (!isActive) {
-	                parentDropdown.classList.add("active");
-	                dropdownMenu.style.display = "block";
-	                dropdownMenu.style.visibility = "visible";
-	                dropdownMenu.style.opacity = "1";
-	                dropdownMenu.style.height = "auto";
-	            } else {
-	                parentDropdown.classList.remove("active");
-	                dropdownMenu.style.display = "none";
-	                dropdownMenu.style.visibility = "hidden";
-	                dropdownMenu.style.opacity = "0";
-	                dropdownMenu.style.height = "0";
-	            }
-	        });
-	    });
-	
-	    // 바깥 클릭 시 닫기
-	    document.addEventListener("click", function (event) {
-	        if (!event.target.closest(".navmenu")) {
-	            document.querySelectorAll(".dropdown").forEach(function (dropdown) {
-	                dropdown.classList.remove("active");
-	                let menu = dropdown.querySelector("ul");
-	                if (menu) {
-	                    menu.style.display = "none";
-	                    menu.style.visibility = "hidden";
-	                    menu.style.opacity = "0";
-	                    menu.style.height = "0";
-	                }
-	            });
-	        }
-	    });
-	});
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".toggle-dropdown, .toggle-sub-dropdown").forEach(function (toggle) {
+        toggle.addEventListener("click", function (event) {
+            event.preventDefault();
+
+            let parentDropdown = this.closest(".dropdown");
+            let dropdownMenu = parentDropdown.querySelector("ul");
+
+            // 현재 상태 확인
+            let isActive = parentDropdown.classList.contains("active");
+
+            // 모든 드롭다운 초기화
+            document.querySelectorAll(".dropdown").forEach(function (dropdown) {
+                dropdown.classList.remove("active");
+                let menu = dropdown.querySelector("ul");
+                if (menu) {
+                    menu.style.opacity = "0";
+                    menu.style.visibility = "hidden";
+                    menu.style.maxHeight = "0";
+                }
+            });
+
+            // 클릭한 드롭다운만 활성화
+            if (!isActive) {
+                parentDropdown.classList.add("active");
+                dropdownMenu.style.opacity = "1";
+                dropdownMenu.style.visibility = "visible";
+                dropdownMenu.style.maxHeight = "300px";
+            } else {
+                parentDropdown.classList.remove("active");
+                dropdownMenu.style.opacity = "0";
+                dropdownMenu.style.visibility = "hidden";
+                dropdownMenu.style.maxHeight = "0";
+            }
+        });
+    });
+});
+
+
+
 
 
 </script>
