@@ -37,5 +37,22 @@ public interface PostService {
 	public String getCategoryName(Long categoryId);
 	
 	public List<Map<String, Object>> getLatestPostsByCategoryId(long categoryId);
+	
+	public List<Map<String, Object>> searchPostsByTitle(String keyword, int pageSize, int offset);
+	public long countPostsByTitle(String keyword);
+
+	public List<Map<String, Object>> searchPostsByTitleAndContent(String keyword, int pageSize, int offset);
+	public long countPostsByTitleAndContent(String keyword);
+
+	
+	public String getCategoryNameById(Long categoryId);
+	
+	public long countPostsByCategoryTitle(Long categoryId, String keyword);
+	public long countPostsByCategoryTitleAndContent(Long categoryId, String keyword);
+
+	public List<Map<String, Object>> searchPostsByCategoryTitle(Long categoryId, String keyword, int pageSize, int offset);
+	public List<Map<String, Object>> searchPostsByCategoryTitleAndContent(Long categoryId, String keyword, int pageSize, int offset);
+
+
 
 }

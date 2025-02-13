@@ -43,4 +43,22 @@ public interface PostDAO {
 
 	// 카테고리별 최신글 2개 가져오기
 	public List<Map<String, Object>> getLatestPostsByCategoryId(@Param("categoryId") long categoryId);
+	
+	// 제목으로 검색
+	public List<Map<String, Object>> searchPostsByTitle(@Param("keyword") String keyword, @Param("pageSize") int pageSize, @Param("offset") int offset);
+	public long countPostsByTitle(@Param("keyword") String keyword);
+
+	// 제목+내용으로 검색
+	public List<Map<String, Object>> searchPostsByTitleAndContent(@Param("keyword") String keyword, @Param("pageSize") int pageSize, @Param("offset") int offset);
+	public long countPostsByTitleAndContent(@Param("keyword") String keyword);
+
+	public String getCategoryNameById(@Param("categoryId") Long categoryId);
+
+	public long countPostsByCategoryTitle(@Param("categoryId") Long categoryId, @Param("keyword") String keyword);
+	public long countPostsByCategoryTitleAndContent(@Param("categoryId") Long categoryId, @Param("keyword") String keyword);
+
+	public List<Map<String, Object>> searchPostsByCategoryTitle(@Param("categoryId") Long categoryId, @Param("keyword") String keyword, @Param("pageSize") int pageSize, @Param("offset") int offset);
+	public List<Map<String, Object>> searchPostsByCategoryTitleAndContent(@Param("categoryId") Long categoryId, @Param("keyword") String keyword, @Param("pageSize") int pageSize, @Param("offset") int offset);
+
+	
 }

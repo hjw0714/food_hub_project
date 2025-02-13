@@ -286,5 +286,127 @@
 	    ORDER BY P.CREATED_AT DESC
 	    LIMIT 2;
 	</select>
+	
+<!-- 제목으로 검색 -->
+<select id="searchPostsByTitle" parameterType="map" resultMap="postMap">
+    SELECT 
+        P.POST_ID, 
+        P.SUB_CATE_NM, 
+        P.TITLE, 
+        U.NICKNAME, 
+        P.CREATED_AT, 
+        P.VIEW_CNT,
+        COALESCE(L.LIKE_COUNT, 0) AS LIKE_COUNT
+    FROM POST P
+    JOIN USER U ON P.USER_ID = U.USER_ID
+    LEFT JOIN (
+        SELECT POST_ID, COUNT(*) AS LIKE_COUNT 
+        FROM POST_LIKE 
+        GROUP BY POST_ID
+    ) AS L ON P.POST_ID = L.POST_ID
+    WHERE P.TITLE LIKE CONCAT('%', #{keyword}, '%')
+    ORDER BY P.CREATED_AT DESC
+    LIMIT #{pageSize} OFFSET #{offset}
+</select>
+
+
+<select id="countPostsByTitle" parameterType="string" resultType="long">
+    SELECT COUNT(*) FROM POST 
+    WHERE TITLE LIKE CONCAT('%', #{keyword}, '%')
+</select>
+
+<!-- 제목 + 내용으로 검색 -->
+<select id="searchPostsByTitleAndContent" parameterType="map" resultMap="postMap">
+    SELECT 
+        P.POST_ID, 
+        P.SUB_CATE_NM, 
+        P.TITLE, 
+        U.NICKNAME, 
+        P.CREATED_AT, 
+        P.VIEW_CNT,
+        COALESCE(L.LIKE_COUNT, 0) AS LIKE_COUNT
+    FROM POST P
+    JOIN USER U ON P.USER_ID = U.USER_ID
+    LEFT JOIN (
+        SELECT POST_ID, COUNT(*) AS LIKE_COUNT 
+        FROM POST_LIKE 
+        GROUP BY POST_ID
+    ) AS L ON P.POST_ID = L.POST_ID
+    WHERE P.TITLE LIKE CONCAT('%', #{keyword}, '%') 
+       OR P.CONTENT LIKE CONCAT('%', #{keyword}, '%')
+    ORDER BY P.CREATED_AT DESC
+    LIMIT #{pageSize} OFFSET #{offset}
+</select>
+
+<select id="countPostsByTitleAndContent" parameterType="string" resultType="long">
+    SELECT COUNT(*) FROM POST 
+    WHERE TITLE LIKE CONCAT('%', #{keyword}, '%') 
+       OR CONTENT LIKE CONCAT('%', #{keyword}, '%')
+</select>
+
+<select id="getCategoryNameById" resultType="String">
+    SELECT CATEGORY_NM FROM POST_CATEGORY WHERE category_id = #{categoryId}
+</select>
+
+<select id="countPostsByCategoryTitle" resultType="long">
+    SELECT COUNT(*) FROM POST 
+    WHERE CATEGORY_ID = #{categoryId} 
+    AND TITLE LIKE CONCAT('%', #{keyword}, '%')
+</select>
+
+<select id="countPostsByCategoryTitleAndContent" resultType="long">
+    SELECT COUNT(*) FROM POST 
+    WHERE CATEGORY_ID = #{categoryId} 
+    AND (TITLE LIKE CONCAT('%', #{keyword}, '%') 
+    OR CONTENT LIKE CONCAT('%', #{keyword}, '%'))
+</select>
+
+<select id="searchPostsByCategoryTitle" resultMap="postMap">
+    SELECT 
+        P.POST_ID, 
+        P.SUB_CATE_NM, 
+        P.TITLE, 
+        U.NICKNAME, 
+        P.CREATED_AT, 
+        P.VIEW_CNT,
+        COALESCE(L.LIKE_COUNT, 0) AS LIKE_COUNT
+    FROM POST P
+    JOIN USER U ON P.USER_ID = U.USER_ID
+    LEFT JOIN (
+        SELECT POST_ID, COUNT(*) AS LIKE_COUNT 
+        FROM POST_LIKE 
+        GROUP BY POST_ID
+    ) AS L ON P.POST_ID = L.POST_ID
+    WHERE P.CATEGORY_ID = #{categoryId}
+      AND P.TITLE LIKE CONCAT('%', #{keyword}, '%')
+    ORDER BY P.CREATED_AT DESC
+    LIMIT #{pageSize} OFFSET #{offset}
+</select>
+
+
+<select id="searchPostsByCategoryTitleAndContent" resultMap="postMap">
+    SELECT 
+        P.POST_ID, 
+        P.SUB_CATE_NM, 
+        P.TITLE, 
+        U.NICKNAME, 
+        P.CREATED_AT, 
+        P.VIEW_CNT,
+        COALESCE(L.LIKE_COUNT, 0) AS LIKE_COUNT
+    FROM POST P
+    JOIN USER U ON P.USER_ID = U.USER_ID
+    LEFT JOIN (
+        SELECT POST_ID, COUNT(*) AS LIKE_COUNT 
+        FROM POST_LIKE 
+        GROUP BY POST_ID
+    ) AS L ON P.POST_ID = L.POST_ID
+    WHERE P.CATEGORY_ID = #{categoryId}
+      AND (P.TITLE LIKE CONCAT('%', #{keyword}, '%') 
+           OR P.CONTENT LIKE CONCAT('%', #{keyword}, '%'))
+    ORDER BY P.CREATED_AT DESC
+    LIMIT #{pageSize} OFFSET #{offset}
+</select>
+
+	
 
 </mapper>
