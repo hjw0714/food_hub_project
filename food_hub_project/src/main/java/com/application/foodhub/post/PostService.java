@@ -36,6 +36,6 @@ public interface PostService {
 
 	public String getCategoryName(Long categoryId);
 	
-	public List<Map<String, Object>> getLatestPostsByCategoryId(int categoryId);
+	public List<Map<String, Object>> getLatestPostsByCategoryId(long categoryId);
 
 }
