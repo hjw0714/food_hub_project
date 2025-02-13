@@ -18,13 +18,14 @@ public class SecurityConfig{
     }
 
     @Bean
-	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		http.cors().disable()			
-			.csrf().disable()			
-			.formLogin().disable()
-			.headers().frameOptions().disable();
- 
-		return http.build();
-	}
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+            .cors(cors -> cors.disable()) // CORS 설정 비활성화
+            .csrf(csrf -> csrf.disable()) // CSRF 보호 비활성화
+            .formLogin(login -> login.disable()) // 폼 로그인 비활성화
+            .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable())); // X-Frame-Options 비활성화
+
+        return http.build();
+    }
     
 }

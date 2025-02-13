@@ -8,6 +8,7 @@ import lombok.Data;
 
 @Data
 public class PostReportDTO {
+	private Long reportId;
     private Long postId;
     private String userId;
     private String content;

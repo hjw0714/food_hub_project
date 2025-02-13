@@ -37,7 +37,11 @@
     WHERE C.POST_ID = #{postId}
     AND C.PARENT_ID IS NULL
     AND C.STATUS != 'DELETED'
-    ORDER BY C.CREATED_AT ASC
+    ORDER BY 
+    <choose>
+        <when test="sortOrder == 'newest'"> C.CREATED_AT DESC </when>
+        <otherwise> C.CREATED_AT ASC </otherwise>
+    </choose>
 </select>
 
 <!-- 특정 댓글의 대댓글 조회 (추천 수 + 추천 여부 포함) -->
@@ -146,4 +150,11 @@
         DELETE FROM COMMENT_LIKE 
         WHERE COMMENT_ID = #{commentId} AND USER_ID = #{userId}
     </delete>
+    
+      <select id="existsByCommentId" resultType="int">
+	    SELECT EXISTS
+	    	(SELECT 1
+	    	FROM COMMENTS 
+	    	WHERE COMMENT_ID = #{commentId})
+		</select>
 </mapper>
