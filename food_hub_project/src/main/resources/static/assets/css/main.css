@@ -254,43 +254,97 @@ h6 {
     color: var(--nav-hover-color);
   }
 
-  .navmenu .dropdown ul {
-	  margin: 0;
-	  padding: 0;
-	  background: var(--nav-dropdown-background-color);
-	  height: 0;
-	  overflow: hidden;
-	  position: absolute;
-	  left: 14px;
-	  top: 130%;
-	  visibility: hidden;
-	  opacity: 0;
-	  transition: height 0.3s ease, opacity 0.3s ease;
-	  border-radius: 4px;
-	  z-index: 99;
-	  box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.1);
-	  display: block;
-	}
+/* 기존 드롭다운 스타일 */
+.navmenu .dropdown ul {
+    display: none;
+    position: absolute;
+    left: 0;
+    top: 100%;
+    background: rgba(255, 255, 255, 0.95); /* 기존 스타일 */
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    min-width: 150px;
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease-in-out;
+}
+
+/* ✅ 새로운 스타일 적용 */
+.navmenu .dropdown:hover > ul {
+    display: block;
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0px); /* 애니메이션 추가 */
+}
+
 	
-	  .navmenu .dropdown ul {
-	    position: absolute;
-	    left: 0;
-	    top: 100%;
-	    display: none;
-	    background: var(--nav-dropdown-background-color);
-	    box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.1);
-	    min-width: 200px;
-	    z-index: 99;
-	}
+/* ✅ 하위 드롭다운 (sub-dropdown) 스타일 */
+.navmenu .dropdown ul .dropdown {
+    position: relative;
+}
 	
-	.navmenu .dropdown:hover > ul {
+/* ✅ 하위 드롭다운 (sub-dropdown) 스타일 */
+.navmenu .dropdown ul .sub-dropdown {
+   display: none;
+   position: absolute;
+   left: 100%;
+   top: 0;
+   background: rgba(255, 255, 255, 0.95);
+   border-radius: 8px;
+   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+   min-width: 150px;
+   z-index: 9999;
+   opacity: 0;
+   visibility: hidden;
+   transition: all 0.3s ease-in-out;
+}
+
+
+/* ✅ 하위 드롭다운 활성화 */
+.navmenu .dropdown ul li:hover > .sub-dropdown {
+    display: block;
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0px); /* 부드러운 애니메이션 */
+}
+
+	
+/* ✅ 드롭다운 메뉴 아이템 스타일 */
+.navmenu .dropdown ul li {
+    list-style: none;
+    padding: 10px 15px;
+    text-align: left;
+    transition: background 0.2s ease-in-out;
+    background-color: rgb(102 103 104 / 0.8); /* 기존 #d2d6d9 + 80% 불투명 */
+    color: #212529; /* 검정에 가까운 색으로 글씨를 선명하게 */
+    font-weight: 500; /* 가독성 향상을 위해 폰트 굵기 추가 */
+    border-radius: 4px; /* 모서리 둥글게 */
+}
+
+/* ✅ 메뉴 아이템 hover 효과 */
+.navmenu .dropdown ul li:hover {
+    background: #0056b3; /* 진한 파란색 */
+    color: #ffffff; /* 글씨는 흰색 */
+    border-radius: 4px;
+}
+
+	/* ✅ 드롭다운 메뉴 링크 스타일 */
+	.navmenu .dropdown ul li a {
+	    color: #ffffff;;
+	    font-size: 14px;
+	    font-weight: 500;
 	    display: block;
+	    text-decoration: none;
+	    transition: color 0.2s ease-in-out;
 	}
 	
-	.navmenu .dropdown ul .dropdown ul {
-	    left: 100%;
-	    top: 0;
+	/* ✅ 링크 hover 효과 */
+	.navmenu .dropdown ul li a:hover {
+	    color: #ffffff;
 	}
+
+	
 
 }
 
