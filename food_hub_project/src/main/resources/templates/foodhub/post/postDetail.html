@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{foodhub/index/headerAndFooter.html}">
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{foodhub/index/headerAndFooter.html}">
 <head>
 <meta charset="utf-8">
 <meta content="width=device-width, initial-scale=1.0" name="viewport">
@@ -277,6 +277,7 @@
 #postLikeButton:hover {
   background-color: #198754; /* 호버 시 초록색 배경 */
   color: white; /* 호버 시 글씨 색 흰색 */
+  border-color: #198754; /* 테두리 유지 */
 }
 
 /* 호버 시 아이콘 색상 변경 */
@@ -1024,6 +1025,11 @@ h2 {
                 contentType: "application/json",
                 data: JSON.stringify({ postId: postId }),
                 success: function(response) {
+                	if (response.isBookmarked) {
+                        bookmarkButton.addClass("active");
+                    } else {
+                        bookmarkButton.removeClass("active");
+                    }
                     alert(response.message); // 알림 메시지 표시
                 },
                 error: function(error) {
@@ -1111,9 +1117,11 @@ h2 {
 						<input type="hidden" id="userId" th:value="${session.userId}">
 						
 						<!-- 북마크 버튼 -->
-		                <button id="bookmarkButton" th:data-post-id="${postMap.postId}">
-		                   🔖 북마크
-		                </button>
+<button id="bookmarkButton" 
+        th:data-post-id="${postMap.postId}" 
+        th:classappend="${isBookmarked} ? 'active' : ''">
+   🔖 북마크
+</button>
 					</div>
 
 					

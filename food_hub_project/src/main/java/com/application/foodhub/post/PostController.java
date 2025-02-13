@@ -54,9 +54,8 @@ public class PostController {
 	@Autowired
 	private BookmarkService bookmarkService;
 
-	/**
-	 * 통합 게시판 목록 조회
-	 */
+	
+	// * 통합 게시판 목록 조회
 	@GetMapping("/allPostList")
 	public String allPostList(@RequestParam(name = "page", defaultValue = "1") int page, Model model) {
 		final int pageSize = 15;
@@ -171,7 +170,8 @@ public class PostController {
 	 */
 	@GetMapping("/postDetail")
 	public String postDetail(Model model,
-			@RequestParam(value = "postId", required = false, defaultValue = "1") long postId) {
+							@RequestParam(value = "postId", required = false, defaultValue = "1") long postId,
+							HttpSession session) {
 
 		// 게시글 상세 정보 가져오기
 		Map<String, Object> postMap = postService.getPostDetail(postId, true);
@@ -190,6 +190,16 @@ public class PostController {
 		Long nextPostId = postService.getNextPostId(postId, categoryId);
 		model.addAttribute("prevPostId", prevPostId);
 		model.addAttribute("nextPostId", nextPostId);
+		
+		// 로그인한 사용자 ID 가져오기
+	    String userId = (String) session.getAttribute("userId");
+	    
+	    // 북마크 여부 확인
+	    boolean isBookmarked = false;
+	    if (userId != null) {
+	        isBookmarked = bookmarkService.isBookmarked(userId, postId);
+	    }
+	    model.addAttribute("isBookmarked", isBookmarked);
 
 		return "foodhub/post/postDetail";
 	}

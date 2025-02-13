@@ -1,6 +1,5 @@
 package com.application.foodhub.bookmark;
 
-
 import java.util.List;
 import java.util.Map;
 
@@ -29,6 +28,11 @@ public class BookmarkServiceImpl implements BookmarkService {
             return true; // 추가된 경우 true 반환
         }
     }
+    
+    @Override
+	public boolean isBookmarked(String userId, long postId) {
+    	return bookmarkDAO.isBookmarked(postId, userId); // DAO 호출로 북마크 여부 확인
+	}
 
     @Override
     public List<BookmarkDTO> getBookmarksByUserId(String userId) {
@@ -39,5 +43,5 @@ public class BookmarkServiceImpl implements BookmarkService {
 	public List<Map<String, Object>> myBookmarkList(String userId) {
 		return bookmarkDAO.myBookmarkList(userId);
 	}
-	
+
 }
