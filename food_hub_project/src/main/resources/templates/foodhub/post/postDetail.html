@@ -449,6 +449,7 @@ h2 {
 
 		let nickname = $("#nickname").text();
 		let loginNickname = "[[${session.nickname}]]";
+		let categoryId = $("#categoryId").val();
 
 		if (nickname == loginNickname) {
 			$("#editPostButton").show();
@@ -459,6 +460,10 @@ h2 {
 			$("#editPostButton").hide();
 			$("#deletePostButton").hide();
 			$("#reportPostButton").show();
+		}
+		
+		if (categoryId == "0") {
+			$("#reportPostButton").hide();
 		}
 		
 		if ($("#userId").val() == "") {
@@ -1062,6 +1067,7 @@ h2 {
 	<main class="main">
 		<section id="post-detail" class="post-detail section">
 			<div class="container">
+			<input type="hidden" id="categoryId" th:value="${postMap.categoryId}"/>
 				<!-- 게시글 제목 -->
 				<div class="post-header mb-4">
 					<h2 class="mb-3" th:text="|[${postMap['subCateNm']}] ${postMap['title']}|"></h2>
