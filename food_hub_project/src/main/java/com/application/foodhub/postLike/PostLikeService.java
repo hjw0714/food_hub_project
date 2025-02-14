@@ -5,7 +5,7 @@ import java.util.Map;
 
 public interface PostLikeService {
 
-	public void togglePostLike(long postId, String userId);
+	public boolean togglePostLike(long postId, String userId);
 	public int getPostLikeCount(long postId);
 	public List<Map<String, Object>> getTopLikedPosts();
 	
