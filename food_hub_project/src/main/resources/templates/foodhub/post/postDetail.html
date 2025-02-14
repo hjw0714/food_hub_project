@@ -591,16 +591,51 @@ h2 {
 	        attachmentSection.style.display = "none";
 	    }
 	});
-    
 	
-	// # 댓글 기능 #
+    // #북마크#
+    $().ready(function() {
+    	let loginNickname = "[[${session.nickname}]]";
+    	let bookmarkButton = $("#bookmarkButton");
+    	
+    	if (loginNickname == "") {
+    		bookmarkButton.prop("disabled", true);
+	    }
+    	
+        $("#bookmarkButton").click(function() {
+            const postId = $(this).data("post-id");
+            
+            $.ajax({
+                type: "POST",
+                url: "/foodhub/post/toggleBookmark",
+                contentType: "application/json",
+                data: JSON.stringify({ postId: postId }),
+                success: function(response) {
+                	if (response.isBookmarked) {
+                        bookmarkButton.addClass("active");
+                    } 
+                	else {
+                        bookmarkButton.removeClass("active");
+                    }
+                    alert(response.message); // 알림 메시지 표시
+                },
+                error: function(error) {
+                    console.error("Error:", error);
+                    alert("오류가 발생했습니다.");
+                }
+            });
+            
+        });
+    });
+	
+	
+    // # 댓글 기능 #
 	
 	$(document).ready(function () {
-        let postId = $("#postId").val();
-        let userId = $("#userId").val();
-     //  sortOrder를 localStorage에서 불러오기 (기본값: newest)
+        let postId = $("#postId").val();	// 게시글 아이디 가져오기
+        let userId = $("#userId").val();	// 유저 아이디 가져오기
+     //  sortOrder를 localStorage에서 불러오기 (기본값: 최신순)
         let sortOrder = localStorage.getItem("commentSortOrder") || "newest";
-        // 댓글 최신순 , 작성일 순 정렬
+        // 댓글 로드창
         function loadComments(sortOrder) {
             
         	 // 정렬 상태를 localStorage에 저장
@@ -611,13 +646,13 @@ h2 {
                 type: "GET",
                 dataType: "json",
                 success: function (parentComments) {
-                    $("#commentList").empty();
+                    $("#commentList").empty(); // 기존 댓글 목록 비우기
 
                     parentComments.forEach(comment => {
                         let commentHtml = createCommentHtml(comment);
                         $("#commentList").append(commentHtml);
 
-                        loadChildComments(comment.commentId);
+                        loadChildComments(comment.commentId); // 대댓글 불러오기
                     });
                 },
                 error: function (xhr, status, error) {
@@ -642,7 +677,7 @@ h2 {
             });
         }
 
-     // 댓글 HTML 생성 함수
+    	 // 댓글 생성 함수
         function createCommentHtml(comment) {
             let profileImgSrc = comment.profileUUID 
                 ? `/foodhub/user/thumbnails?fileName=${comment.profileUUID}`
@@ -650,22 +685,25 @@ h2 {
 
             let currentUserId = $("#userId").val();
             let displayName = `${comment.nickname}(${comment.userId})`; // ✅ 닉네임(userId) 형식으로 표시
-
+			
+            // 수정 및 삭제 버튼 (본인 댓글에만 표시)
             let editButtonHtml = comment.userId === currentUserId 
                 ? `<a href="javascript:void(0);" class="btn btn-outline-secondary btn-sm edit-btn" data-id="${comment.commentId}">수정</a>`
-                : '';
+                : ''; 
 
             let deleteButtonHtml = comment.userId === currentUserId 
                 ? `<a href="javascript:void(0);" class="btn btn-outline-danger btn-sm delete-btn" data-id="${comment.commentId}">삭제</a>`
                 : '';
-                
-                let reportButtonHtml = comment.userId !== currentUserId  
-                ? `<span class="report-comment-btn" data-id="${comment.commentId}" title="신고">
-                        🚨
-                   </span>`
-                : '';   
+             // 댓글 신고 버튼 (본인이 작성한 댓글이면 표시 x)
+            let reportButtonHtml = comment.userId !== currentUserId  
+            ? `<span class="report-comment-btn" data-id="${comment.commentId}" title="신고">
+                    🚨
+               </span>`
+            : '';   
+             // 댓글 추천 버튼       
             let likedClass = comment.likedByUser ? "btn-success" : "btn-outline-success";
-            return `
+            
+             return `
                 <div class="comment-box" data-id="${comment.commentId}">
                     <div class="comment-header">
                         <img class="profile-img" src="${profileImgSrc}" alt="프로필">
@@ -689,14 +727,14 @@ h2 {
                          
         }
 
-        // 대댓글 HTML 생성 함수
+        // 대댓글 생성 함수
         function createReplyHtml(reply) {
             let profileImgSrc = reply.profileUUID 
                 ? `/foodhub/user/thumbnails?fileName=${reply.profileUUID}`
                 : "/default-profile.png";
 
             let currentUserId = $("#userId").val();
-            let displayName = `${reply.nickname}(${reply.userId})`; // ✅ 닉네임(userId) 형식으로 표시
+            let displayName = `${reply.nickname}(${reply.userId})`; 
 
             let editButtonHtml = reply.userId === currentUserId 
                 ? `<a href="javascript:void(0);" class="btn btn-outline-secondary btn-sm edit-btn" data-id="${reply.commentId}">수정</a>`
@@ -732,12 +770,13 @@ h2 {
         }
 
 
-        // ✅ 로그인 여부 확인 후 댓글 등록 처리
+        // 로그인 여부 확인 후 댓글 등록 처리
         $("#commentForm").submit(function (event) {
-            event.preventDefault();
-            if (!userId) {
+            event.preventDefault(); // 이동 방지
+
+            if (!userId) {	// 로그인 안할시
                 alert("로그인이 필요합니다. 로그인 페이지로 이동합니다.");
-                window.location.href = "/foodhub/user/login"; // 로그인 페이지 URL
+                window.location.href = "/foodhub/user/login"; // 
                 return;
             }
 
@@ -761,7 +800,7 @@ h2 {
         });
 
 
-     // ✅ 로그인 여부 확인 후 답글 입력창 추가
+     // 로그인 여부 확인 후 답글 입력창 추가
         $(document).on("click", ".reply-btn", function () {
             if (!userId) {
                 alert("로그인이 필요합니다. 로그인 페이지로 이동합니다.");
@@ -784,16 +823,16 @@ h2 {
                     <button class="btn btn-sm btn-secondary cancel-reply">취소</button>
                 </div>
             `;
-            // 🔹 대댓글이 이미 존재하는 경우, 첫 번째 대댓글 위에 삽입
-    if (replyBox.children(".reply-comment-box").length > 0) {
-        replyBox.children(".reply-comment-box").first().before(replyFormHtml);
-    } 
-    else {
-        // 🔹 대댓글이 없을 경우, 그냥 replyBox 안에 삽입
-        replyBox.append(replyFormHtml);
-    }
-        });
-
+            // 대댓글이 이미 존재하는 경우, 첫 번째 대댓글 위에 삽입
+			    if (replyBox.children(".reply-comment-box").length > 0) {
+			        replyBox.children(".reply-comment-box").first().before(replyFormHtml);
+			    } 
+			    else {
+			        	// 대댓글이 없을 경우, 그냥 replyBox 안에 삽입
+			        replyBox.append(replyFormHtml);
+			    }
+			        });
+			
 
 
     //대댓글 등록 (기존 대댓글 유지)
@@ -825,6 +864,7 @@ h2 {
  // ✅ 답글 취소 버튼 작동 안 하는 문제 해결
     $(document).on("click", ".cancel-reply", function () {
         $(this).closest(".reply-form").remove(); // ✅ 해당 입력창만 삭제
+
     });
  
     $(document).on("click", ".edit-btn", function () {
@@ -1028,40 +1068,6 @@ h2 {
     
     
     
-    // ✅ 북마크
-    $().ready(function() {
-    	let loginNickname = "[[${session.nickname}]]";
-    	let bookmarkButton = $("#bookmarkButton");
-    	
-    	if (loginNickname == "") {
-    		bookmarkButton.prop("disabled", true);
-	    }
-    	
-        $("#bookmarkButton").click(function() {
-            const postId = $(this).data("post-id");
-            
-            $.ajax({
-                type: "POST",
-                url: "/foodhub/post/toggleBookmark",
-                contentType: "application/json",
-                data: JSON.stringify({ postId: postId }),
-                success: function(response) {
-                	if (response.isBookmarked) {
-                        bookmarkButton.addClass("active");
-                    } 
-                	else {
-                        bookmarkButton.removeClass("active");
-                    }
-                    alert(response.message); // 알림 메시지 표시
-                },
-                error: function(error) {
-                    console.error("Error:", error);
-                    alert("오류가 발생했습니다.");
-                }
-            });
-            
-        });
-    });
 </script>
 </head>
 
