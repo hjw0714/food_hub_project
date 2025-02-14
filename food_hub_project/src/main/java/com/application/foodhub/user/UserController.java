@@ -124,7 +124,7 @@ public class UserController {
 	
 	
 
-    @GetMapping("/myPage")
+    @GetMapping("/myPage") // 마이 페이지
     public String myPage(Model model, HttpServletRequest request,
                          @RequestParam(value = "postPage", defaultValue = "1") int postPage,
                          @RequestParam(value = "commentPage", defaultValue = "1") int commentPage,
@@ -181,7 +181,7 @@ public class UserController {
 
 	    
 	    
-	@GetMapping("/modifyPage")
+	@GetMapping("/modifyPage") // 수정 페이지
 	public String modifyPage(HttpServletRequest request, Model model) {
 	    HttpSession session = request.getSession();
 	    String userId = (String) session.getAttribute("userId");
@@ -191,7 +191,7 @@ public class UserController {
 	    return "foodhub/user/modifyPage";
 	}
 		
-	@GetMapping("/updateUser")// 사용자 정보 업데이트 
+	@GetMapping("/updateUser") // 사용자 정보 업데이트 
 	public String updateUser(HttpServletRequest request , Model model) {
 		
 		HttpSession session = request.getSession();
@@ -223,9 +223,9 @@ public class UserController {
 	       return jsScript;
 	   }
 	
-	@GetMapping("/logout") // localhost/user/signOut 요청시 매핑
+	@GetMapping("/logout") // 로그아웃
 	@ResponseBody
-	public String signOut(HttpServletRequest request) {
+	public String logout(HttpServletRequest request) {
 		
 		HttpSession session = request.getSession(); // 세션 객체 생성
 		session.invalidate(); // 세션 삭제
@@ -238,13 +238,13 @@ public class UserController {
 			
 		return jsScript;
 	}
-	@GetMapping("/thumbnails")
+	@GetMapping("/thumbnails") // 프로필 사진
 	@ResponseBody
 	public Resource thumbnails(@RequestParam("fileName") String fileName) throws MalformedURLException {
 		return new UrlResource("file:" + fileRepositoryPath + fileName);
 	}
 	
-	@GetMapping("/deleteUser")
+	@GetMapping("/deleteUser") // 유저 탈퇴
 	   public String deleteUser() {
 	      return "foodhub/user/deleteUser";
     }
@@ -268,7 +268,7 @@ public class UserController {
 		return jsScript;
 	} 
 	
-	@GetMapping("/findId")
+	@GetMapping("/findId") // 아이디 찾기
 	public String findId() {
 		return "foodhub/user/findId";
 	}
@@ -281,7 +281,7 @@ public class UserController {
 	    return userService.findId(email, tel);
 	}
 	
-	@GetMapping("/findPassword")
+	@GetMapping("/findPassword") // 비밀번호 찾기
 	public String findPassword() {
 		return "foodhub/user/findPassword";
 	}
@@ -296,7 +296,7 @@ public class UserController {
 	}
 	
 
-	@PostMapping("/resetPassword")
+	@PostMapping("/resetPassword") // 비밀번호 리셋
 	@ResponseBody
 	public String resetPassword(@RequestParam("newPassword") String newPassword, 
 	                            @RequestParam("userId") String userId) { 
@@ -313,7 +313,7 @@ public class UserController {
 	    return jsScript;
 	}
 	
-	@GetMapping("/changePassword")
+	@GetMapping("/changePassword") // 비밀번호 변경
 	public String changePassword() {
 		return "foodhub/user/changePassword";
 	}
