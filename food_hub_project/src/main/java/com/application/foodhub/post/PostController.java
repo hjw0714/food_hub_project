@@ -498,7 +498,7 @@ public class PostController {
 	}
 
 	@PostMapping("/postLike")
-	public ResponseEntity<Integer> postLike(@RequestBody PostLikeDTO postLikeDTO) {
+	public ResponseEntity<Map<String, Object>> postLike(@RequestBody PostLikeDTO postLikeDTO) {
 
 		long postId = postLikeDTO.getPostId();
 		String userId = postLikeDTO.getUserId();
@@ -506,10 +506,15 @@ public class PostController {
 //	    System.out.println("postId : " + postId);
 //	    System.out.println("userId : " + userId);
 
-		postLikeService.togglePostLike(postId, userId);
+		boolean isLiked = postLikeService.togglePostLike(postId, userId);
 		int likeCount = postLikeService.getPostLikeCount(postId);
+		
+		Map<String, Object> result = new HashMap<>();
+		
+		result.put("isLiked", isLiked);
+		result.put("likeCount", likeCount);
 
-		return ResponseEntity.ok(likeCount);
+		return ResponseEntity.ok(result);
 	}
 
 	@PostMapping("/report")

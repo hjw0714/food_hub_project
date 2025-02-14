@@ -491,8 +491,14 @@ h2 {
 	            url: "/foodhub/post/postLike",
 	            contentType: "application/json",
 	            data: JSON.stringify(likeData), 
-	            success: function (likeCount) {
-	                $("#likeCount").text(likeCount);
+	            success: function(response) {
+	                $("#likeCount").text(response.likeCount);
+	                
+	                if (response.isLiked) {
+	                    alert("추천되었습니다!");
+	                } else {
+	                    alert("추천이 취소되었습니다!");
+	                }
 	            }
 	        });
 	    });

@@ -14,11 +14,13 @@ public class PostLikeServiceImpl implements PostLikeService {
 	private PostLikeDAO postLikeDAO;
 
 	@Override
-	public void togglePostLike(long postId, String userId) {
+	public boolean togglePostLike(long postId, String userId) {
 		if (postLikeDAO.existsPostLike(postId, userId)) {
 			postLikeDAO.deletePostLike(postId, userId);
+			return false; // 게시글 추천 취소
 		} else {
 			postLikeDAO.insertPostLike(postId, userId);
+			return true; // 게시글 추천
 		}
 	}
 

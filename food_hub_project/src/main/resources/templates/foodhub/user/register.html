@@ -19,7 +19,8 @@ body {
 	padding: 0;
 	justify-content: center;
 	align-items: center;
-	height: 100vh;
+ 	height: auto; /* 높이를 자동으로 조정 */
+    min-height: 100vh; /* 최소 높이 설정 */
 	box-sizing: border-box; /* 모든 요소가 테두리와 패딩을 포함하여 크기를 계산하도록 함 */
 }
 
@@ -31,6 +32,7 @@ body {
 	width: 100%; /* 화면 너비에 맞게 */
 	max-width: 500px; /* 최대 너비 설정 */
 	box-sizing: border-box; /* 패딩과 테두리를 포함한 크기 계산 */
+	margin-top: 80px; /* 헤더 높이에 맞춰 조정 */
 	margin: 0 auto;
 }
 
