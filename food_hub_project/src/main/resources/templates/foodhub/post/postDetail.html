@@ -21,7 +21,6 @@
 	margin-bottom: 10px;
 }
 
-
 /* ✅ 작성자 정보 스타일 */
 .post-meta {
 	background: #f8f9fa;
@@ -86,63 +85,62 @@
 
 /* ✅ 북마크 버튼 스타일 (추천 버튼과 유사한 스타일 적용) */
 #bookmarkButton {
-  color: #6c757d; /* 기본 글씨 색상을 회색 */
-  background-color: transparent; /* 배경색 투명 */
-  border: 2px solid #ffc107; /* 테두리 노란색 */
-  border-radius: 5px; /* 모서리 둥글게 */
-  padding: 6px 12px; /* 내부 여백 */
-  font-size: 14px; /* 글자 크기 */
-  font-weight: bold;
-  display: inline-flex; /* 내부 요소 정렬 */
-  align-items: center; /* 세로 중앙 정렬 */
-  justify-content: center; /* 가로 중앙 정렬 */
-  transition: all 0.2s ease-in-out;
-  cursor: pointer;
-  min-width: 80px; /* 최소 너비를 맞춰서 크기 통일 */
-  height: 38px; /* 버튼 높이를 동일하게 맞추기 */
+	color: #6c757d; /* 기본 글씨 색상을 회색 */
+	background-color: transparent; /* 배경색 투명 */
+	border: 2px solid #ffc107; /* 테두리 노란색 */
+	border-radius: 5px; /* 모서리 둥글게 */
+	padding: 6px 12px; /* 내부 여백 */
+	font-size: 14px; /* 글자 크기 */
+	font-weight: bold;
+	display: inline-flex; /* 내부 요소 정렬 */
+	align-items: center; /* 세로 중앙 정렬 */
+	justify-content: center; /* 가로 중앙 정렬 */
+	transition: all 0.2s ease-in-out;
+	cursor: pointer;
+	min-width: 80px; /* 최소 너비를 맞춰서 크기 통일 */
+	height: 38px; /* 버튼 높이를 동일하게 맞추기 */
 }
 
 /* 아이콘 스타일 */
 #bookmarkButton i {
-  margin-right: 5px; /* 아이콘과 텍스트 사이 여백 */
-  font-size: 16px; /* 아이콘 크기 */
-  color: #ffc107; /* 아이콘 색상 노란색 */
+	margin-right: 5px; /* 아이콘과 텍스트 사이 여백 */
+	font-size: 16px; /* 아이콘 크기 */
+	color: #ffc107; /* 아이콘 색상 노란색 */
 }
 
 /* ✅ 북마크 버튼 활성화 상태 */
 #bookmarkButton.active {
-  background-color: #ffc107; /* 노란색 배경 */
-  color: white; /* 흰색 텍스트 */
+	background-color: #ffc107; /* 노란색 배경 */
+	color: white; /* 흰색 텍스트 */
 }
 
 /* ✅ 호버 효과 */
 #bookmarkButton:hover {
-  background-color: #ffc107; /* 호버 시 노란색 배경 */
-  color: white; /* 호버 시 글씨 색 흰색 */
-  border-color: #ffc107; /* 테두리 유지 */
+	background-color: #ffc107; /* 호버 시 노란색 배경 */
+	color: white; /* 호버 시 글씨 색 흰색 */
+	border-color: #ffc107; /* 테두리 유지 */
 }
 
 /* 호버 시 아이콘 색상 변경 */
 #bookmarkButton:hover i {
-  color: white; /* 호버 시 아이콘 흰색 */
+	color: white; /* 호버 시 아이콘 흰색 */
 }
 
 /* ✅ 버튼 클릭(active) 스타일 */
 #bookmarkButton:active {
-  background-color: #d39e00; /* 더 어두운 노란색 */
-  border-color: #c69500;
-  color: white;
+	background-color: #d39e00; /* 더 어두운 노란색 */
+	border-color: #c69500;
+	color: white;
 }
 
 /* ✅ 비활성화 버튼 스타일 */
 #bookmarkButton:disabled {
-  color: #6c757d;
-  background-color: transparent;
-  border: 2px solid #ffc107;
-  cursor: not-allowed;
-  opacity: 0.6;
+	color: #6c757d;
+	background-color: transparent;
+	border: 2px solid #ffc107;
+	cursor: not-allowed;
+	opacity: 0.6;
 }
-
 
 .thumbnail-img {
 	max-width: 30%; /* 원본 크기의 30%로 자동 조정 */
@@ -169,6 +167,7 @@
 
 .reply-form button {
 	margin-right: 5px; /* 버튼 간격 조정 */
+	align-content: right;
 }
 
 /* ✅ 대댓글 크기 최적화 */
@@ -182,7 +181,6 @@
 .reply-box {
 	margin-left: 20px; /* 대댓글이 원댓글 내부에서 들여쓰기되도록 설정 */
 }
-
 
 /* 댓글 스타일 */
 .comment-box {
@@ -235,212 +233,211 @@
 
 /* 부모 요소를 오른쪽 정렬 */
 .recommend-container {
-  display: flex;
-  justify-content: flex-end; /* 버튼을 오른쪽 정렬 */
-  align-items: center; /* 세로 중앙 정렬 */
-  width: 100%; /* 부모 요소 전체 너비 차지 */
-  margin-top: 10px; /* 위쪽 여백 */
-  gap: 8px; /* 버튼 사이 간격 추가 */
+	display: flex;
+	justify-content: flex-end; /* 버튼을 오른쪽 정렬 */
+	align-items: center; /* 세로 중앙 정렬 */
+	width: 100%; /* 부모 요소 전체 너비 차지 */
+	margin-top: 10px; /* 위쪽 여백 */
+	gap: 8px; /* 버튼 사이 간격 추가 */
 }
 
 #postLikeButton {
-  color: #6c757d; /* 기본 글씨 색상을 회색 */
-  background-color: transparent; /* 배경색 투명 */
-  border: 2px solid #198754; /* 테두리 초록색 */
-  border-radius: 5px; /* 모서리 둥글게 */
-  padding: 6px 12px; /* 내부 여백 (수정 & 삭제 버튼과 동일) */
-  font-size: 14px; /* 글자 크기 맞추기 */
-  font-weight: bold;
-  display: inline-flex; /* 내부 요소 정렬 */
-  align-items: center; /* 세로 중앙 정렬 */
-  justify-content: center; /* 가로 중앙 정렬 */
-  transition: all 0.2s ease-in-out;
-  cursor: pointer;
-  min-width: 80px; /* 수정, 삭제 버튼과 동일한 최소 너비 설정 */
-  height: 38px; /* 버튼 높이를 동일하게 맞추기 */
+	color: #6c757d; /* 기본 글씨 색상을 회색 */
+	background-color: transparent; /* 배경색 투명 */
+	border: 2px solid #198754; /* 테두리 초록색 */
+	border-radius: 5px; /* 모서리 둥글게 */
+	padding: 6px 12px; /* 내부 여백 (수정 & 삭제 버튼과 동일) */
+	font-size: 14px; /* 글자 크기 맞추기 */
+	font-weight: bold;
+	display: inline-flex; /* 내부 요소 정렬 */
+	align-items: center; /* 세로 중앙 정렬 */
+	justify-content: center; /* 가로 중앙 정렬 */
+	transition: all 0.2s ease-in-out;
+	cursor: pointer;
+	min-width: 80px; /* 수정, 삭제 버튼과 동일한 최소 너비 설정 */
+	height: 38px; /* 버튼 높이를 동일하게 맞추기 */
 }
 
 /* 아이콘 스타일 (아이콘이 들어갈 경우) */
 #postLikeButton i {
-  margin-right: 5px; /* 아이콘과 텍스트 사이 여백 */
-  font-size: 16px; /* 아이콘 크기 */
-  color: #198754; /* 아이콘 초록색 */
+	margin-right: 5px; /* 아이콘과 텍스트 사이 여백 */
+	font-size: 16px; /* 아이콘 크기 */
+	color: #198754; /* 아이콘 초록색 */
 }
 
 /* ✅ 추천 버튼 활성화 상태 */
 #postLikeButton.active {
-  background-color: #198754; /* 초록색 배경 */
-  color: white; /* 흰색 텍스트 */
+	background-color: #198754; /* 초록색 배경 */
+	color: white; /* 흰색 텍스트 */
 }
 
 /* 호버 효과 */
 #postLikeButton:hover {
-  background-color: #198754; /* 호버 시 초록색 배경 */
-  color: white; /* 호버 시 글씨 색 흰색 */
-  border-color: #198754; /* 테두리 유지 */
+	background-color: #198754; /* 호버 시 초록색 배경 */
+	color: white; /* 호버 시 글씨 색 흰색 */
+	border-color: #198754; /* 테두리 유지 */
 }
 
 /* 호버 시 아이콘 색상 변경 */
 #postLikeButton:hover i {
-  color: white; /* 호버 시 아이콘 흰색 */
+	color: white; /* 호버 시 아이콘 흰색 */
 }
 
 #postLikeButton:active {
-/* 버튼 클릭(active) 스타일 */
-  background-color: #146c43; /* 더 어두운 초록색 */
-  border-color: #13653f;
-  color: white;
+	/* 버튼 클릭(active) 스타일 */
+	background-color: #146c43; /* 더 어두운 초록색 */
+	border-color: #13653f;
+	color: white;
 }
 
 /* 비활성화 버튼 스타일 */
 #postLikeButton:disabled {
-  color: #6c757d;
-  background-color: transparent;
-  border: 2px solid #198754;
-  cursor: not-allowed;
-  opacity: 0.6;
+	color: #6c757d;
+	background-color: transparent;
+	border: 2px solid #198754;
+	cursor: not-allowed;
+	opacity: 0.6;
 }
 
 /* ✅ 댓글 푸터(버튼 영역) 스타일 수정 */
 .comment-footer {
-  display: flex;
-  justify-content: flex-end; /* 버튼을 오른쪽 정렬 */
-  align-items: center; /* 세로 중앙 정렬 */
-  flex-wrap: wrap; /* 버튼이 줄바꿈되지 않도록 설정 */
+	display: flex;
+	justify-content: flex-end; /* 버튼을 오른쪽 정렬 */
+	align-items: center; /* 세로 중앙 정렬 */
+	flex-wrap: wrap; /* 버튼이 줄바꿈되지 않도록 설정 */
 }
 
 /* ✅ 버튼 공통 스타일 (모든 버튼 크기 통일 + 폭 줄이기) */
-.comment-footer button,
-.comment-footer a {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px; /* ✅ 글자 크기 줄이기 */
-  padding: 4px 8px; /* ✅ 내부 여백 줄이기 */
-  height: 28px; /* ✅ 버튼 높이 줄이기 */
-  min-width: 40px; /* ✅ 버튼 최소 너비 줄이기 */
-  border-radius: 3px; /* ✅ 모서리 둥글게 */
-  transition: all 0.2s ease-in-out;
-  font-weight: bold;
+.comment-footer button, .comment-footer a {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 12px; /* ✅ 글자 크기 줄이기 */
+	padding: 4px 8px; /* ✅ 내부 여백 줄이기 */
+	height: 28px; /* ✅ 버튼 높이 줄이기 */
+	min-width: 40px; /* ✅ 버튼 최소 너비 줄이기 */
+	border-radius: 3px; /* ✅ 모서리 둥글게 */
+	transition: all 0.2s ease-in-out;
+	font-weight: bold;
 }
 
 /* ✅ 버튼 개별 스타일 조정 */
 #commentLikeButton {
-  color: #198754;
-  background-color: transparent;
-  border: 1px solid #198754;
+	color: #198754;
+	background-color: transparent;
+	border: 1px solid #198754;
 }
 
 #commentLikeButton:hover {
-  background-color: #198754;
-  color: white;
+	background-color: #198754;
+	color: white;
 }
 
 .reply-btn {
-  color: #0d6efd;
-  border: 1px solid #0d6efd;
+	color: #0d6efd;
+	border: 1px solid #0d6efd;
 }
 
 .reply-btn:hover {
-  background-color: #0d6efd;
-  color: white;
+	background-color: #0d6efd;
+	color: white;
 }
 
 .edit-btn {
-  color: #6c757d;
-  border: 1px solid #6c757d;
+	color: #6c757d;
+	border: 1px solid #6c757d;
 }
 
 .edit-btn:hover {
-  background-color: #6c757d;
-  color: white;
+	background-color: #6c757d;
+	color: white;
 }
 
 .delete-btn {
-  color: #dc3545;
-  border: 1px solid #dc3545;
+	color: #dc3545;
+	border: 1px solid #dc3545;
 }
 
 .delete-btn:hover {
-  background-color: #dc3545;
-  color: white;
+	background-color: #dc3545;
+	color: white;
 }
 
 /* ✅ 신고 버튼 스타일 */
 #reportPostButton {
-  color: #dc3545; /* 빨간색 글씨 */
-  border: 2px solid #dc3545; /* 빨간색 테두리 */
-  background-color: transparent; /* 배경 투명 */
-  border-radius: 5px;
-  padding: 6px 12px;
-  font-size: 14px;
-  font-weight: bold;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease-in-out;
-  cursor: pointer;
-  min-width: 80px;
-  height: 38px;
+	color: #dc3545; /* 빨간색 글씨 */
+	border: 2px solid #dc3545; /* 빨간색 테두리 */
+	background-color: transparent; /* 배경 투명 */
+	border-radius: 5px;
+	padding: 6px 12px;
+	font-size: 14px;
+	font-weight: bold;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	transition: all 0.2s ease-in-out;
+	cursor: pointer;
+	min-width: 80px;
+	height: 38px;
 }
 
 /* ✅ 호버 효과 */
 #reportPostButton:hover {
-  background-color: #dc3545;
-  color: white;
+	background-color: #dc3545;
+	color: white;
 }
 
 /* 제목 스타일 */
 h2 {
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    white-space: normal;
-    max-width: 100%;
+	word-wrap: break-word;
+	overflow-wrap: break-word;
+	white-space: normal;
+	max-width: 100%;
 }
 
 /* 본문 내용 스타일 */
 .content-box p {
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    white-space: normal;
+	word-wrap: break-word;
+	overflow-wrap: break-word;
+	white-space: normal;
 }
 
 /* 댓글도 자동 줄바꿈 */
 .comment-box p {
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    white-space: normal;
+	word-wrap: break-word;
+	overflow-wrap: break-word;
+	white-space: normal;
 }
 
 /* 🚨 신고 버튼 스타일 */
 .report-comment-btn {
-    cursor: pointer;  /* 클릭 가능하도록 설정 */
-    font-size: 18px;  /* 크기 조정 */
-    margin-left: 8px; /* 여백 추가 */
-    transition: transform 0.2s ease-in-out, color 0.2s ease-in-out;
+	cursor: pointer; /* 클릭 가능하도록 설정 */
+	font-size: 18px; /* 크기 조정 */
+	margin-left: 8px; /* 여백 추가 */
+	transition: transform 0.2s ease-in-out, color 0.2s ease-in-out;
 }
 
 /* 🚨 호버 효과 */
 .report-comment-btn:hover {
-    transform: scale(1.2);  /* 약간 확대 */
-    color: red;  /* 색상 강조 */
+	transform: scale(1.2); /* 약간 확대 */
+	color: red; /* 색상 강조 */
 }
 
 /* ✅ 정렬 옵션 텍스트 스타일 */
 .sort-text {
-    cursor: pointer;
-    font-size: 14px;
-    color: #6c757d;
-    transition: color 0.2s ease-in-out;
+	cursor: pointer;
+	font-size: 14px;
+	color: #6c757d;
+	transition: color 0.2s ease-in-out;
 }
 
 .sort-text:hover {
-    color: #000;
+	color: #000;
 }
 
 .sort-text.active {
-    font-weight: bold;
-    color: #000;
+	font-weight: bold;
+	color: #000;
 }
 </style>
 
@@ -504,7 +501,8 @@ h2 {
 	        if (isFromAllPostList === "true") {
 	            window.location.href = "/foodhub/post/allPostList";
 	            localStorage.setItem("fromAllPostList", "false"); // 값 유지
-	        } else {
+	        } 
+	        else {
 	            let categoryId = $("#categoryId").val();
 	            if (!categoryId || categoryId === "undefined") {
 	                alert("카테고리 정보를 찾을 수 없습니다.");
@@ -559,8 +557,6 @@ h2 {
 	        });
 	    });
 
-
-	    
 	});
 
 	document.addEventListener("DOMContentLoaded", function() {
@@ -771,14 +767,15 @@ h2 {
             	
                 <div class="reply-form">
                     <textarea class="form-control reply-content" rows="2" placeholder="답글을 입력하세요..."></textarea>
-                    <button class="btn btn-sm btn-primary submit-reply" data-id="${parentId}">등록</button>
+                    <div style="text-align: right;"><button class="btn btn-sm btn-primary submit-reply" data-id="${parentId}">등록</button>
                     <button class="btn btn-sm btn-secondary cancel-reply">취소</button>
                 </div>
             `;
             // 🔹 대댓글이 이미 존재하는 경우, 첫 번째 대댓글 위에 삽입
     if (replyBox.children(".reply-comment-box").length > 0) {
         replyBox.children(".reply-comment-box").first().before(replyFormHtml);
-    } else {
+    } 
+    else {
         // 🔹 대댓글이 없을 경우, 그냥 replyBox 안에 삽입
         replyBox.append(replyFormHtml);
     }
@@ -896,7 +893,8 @@ h2 {
             success: function (response) {
                 if (response === "댓글이 삭제 처리되었습니다.") {
                     $(`.comment-box[data-id='${commentId}']`).remove(); // ✅ UI에서 제거
-                } else {
+                } 
+                else {
                     alert("삭제 실패: " + response);
                 }
             },
@@ -931,10 +929,10 @@ h2 {
             url: "/comments/report",
             contentType: "application/json",
             data: JSON.stringify({
-                commentId: commentId,
-                userId: userId,
-                content: content
-            }),
+                	commentId: commentId,
+                	userId: userId,
+                	content: content
+            	  }),
             success: function (response) {
                 alert(response.message);
                 $("#reportModal2").modal("hide"); // 모달 닫기
@@ -969,10 +967,12 @@ h2 {
                     // 추천 버튼 색상 변경
                     if (response.liked) {
                         button.removeClass("btn-outline-success").addClass("btn-success");
-                    } else {
+                    } 
+                    else {
                         button.removeClass("btn-success").addClass("btn-outline-success");
                     }
-                } else {
+                } 
+                else {
                     alert("추천 처리 실패");
                 }
             },
@@ -1027,7 +1027,8 @@ h2 {
                 success: function(response) {
                 	if (response.isBookmarked) {
                         bookmarkButton.addClass("active");
-                    } else {
+                    } 
+                	else {
                         bookmarkButton.removeClass("active");
                     }
                     alert(response.message); // 알림 메시지 표시
@@ -1040,207 +1041,195 @@ h2 {
             
         });
         
-        
-        
     });
 </script>
 </head>
 
     <!-- 게시글 본문 내용 -->
 <body class="single-post-page">
-	<div layout:fragment="content">
-		<main class="main">
-			<section id="post-detail" class="post-detail section">
-				<div class="container">
 
-	
-					<!-- ✅ 삭제되지 않은 경우에만 본문 내용 출력 -->
-					<!-- 게시글 제목 -->
-					<div class="post-header mb-4">
-						<h2 class="mb-3"
-							th:text="|[${postMap['subCateNm']}] ${postMap['title']}|"></h2>
 
-						<!-- 작성자 정보 박스 -->
-						<div class="post-meta">
-					    <div class="author-box">
-					        <img class="profile-img"
-					             th:src="${'/foodhub/user/thumbnails?fileName=' + postMap.profileUUID}"
-					             alt="프로필 사진">
-					        <span class="text-muted">작성자: <span id="nickname" th:text="${postMap.nickname}"></span></span>
-					    </div>
-					    <div class="post-details">
-					        <span class="text-muted">작성일: <span th:text="${#dates.format(postMap.createdAt, 'yyyy-MM-dd HH:mm')}"></span></span>
-					        <span class="text-muted"> | 조회수: <span th:text="${postMap.viewCnt}"></span></span>
-					        <span class="text-muted"> | 추천수: <span id="likeCount" th:text="${postMap.likeCount}">0</span></span>
-					    </div>
-					</div>
-					</div>
-					
-
-					<!-- 본문 내용 -->
-					<div class="content-box">
-						<h4>📄 본문 내용</h4>
-						<p>
-							<span th:utext="${postMap.content}"></span>
-						</p>
-
-						<!-- 이미지 파일을 본문 아래에 표시 (최대 크기 조정) -->
-						<div th:each="file : ${fileList}"
-							th:if="${file.fileName.endsWith('.jpg') or file.fileName.endsWith('.png') or file.fileName.endsWith('.gif')}">
-							<a th:href="@{/uploads/{fileUUID}(fileUUID=${file.fileUUID})}"
-								target="_blank"> <img
-								th:src="@{/uploads/{fileUUID}(fileUUID=${file.fileUUID})}"
-								alt="첨부 이미지" class="thumbnail-img">
-							</a>
-						</div>
-					</div>
-
-					<!-- 이미지가 아닌 파일만 첨부파일 목록에 표시 -->
-					<div id="attachmentSection" class="content-box"
-						th:if="${fileList != null and #lists.size(fileList) > 0}">
-						<h4>📂 첨부 파일</h4>
-						<ul class="file-list">
-							<li th:each="file : ${fileList}" class="attachment-item"
-								th:data-filename="${file.fileName}"
-								th:unless="${file.fileName.endsWith('.jpg') or file.fileName.endsWith('.png') or file.fileName.endsWith('.gif')}">
-								<a th:href="@{/uploads/{fileUUID}(fileUUID=${file.fileUUID})}"
-								th:text="${file.fileName}" title="다운로드"> 📂 다운로드 </a>
-							</li>
-						</ul>
-					</div>
-
+<div layout:fragment="content">
+	<main class="main">
+		<section id="post-detail" class="post-detail section">
+			<div class="container">
+				<!-- 게시글 제목 -->
+				<div class="post-header mb-4">
+					<h2 class="mb-3" th:text="|[${postMap['subCateNm']}] ${postMap['title']}|"></h2>
 				
-					<div class="recommend-container">
-						<!-- 게시글 추천 버튼 -->
-					    <button id="postLikeButton">
-					        👍 추천
-					    </button>
-					    <!-- 유저 정보 저장 (로그인한 유저 ID & 작성자 ID) -->
-						<input type="hidden" id="postId" th:value="${postMap.postId}">
-						<input type="hidden" id="userId" th:value="${session.userId}">
-						
-						<!-- 북마크 버튼 -->
-<button id="bookmarkButton" 
-        th:data-post-id="${postMap.postId}" 
-        th:classappend="${isBookmarked} ? 'active' : ''">
-   🔖 북마크
-</button>
-					</div>
-
-					
-
-					<!-- 수정 & 삭제 버튼 -->
-					<div class="d-flex justify-content-center gap-2 mb-4">
-						<button id="editPostButton" class="btn btn-outline-secondary"
-							th:onclick="|location.href='@{/foodhub/post/updatePost(postId=${postMap.postId})}'|">
-							<i class="bi bi-pencil"></i> 수정
-						</button>
-						<button id="deletePostButton" class="btn btn-outline-secondary"
-							th:onclick="|location.href='@{/foodhub/post/deletePost(postId=${postMap.postId})}'|">
-							<i class="bi bi-trash"></i> 삭제
-						</button>
-					</div>
-					
-					<!-- ✅ 신고 버튼을 아래쪽에 별도로 추가 -->
-					<div class="d-flex justify-content-center mt-2">
-					    <button id="reportPostButton" class="btn btn-outline-danger">
-					    	<i class="bi bi-flag"></i> 신고
-					    </button>
-					</div>
-					
-					<!-- 게시글 신고 모달 -->
-					<div id="reportModal" class="modal fade" tabindex="-1" aria-hidden="true">
-					    <div class="modal-dialog">
-					        <div class="modal-content">
-					            <div class="modal-header">
-					                <h5 class="modal-title">게시글 신고</h5>
-					                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-					            </div>
-					            <div class="modal-body">
-					                <p>신고 사유를 입력해주세요:</p>
-					                <textarea id="reportReason" class="form-control" rows="4" placeholder="신고 사유를 입력하세요..."></textarea>
-					            </div>
-					            <div class="modal-footer">
-					                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-					                <button type="button" id="submitReport" class="btn btn-danger">신고 제출</button>
-					            </div>
-					        </div>
-					    </div>
-					</div>
-					
-					<!-- 댓글 신고 모달 -->
-					<div id="reportModal2" class="modal fade" tabindex="-1" aria-hidden="true">
-					    <div class="modal-dialog">
-					        <div class="modal-content">
-					            <div class="modal-header">
-					                <h5 class="modal-title">댓글 신고</h5>
-					                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-					            </div>
-					            <div class="modal-body">
-					                <p>신고 사유를 입력해주세요:</p>
-					                <textarea id="reportReason2" class="form-control" rows="4" placeholder="신고 사유를 입력하세요..."></textarea>
-					           		<input type="hidden" id="commentId">
-					            </div>
-					            <div class="modal-footer">
-					                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-					                <button type="button" id="submitReport2" class="btn btn-danger">신고 제출</button>
-					            </div>
-					        </div>
-					    </div>
-					</div>
-										
-
-					<!-- 댓글 섹션 -->
-<section id="comments" class="comments section">
-    <div class="d-flex align-items-center justify-content-between mb-3">
-        <h3 class="mb-0">댓글</h3>
-        <div class="d-flex align-items-center">
-            <span id="sortOldest" class="sort-text">작성일 순</span>
-            <span class="mx-2">|</span>
-            <span id="sortNewest" class="sort-text active">최신순</span>
-        </div>
-    </div>
-						<!-- 댓글 입력 폼 -->
-						<div class="comment-box">
-							<form id="commentForm">
-								<textarea name="content" id="commentContent"
-									class="form-control" rows="3" placeholder="댓글을 입력하세요..."></textarea>
-								<input type="hidden" id="postId" th:value="${postMap.postId}">
-								<input type="hidden" id="userId" th:value="${session.userId}">
-								<button type="submit" class="btn btn-primary mt-2">댓글등록</button>
-							</form>
+					<!-- 작성자 정보 박스 -->
+					<div class="post-meta">
+						<div class="author-box">
+								<img class="profile-img" th:src="${'/foodhub/user/thumbnails?fileName=' + postMap.profileUUID}" alt="프로필 사진" /> 
+								<span class="text-muted">작성자:
+									<span id="nickname" th:text="${postMap.nickname}"></span>
+								</span>
+						</div>
+						<div class="post-details">
+							<span class="text-muted">작성일: 
+								<span th:text="${#dates.format(postMap.createdAt, 'yyyy-MM-dd HH:mm')}"></span>
+							</span>
+							<span class="text-muted"> | 조회수: 
+								<span th:text="${postMap.viewCnt}"></span>
+							</span>
+							 <span class="text-muted"> | 추천수: 
+							 	<span id="likeCount" th:text="${postMap.likeCount}">0</span>
+							 </span>
 						</div>
 
-						<!-- 댓글 목록 -->
-						<div id="commentList">
-							<!-- 서버에서 가져온 댓글 동적 렌더링 -->
-						</div>
-
-
-					</section>
-
-					<!-- 이전 글, 전체 게시판, 다음 글 버튼 -->
-					<div class="d-flex justify-content-center gap-2 mt-4">
-						<a th:if="${prevPostId != null}"
-							   th:href="@{/foodhub/post/postDetail(postId=${prevPostId}, categoryId=${postMap.categoryId})}"
-							   class="btn btn-outline-secondary">
-							   <i class="bi bi-arrow-left"></i> 이전 글
-						</a> 
-						<a th:href="@{/foodhub/post/category/{categoryId}(categoryId=${postMap.categoryId})}"
-							class="btn btn-outline-primary" id="boardListButton"> <i class="bi bi-list"></i>
-							게시판 목록
-							<input type="hidden" id="categoryId" th:value="${postMap.categoryId}">
-						</a> 
-						<a th:if="${nextPostId != null}"
-							th:href="@{/foodhub/post/postDetail(postId=${nextPostId}, categoryId=${postMap.categoryId})}"
-							class="btn btn-outline-secondary"> 다음 글 <i
-							class="bi bi-arrow-right"></i>
+					</div>
+				</div>
+			
+			
+				<!-- 본문 내용 -->
+				<div class="content-box">
+					<h4>📄 본문 내용</h4>
+					<p><span th:utext="${postMap.content}"></span></p>
+			
+					<!-- 이미지 파일을 본문 아래에 표시 (최대 크기 조정) -->
+					<div th:each="file : ${fileList}" th:if="${file.fileName.endsWith('.jpg') or file.fileName.endsWith('.png') or file.fileName.endsWith('.gif')}">
+						<a th:href="@{/uploads/{fileUUID}(fileUUID=${file.fileUUID})}" target="_blank">
+							<img th:src="@{/uploads/{fileUUID}(fileUUID=${file.fileUUID})}" alt="첨부 이미지" class="thumbnail-img">
 						</a>
 					</div>
 				</div>
-			</section>
-		</main>
+			
+				<!-- 이미지가 아닌 파일만 첨부파일 목록에 표시 -->
+				<div id="attachmentSection" class="content-box" th:if="${fileList != null and #lists.size(fileList) > 0}">
+					<h4>📂 첨부 파일</h4>
+					<ul class="file-list">
+						<li th:each="file : ${fileList}" class="attachment-item" th:data-filename="${file.fileName}" 
+							th:unless="${file.fileName.endsWith('.jpg') or file.fileName.endsWith('.png') or file.fileName.endsWith('.gif')}">
+							<a th:href="@{/uploads/{fileUUID}(fileUUID=${file.fileUUID})}" th:text="${file.fileName}" title="다운로드"> 📂 다운로드 </a>
+						</li>
+					</ul>
+				</div>
+			
+			
+				<div class="recommend-container">
+					<!-- 게시글 추천 버튼 -->
+					<button id="postLikeButton">👍 추천</button>
+					<!-- 유저 정보 저장 (로그인한 유저 ID & 작성자 ID) -->
+					<input type="hidden" id="postId" th:value="${postMap.postId}" />
+					<input type="hidden" id="userId" th:value="${session.userId}" />
+					
+					<!-- 북마크 버튼 -->
+					<button id="bookmarkButton" th:data-post-id="${postMap.postId}" th:classappend="${isBookmarked} ? 'active' : ''">🔖 북마크</button>
+				</div>
+			
+			
+				<!-- 수정 & 삭제 버튼 -->
+				<div class="d-flex justify-content-center gap-2 mb-4">
+					<button id="editPostButton" class="btn btn-outline-secondary" th:onclick="|location.href='@{/foodhub/post/updatePost(postId=${postMap.postId})}'|">
+						<i class="bi bi-pencil"></i> 수정
+					</button>
+					<button id="deletePostButton" class="btn btn-outline-secondary" th:onclick="|location.href='@{/foodhub/post/deletePost(postId=${postMap.postId})}'|">
+						<i class="bi bi-trash"></i> 삭제
+					</button>
+				</div>
+			
+				<!-- ✅ 신고 버튼을 아래쪽에 별도로 추가 -->
+				<div class="d-flex justify-content-center mt-2">
+					<button id="reportPostButton" class="btn btn-outline-danger">
+						<i class="bi bi-flag"></i> 신고
+					</button>
+				</div>
+			
+				<!-- 게시글 신고 모달 -->
+				<div id="reportModal" class="modal fade" tabindex="-1" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title">게시글 신고</h5>
+								<button type="button" class="btn-close"
+										data-bs-dismiss="modal" aria-label="Close"></button>
+							</div>
+							<div class="modal-body">
+								<p>신고 사유를 입력해주세요:</p>
+								<textarea id="reportReason" class="form-control" rows="4" placeholder="신고 사유를 입력하세요..."></textarea>
+							</div>
+							<div class="modal-footer">
+									<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+									<button type="button" id="submitReport" class="btn btn-danger">신고 제출</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			
+				<!-- 댓글 신고 모달 -->
+				<div id="reportModal2" class="modal fade" tabindex="-1" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title">댓글 신고</h5>
+								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+							</div>
+							<div class="modal-body">
+								<p>신고 사유를 입력해주세요:</p>
+								<textarea id="reportReason2" class="form-control" rows="4" placeholder="신고 사유를 입력하세요..."></textarea>
+								<input type="hidden" id="commentId" />
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+								<button type="button" id="submitReport2" class="btn btn-danger">신고 제출</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			
+			
+				<!-- 댓글 섹션 -->
+				<section id="comments" class="comments section">
+					<div class="d-flex align-items-center justify-content-between mb-3">
+						<h3 class="mb-0">댓글</h3>
+						<div class="d-flex align-items-center">
+							<span id="sortOldest" class="sort-text">작성일 순</span>
+							<span class="mx-2">|</span> 
+							<span id="sortNewest" class="sort-text active">최신순</span>
+						</div>
+					</div>
+					
+					<!-- 댓글 입력 폼 -->
+					<div class="comment-box">
+						<form id="commentForm">
+							<textarea name="content" id="commentContent" class="form-control" rows="3" placeholder="댓글을 입력하세요..."></textarea>
+							<br> 
+							<input type="hidden" id="postId" th:value="${postMap.postId}" />
+							<input type="hidden" id="userId" th:value="${session.userId}" />
+							<div style="text-align: right;">
+								<button type="submit" class="btn btn-outline-primary btn-sm reply-btn">댓글등록</button>
+							</div>
+						</form>
+					</div>
+				
+					<!-- 댓글 목록 -->
+					<div id="commentList">
+						<!-- 서버에서 가져온 댓글 동적 렌더링 -->
+					</div>
+				</section>
+			
+				<!-- 이전 글, 전체 게시판, 다음 글 버튼 -->
+				<div class="d-flex justify-content-center gap-2 mt-4">
+					<a th:if="${prevPostId != null}"
+							th:href="@{/foodhub/post/postDetail(postId=${prevPostId}, categoryId=${postMap.categoryId})}"
+							class="btn btn-outline-secondary"> <i
+							class="bi bi-arrow-left"></i> 이전 글
+					</a> <a
+							th:href="@{/foodhub/post/category/{categoryId}(categoryId=${postMap.categoryId})}"
+							class="btn btn-outline-primary" id="boardListButton">
+							<i class="bi bi-list"></i> 게시판 목록 <input type="hidden"
+							id="categoryId" th:value="${postMap.categoryId}">
+					</a> <a th:if="${nextPostId != null}"
+							th:href="@{/foodhub/post/postDetail(postId=${nextPostId}, categoryId=${postMap.categoryId})}"
+							class="btn btn-outline-secondary"> 다음 글 <i
+							class="bi bi-arrow-right"></i>
+					</a>
+				</div>
 
-	</div>
+			</div>
+		</section>
+	</main>
+</div>
+
 </body>
 </html>
