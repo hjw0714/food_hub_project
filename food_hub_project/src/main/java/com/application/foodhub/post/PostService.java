@@ -25,7 +25,6 @@ public interface PostService {
 
 	public List<Map<String, Object>> getBestPostList(int pageSize, int offset);
 
-	public void deletePost(long postId);
 
 	public void updatePost(PostDTO postDTO);
 
