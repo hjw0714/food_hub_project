@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{foodhub/index/headerAndFooter.html}">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>서브 카테고리별 게시판</title>
+    <style>
+  
+
+        .btn-custom {
+            background-color: white;
+            color: #0056b3;
+            border: 2px solid #0056b3;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .btn-custom:hover {
+            background-color: #0056b3;
+            color: white;
+        }
+
+        .post-card {
+            background-color: #ffffff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
+            border-left: 4px solid #0056b3;
+            transition: transform 0.2s;
+        }
+
+        .post-card:hover {
+            transform: scale(1.02);
+        }
+
+        .post-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .pagination a {
+            padding: 8px 12px;
+            margin: 0 5px;
+            border: 2px solid #0056b3;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #0056b3;
+            background-color: white;
+            transition: 0.3s;
+        }
+
+        .pagination a.active, .pagination a:hover {
+            background-color: #0056b3;
+            color: white;
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            function searchPosts() {
+                let searchType = document.getElementById("searchType").value;
+                let keyword = document.getElementById("searchKeyword").value.trim();
+                let subCateId = document.getElementById("subCateId").value;  // ✅ subCateId 가져오기
+
+                if (!subCateId) {
+                    alert("서브 카테고리 ID가 올바르지 않습니다.");
+                    return;
+                }
+
+                if (keyword === "") {
+                    alert("검색어를 입력하세요.");
+                    return;
+                }
+
+                let url = `/foodhub/post/category/${categoryId}/subcate/${subCateId}?page=1&searchType=${searchType}&keyword=${encodeURIComponent(keyword)}`;
+                window.location.href = url;
+            }
+
+            document.getElementById("searchBtn").addEventListener("click", searchPosts);
+            document.getElementById("searchKeyword").addEventListener("keypress", function (event) {
+                if (event.key === "Enter") {
+                    searchPosts();
+                }
+            });
+        });
+    </script>
+</head>
+
+<body class="board-page">
+<div layout:fragment="content">
+    <main class="main">
+        <section id="board" class="board section">
+            <div class="container">
+                <div class="board-header mb-4">
+                    <h2 class="mb-3" th:text="${categoryName ?: '알 수 없는'} + ' 게시판'"></h2>
+                    <p>해당 서브 카테고리의 게시글을 확인하세요.</p>
+                    <a th:href="@{/foodhub/post/createPost}" class="btn btn-custom mb-4">새 글 작성</a>
+                </div>
+
+                <div class="board-list">
+                    <div class="list-group" th:if="${postListMap.size() > 0}" th:each="post : ${postListMap}">
+                        <a th:href="@{/foodhub/post/postDetail(postId=${post.postId})}"
+                           class="list-group-item list-group-item-action post-card">
+                            <h5><span class="mb-1 post-title"
+	                            th:text="${#strings.length(#strings.concat('[', post['subCateNm'], '] ', post['title'])) > 100} 
+	                                     ? ${#strings.concat('[', post['subCateNm'], '] ', #strings.substring(post['title'], 0, 100 - #strings.length(post['subCateNm']) - 3), '...')} 
+	                                     : ${#strings.concat('[', post['subCateNm'], '] ', post['title'])}"
+	                            th:title="${#strings.concat('[', post['subCateNm'], '] ', post['title'])}"></span>
+	                        </h5>
+                            <small class="text-muted">
+                                <span th:text="'작성자 : ' + ${post['nickname']}"></span>
+                                <span th:text="'| 작성일 : ' + ${post['createdAt']}"></span>
+                                <span th:text="'| 조회수 : ' + ${post['viewCnt']}"></span>
+                                <span th:text="'| 추천수 : ' + ${post['LIKE_COUNT']}"></span>
+                            </small>
+                        </a>
+                    </div>
+                    <div class="no-posts" th:if="${postListMap.size() == 0}">작성된 게시글이 없습니다.</div>
+                </div>
+
+                <div class="pagination" th:if="${maxPages > 1}">
+                    <a th:href="@{/foodhub/post/category/{categoryId}/subcate/{subCateId}(categoryId=${categoryId}, subCateId=${subCateId}, page=1)}"
+  						 th:if="${page > 1}">&laquo; 첫 페이지</a>
+
+
+                    <a th:href="@{/foodhub/post/category/{categoryId}/subcate/{subCateId}(categoryId=${categoryId}, subCateId=${subCateId}, page=${startPage - 1})}"
+   						th:if="${startPage > 1}">&lt;</a>
+		
+
+                    <th:block th:each="i : ${#numbers.sequence(startPage, endPage)}">
+                        <a th:href="@{/foodhub/post/category/{categoryId}/subcate/{subCateId}(categoryId=${categoryId}, subCateId=${subCateId}, page=${i})}"
+   							th:text="${i}" th:classappend="${i == page} ? 'active' : ''"></a>
+
+                    </th:block>
+
+                    <a th:href="@{/foodhub/post/category/{categoryId}/subcate/{subCateId}(categoryId=${categoryId}, subCateId=${subCateId}, page=${endPage + 1})}"
+   						th:if="${endPage < maxPages}">&gt;</a>
+
+
+                    <a th:href="@{/foodhub/post/category/{categoryId}/subcate/{subCateId}(categoryId=${categoryId}, subCateId=${subCateId}, page=${maxPages})}"
+   						th:if="${page < maxPages}">마지막 페이지 &raquo;</a>
+
+                </div>
+				<input type="hidden" id="categoryId" th:value="${categoryId}">
+                <input type="hidden" id="subCateId" th:value="${subCateId}">
+
+            </div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

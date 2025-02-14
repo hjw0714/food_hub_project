@@ -145,7 +145,7 @@ public class CommentController {
 			response.put("success", false);
 			response.put("message", "이미 신고한 댓글입니다.");
 			response.put("redirectUrl", "/foodhub/post/postDetail?postId=" + commentReportDTO.getCommentId());
-			return ResponseEntity.ok(response); // 🚨 클라이언트가 알 수 있도록 JSON 반환
+			return ResponseEntity.ok(response); 
 		} else {
 			// 신고 성공 시
 			response.put("success", true);

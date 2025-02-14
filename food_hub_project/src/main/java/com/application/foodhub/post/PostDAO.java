@@ -19,13 +19,13 @@ public interface PostDAO {
 
 	public void createPost(PostDTO postDTO);
 
-	public Map<String, Object> getPostDetail(long postId);
+	public Map<String, Object> getPostDetail(@Param("postId") Long postId);
 
 	public void updateReadCnt(long postId);
 
 	public List<Map<String, Object>> myPostList(String userId);
 
-	public void deletePost(long postId);
+	 public void markPostAsDeleted(@Param("postId") long postId); ////////
 
 	public void updatePost(PostDTO postDTO);
 
@@ -61,6 +61,22 @@ public interface PostDAO {
 
 	public List<Map<String, Object>> searchPostsByCategoryTitle(@Param("categoryId") Long categoryId, @Param("keyword") String keyword, @Param("pageSize") int pageSize, @Param("offset") int offset);
 	public List<Map<String, Object>> searchPostsByCategoryTitleAndContent(@Param("categoryId") Long categoryId, @Param("keyword") String keyword, @Param("pageSize") int pageSize, @Param("offset") int offset);
+
+	public String getSubCateNameById(@Param("subCateId")Long subCateId);
+
+	public long countPostsBySubCategoryTitle(@Param("subCateId")Long subCateId, @Param("keyword")String keyword);
+
+	public List<Map<String, Object>> searchPostsBySubCategoryTitle(@Param("subCateId")Long subCateId, @Param("keyword")String keyword, @Param("pageSize")int pageSize,
+			@Param("offset")int offset);
+
+	public long countPostsBySubCategoryTitleAndContent(@Param("subCateId")Long subCateId, @Param("keyword")String keyword);
+
+	public List<Map<String, Object>> searchPostsBySubCategoryTitleAndContent(@Param("subCateId")Long subCateId, @Param("keyword")String keyword,
+			@Param("pageSize")int pageSize, @Param("offset")int offset);
+
+	public long getPostCntBySubCategory(@Param("subCateId")Long subCateId);
+
+	public List<Map<String, Object>> getPostListBySubCategory(@Param("subCateId")Long subCateId, @Param("pageSize")int pageSize, @Param("offset")int offset);
 
 	
 }
