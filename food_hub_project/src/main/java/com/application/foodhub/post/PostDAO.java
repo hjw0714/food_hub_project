@@ -1,7 +1,5 @@
 package com.application.foodhub.post;
 
-
-
 import java.util.List;
 import java.util.Map;
 
@@ -12,11 +10,13 @@ import org.apache.ibatis.annotations.Param;
 public interface PostDAO {
 
 	public List<Map<String, Object>> getPostList(@Param("pageSize") int pageSize, @Param("offset") int offset);
+	
+	public List<Map<String, Object>> getBestPostList(@Param("pageSize") int pageSize, @Param("offset") int offset);
 
 	public long getAllPostCnt();
 
 	public long getPostCnt();
-
+	
 	public void createPost(PostDTO postDTO);
 
 	public Map<String, Object> getPostDetail(long postId);
@@ -61,6 +61,11 @@ public interface PostDAO {
 
 	public List<Map<String, Object>> searchPostsByCategoryTitle(@Param("categoryId") Long categoryId, @Param("keyword") String keyword, @Param("pageSize") int pageSize, @Param("offset") int offset);
 	public List<Map<String, Object>> searchPostsByCategoryTitleAndContent(@Param("categoryId") Long categoryId, @Param("keyword") String keyword, @Param("pageSize") int pageSize, @Param("offset") int offset);
+	
+	public long getBestPostCnt();
+	public List<Map<String, Object>> searchBestPostsByTitle(@Param("keyword") String keyword, @Param("pageSize") int pageSize, @Param("offset") int offset);
+	public List<Map<String, Object>> searchBestPostsByTitleAndContent(@Param("keyword") String keyword, @Param("pageSize") int pageSize, @Param("offset") int offset);
+
 
 	
 }

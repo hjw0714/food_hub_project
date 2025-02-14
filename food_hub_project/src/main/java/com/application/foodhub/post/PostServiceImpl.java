@@ -1,7 +1,5 @@
 package com.application.foodhub.post;
 
-
-
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +24,11 @@ public class PostServiceImpl implements PostService {
 	@Override
 	public List<Map<String, Object>> getPostList(int pageSize, int offset) {
 		return postDAO.getPostList(pageSize, offset);
+	}
+	
+	@Override
+	public List<Map<String, Object>> getBestPostList(int pageSize, int offset) {
+		return postDAO.getBestPostList(pageSize, offset);
 	}
 
 	@Override
@@ -159,6 +162,22 @@ public class PostServiceImpl implements PostService {
 	@Override
 	public List<Map<String, Object>> searchPostsByCategoryTitleAndContent(Long categoryId, String keyword, int pageSize, int offset) {
 	    return postDAO.searchPostsByCategoryTitleAndContent(categoryId, keyword, pageSize, offset);
+	}
+
+	@Override
+	public long getBestPostCnt() {
+		long count = postDAO.getBestPostCnt();
+		return Math.max(count, 0); // 0 미만이 되지 않도록 보장
+	}
+
+	@Override
+	public List<Map<String, Object>> searchBestPostsByTitle(String keyword, int pageSize, int offset) {
+		return postDAO.searchBestPostsByTitle(keyword, pageSize, offset);
+	}
+
+	@Override
+	public List<Map<String, Object>> searchBestPostsByTitleAndContent(String keyword, int pageSize, int offset) {
+		return postDAO.searchBestPostsByTitleAndContent(keyword, pageSize, offset);
 	}
 
 

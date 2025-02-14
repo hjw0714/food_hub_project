@@ -139,17 +139,67 @@ h6 {
   }
 }
 
+/* 푸터를 화면 하단에 고정 */
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+#footer {
+  position: relative;
+  margin-top: auto;
+  width: 100%;
+}
+
+.wrapper {
+    min-height: 100vh; /* 최소 높이 지정 */
+    width: 100%; /* 전체 너비 사용 */
+    min-height: 100vh; /* 최소 높이를 전체 화면으로 설정 */
+    flex-direction: column;
+    display: flex;    
+}
+
+.content {
+  flex: 1;
+}
+
+
+
 /*--------------------------------------------------------------
 # Global Header
 --------------------------------------------------------------*/
 .header {
-  --background-color: #f2f2f2;
-  color: var(--default-color);
-  background-color: var(--background-color);
-  padding: 20px 0;
-  transition: all 0.5s;
-  z-index: 997;
+    background-color: #D6E6F2;
+    padding: 20px 0;
+    width: 100%;
+    transition: all 0.5s;
+    z-index: 997;
 }
+
+/* 특정 페이지에서 헤더를 고정 해제 */
+.static-header {
+    position: relative !important;
+}
+
+/* 페이지 높이 조정 */
+html, body {
+    height: auto;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* main이 자동으로 채워지도록 설정 */
+main {
+    flex: 1;
+}
+
+.mypage, .signup-page {
+    width: 80%; /* 화면 너비의 80%를 차지하도록 변경 */
+    max-width: 800px; /* 최대 너비를 늘려서 여백을 줄임 */
+}
+
+
 
 .header .logo {
   line-height: 1;
@@ -519,6 +569,7 @@ h6 {
   background-color: var(--background-color);
   font-size: 14px;
   position: relative;
+  width: 100%; /* 전체 너비 설정 */
 }
 
 .footer .footer-top {
