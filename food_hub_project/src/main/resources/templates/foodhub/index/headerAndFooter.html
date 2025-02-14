@@ -193,50 +193,6 @@
     <script src="/assets/js/main.js"></script>
 
 </body>
-<script>
-	
-document.addEventListener("DOMContentLoaded", function () {
-    document.querySelectorAll(".toggle-dropdown, .toggle-sub-dropdown").forEach(function (toggle) {
-        toggle.addEventListener("click", function (event) {
-            event.preventDefault();
 
-            let parentDropdown = this.closest(".dropdown");
-            let dropdownMenu = parentDropdown.querySelector("ul");
-
-            // 현재 상태 확인
-            let isActive = parentDropdown.classList.contains("active");
-
-            // 모든 드롭다운 초기화
-            document.querySelectorAll(".dropdown").forEach(function (dropdown) {
-                dropdown.classList.remove("active");
-                let menu = dropdown.querySelector("ul");
-                if (menu) {
-                    menu.style.opacity = "0";
-                    menu.style.visibility = "hidden";
-                    menu.style.maxHeight = "0";
-                }
-            });
-
-            // 클릭한 드롭다운만 활성화
-            if (!isActive) {
-                parentDropdown.classList.add("active");
-                dropdownMenu.style.opacity = "1";
-                dropdownMenu.style.visibility = "visible";
-                dropdownMenu.style.maxHeight = "300px";
-            } else {
-                parentDropdown.classList.remove("active");
-                dropdownMenu.style.opacity = "0";
-                dropdownMenu.style.visibility = "hidden";
-                dropdownMenu.style.maxHeight = "0";
-            }
-        });
-    });
-});
-
-
-
-
-
-</script>
 
 </html>
