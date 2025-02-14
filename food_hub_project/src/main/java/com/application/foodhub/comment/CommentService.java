@@ -29,6 +29,7 @@ public interface CommentService {
 
     public boolean isCommentDeleted(long commentId);
 
+    public void markCommentsAsDeletedByPostId(long postId);
 
 	
 }
