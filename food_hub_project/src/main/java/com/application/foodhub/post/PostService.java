@@ -17,13 +17,11 @@ public interface PostService {
 
 	public Long createPost(PostDTO postDTO);
 
-	public Map<String, Object> getPostDetail(long postId, boolean isIncreaseReadCnt);
+
 
 	public List<Map<String, Object>> myPostList(String userId);
 
 	public List<Map<String, Object>> getPostList(int pageSize, int offset);
-
-	public void deletePost(long postId);
 
 	public void updatePost(PostDTO postDTO);
 
@@ -54,6 +52,32 @@ public interface PostService {
 
 	public List<Map<String, Object>> searchPostsByCategoryTitle(Long categoryId, String keyword, int pageSize, int offset);
 	public List<Map<String, Object>> searchPostsByCategoryTitleAndContent(Long categoryId, String keyword, int pageSize, int offset);
+
+	public void markPostAsDeleted(long postId);
+
+	public Map<String, Object> getPostDetail(long postId, boolean isIncreaseReadCnt);
+
+	public Map<String, Object> getPostById(Long postId);
+
+	
+	
+	
+	public String getSubCateNameById(Long subCateId);
+
+	public long countPostsBySubCategoryTitle(Long subCateId, String keyword);
+
+	public List<Map<String, Object>> searchPostsBySubCategoryTitle(Long subCateId, String keyword, int pageSize,
+			int offset);
+
+	public long countPostsBySubCategoryTitleAndContent(Long subCateId, String keyword);
+
+	public List<Map<String, Object>> searchPostsBySubCategoryTitleAndContent(Long subCateId, String keyword,
+			int pageSize, int offset);
+
+	public long getPostCntBySubCategory(Long subCateId);
+
+	public List<Map<String, Object>> getPostListBySubCategory(Long subCateId, int pageSize, int offset);
+
 
 
 
