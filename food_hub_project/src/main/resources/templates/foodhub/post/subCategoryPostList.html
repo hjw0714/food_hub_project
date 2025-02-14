@@ -68,35 +68,6 @@
             color: white;
         }
     </style>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            function searchPosts() {
-                let searchType = document.getElementById("searchType").value;
-                let keyword = document.getElementById("searchKeyword").value.trim();
-                let subCateId = document.getElementById("subCateId").value;  // ✅ subCateId 가져오기
-
-                if (!subCateId) {
-                    alert("서브 카테고리 ID가 올바르지 않습니다.");
-                    return;
-                }
-
-                if (keyword === "") {
-                    alert("검색어를 입력하세요.");
-                    return;
-                }
-
-                let url = `/foodhub/post/category/${categoryId}/subcate/${subCateId}?page=1&searchType=${searchType}&keyword=${encodeURIComponent(keyword)}`;
-                window.location.href = url;
-            }
-
-            document.getElementById("searchBtn").addEventListener("click", searchPosts);
-            document.getElementById("searchKeyword").addEventListener("keypress", function (event) {
-                if (event.key === "Enter") {
-                    searchPosts();
-                }
-            });
-        });
-    </script>
 </head>
 
 <body class="board-page">
