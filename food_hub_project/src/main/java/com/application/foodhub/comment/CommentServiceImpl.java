@@ -104,5 +104,10 @@ public class CommentServiceImpl implements CommentService {
     public boolean isCommentDeleted(long commentId) {
         return commentDAO.existsByCommentId(commentId) > 0;
     }
+    
+    @Override
+    public void markCommentsAsDeletedByPostId(long postId) {
+        commentDAO.markCommentsAsDeletedByPostId(postId);
+    }
 
 }

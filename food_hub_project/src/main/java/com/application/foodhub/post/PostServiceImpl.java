@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.application.foodhub.comment.CommentService;
 import com.application.foodhub.postLike.PostLikeService;
 
 @Service
@@ -20,6 +21,9 @@ public class PostServiceImpl implements PostService {
 	
 	@Autowired
 	private PostLikeService postLikeService;
+	
+	@Autowired
+	private CommentService commentService;
 
 	@Override
 	public List<Map<String, Object>> getPostList(int pageSize, int offset) {
@@ -43,28 +47,30 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public Map<String, Object> getPostDetail(long postId, boolean isIncreaseReadCnt) {
+    public Map<String, Object> getPostDetail(long postId, boolean isIncreaseReadCnt) {
+        // ✅ 삭제된 게시글인지 확인
+        Map<String, Object> postMap = postDAO.getPostDetail(postId);
+        if (postMap == null || "DELETED".equals(postMap.get("status"))) {
+            return null; // 삭제된 게시글이면 null 반환
+        }
 
-		if (isIncreaseReadCnt) {
-			postDAO.updateReadCnt(postId); // 조회수 증가
-		}
-		
-		 // 기존 게시글 정보 가져오기
-	    Map<String, Object> postMap = postDAO.getPostDetail(postId);
+        // ✅ 조회수 증가 처리
+        if (isIncreaseReadCnt) {
+            postDAO.updateReadCnt(postId);
+        }
 
-	    // 게시글이 존재하면 추천수를 추가
-	    if (postMap != null) {
-	        int likeCount = postLikeService.getPostLikeCount(postId);
-	        postMap.put("likeCount", likeCount); // 추천수 추가
-	        
-	        // 프로필 이미지가 없는 경우 기본 이미지 설정
-	        if (!postMap.containsKey("profileUUID") || postMap.get("profileUUID") == null || postMap.get("profileUUID").toString().isEmpty()) {
-	            postMap.put("profileUUID", "default-profile.png"); // 기본 이미지 경로
-	        }
-	    }
-	    
-		return postMap;
-	}
+        // ✅ 추천수 추가
+        int likeCount = postLikeService.getPostLikeCount(postId);
+        postMap.put("likeCount", likeCount);
+
+        // ✅ 프로필 이미지가 없는 경우 기본 이미지 설정
+        if (!postMap.containsKey("profileUUID") || postMap.get("profileUUID") == null || postMap.get("profileUUID").toString().isEmpty()) {
+            postMap.put("profileUUID", "default-profile.png"); // 기본 프로필 이미지
+        }
+
+        return postMap;
+    }
+
 
 	@Override
 	public Long createPost(PostDTO postDTO) {
@@ -77,10 +83,11 @@ public class PostServiceImpl implements PostService {
 		return postDAO.myPostList(userId);
 	}
 
-	@Override
-	public void deletePost(long postId) {
-		postDAO.deletePost(postId);
-	}
+	 @Override
+	    public void markPostAsDeleted(long postId) {
+	        postDAO.markPostAsDeleted(postId); // 게시글 상태 변경
+	        commentService.markCommentsAsDeletedByPostId(postId); // 해당 게시글의 댓글들 숨기기
+	    }
 
 	@Override
 	public void updatePost(PostDTO postDTO) {
@@ -164,6 +171,7 @@ public class PostServiceImpl implements PostService {
 	    return postDAO.searchPostsByCategoryTitleAndContent(categoryId, keyword, pageSize, offset);
 	}
 
+
 	@Override
 	public long getBestPostCnt() {
 		long count = postDAO.getBestPostCnt();
@@ -178,6 +186,55 @@ public class PostServiceImpl implements PostService {
 	@Override
 	public List<Map<String, Object>> searchBestPostsByTitleAndContent(String keyword, int pageSize, int offset) {
 		return postDAO.searchBestPostsByTitleAndContent(keyword, pageSize, offset);
+	}
+
+
+	 @Override
+	    public Map<String, Object> getPostById(Long postId) {
+	        // MyBatis 매퍼를 통해 게시글 정보를 가져옴
+	        Map<String, Object> postMap = postDAO.getPostDetail(postId);
+
+	        // 게시글이 없거나, 상태가 'DELETED'라면 null 반환 (컨트롤러에서 404 페이지로 이동)
+	        if (postMap == null || "DELETED".equals(postMap.get("status"))) {
+	            return null;
+	        }
+
+	        return postMap;
+	    }
+
+	@Override
+	public String getSubCateNameById(Long subCateId) {
+		return postDAO.getSubCateNameById(subCateId);
+	}
+
+	@Override
+	public long countPostsBySubCategoryTitle(Long subCateId, String keyword) {
+		return postDAO.countPostsBySubCategoryTitle(subCateId , keyword);
+	}
+
+	@Override
+	public List<Map<String, Object>> searchPostsBySubCategoryTitle(Long subCateId, String keyword, int pageSize,int offset) {
+		return postDAO.searchPostsBySubCategoryTitle(subCateId , keyword , pageSize , offset);
+	}
+
+	@Override
+	public long countPostsBySubCategoryTitleAndContent(Long subCateId, String keyword) {
+		return postDAO.countPostsBySubCategoryTitleAndContent(subCateId , keyword);
+	}
+
+	@Override
+	public List<Map<String, Object>> searchPostsBySubCategoryTitleAndContent(Long subCateId, String keyword,int pageSize, int offset) {
+		return postDAO.searchPostsBySubCategoryTitleAndContent(subCateId , keyword , pageSize , offset);
+	}
+
+	@Override
+	public long getPostCntBySubCategory(Long subCateId) {
+		return postDAO.getPostCntBySubCategory(subCateId);
+	}
+
+	@Override
+	public List<Map<String, Object>> getPostListBySubCategory(Long subCateId, int pageSize, int offset) {
+		return postDAO.getPostListBySubCategory(subCateId, pageSize , offset);
 	}
 
 
