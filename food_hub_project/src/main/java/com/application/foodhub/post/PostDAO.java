@@ -1,5 +1,7 @@
 package com.application.foodhub.post;
 
+
+
 import java.util.List;
 import java.util.Map;
 
@@ -42,7 +44,7 @@ public interface PostDAO {
 	public String getCategoryName(@Param("categoryId") Long categoryId);
 
 	// 카테고리별 최신글 2개 가져오기
-	public List<Map<String, Object>> getLatestPostsByCategoryId(@Param("categoryId") long categoryId);
+	public List<Map<String, Object>> getLatestPostsByCategoryId(@Param("categoryId") long categoryId, @Param("limit")int limit);
 	
 	// 제목으로 검색
 	public List<Map<String, Object>> searchPostsByTitle(@Param("keyword") String keyword, @Param("pageSize") int pageSize, @Param("offset") int offset);

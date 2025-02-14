@@ -35,6 +35,7 @@
         #{nickname},
         #{categoryId},
         CASE 
+        	WHEN #{categoryId} = 0 THEN '공지사항'
             WHEN #{categoryId} = 1 THEN '외식업정보게시판'
             WHEN #{categoryId} = 2 THEN '자유게시판'
             WHEN #{categoryId} = 3 THEN '알바공고게시판'
@@ -46,6 +47,7 @@
         END,
         #{subCateId},
         CASE 
+            WHEN #{subCateId} = 0 THEN '공지'
             WHEN #{subCateId} = 1 THEN '잡담'
             WHEN #{subCateId} = 2 THEN '일상이야기'
             WHEN #{subCateId} = 3 THEN '질문'
@@ -284,8 +286,10 @@
 	    		) AS L ON P.POST_ID = L.POST_ID
 	    WHERE 	P.CATEGORY_ID = #{categoryId}
 	    ORDER BY P.CREATED_AT DESC
-	    LIMIT 2;
+	    LIMIT #{limit};
 	</select>
+	
+	
 	
 <!-- 제목으로 검색 -->
 <select id="searchPostsByTitle" parameterType="map" resultMap="postMap">

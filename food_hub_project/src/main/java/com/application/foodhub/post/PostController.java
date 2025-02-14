@@ -1,5 +1,7 @@
 package com.application.foodhub.post;
 
+
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -377,18 +379,6 @@ public class PostController {
 
 		}
 		return jsScript;
-	}
-
-	@GetMapping("/notification")
-	public String notificationPage(Model model) {
-		List<Map<String, Object>> postList = postService.getPostList(15, 0);
-
-		if (postList == null) {
-			postList = new ArrayList<>(); // 빈 리스트 반환
-		}
-
-		model.addAttribute("postListMap", postList);
-		return "foodhub/post/notification";
 	}
 
 	@PostMapping("/postLike")

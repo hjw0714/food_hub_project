@@ -121,6 +121,8 @@
 								<option value="5">중고장비거래게시판</option>
 								<option value="6">매장홍보게시판</option>
 								<option value="7">협력업체게시판</option>
+								<!-- ADMIN만 볼 수 있도록 Thymeleaf 조건 추가 -->
+    							<option th:if="${session.membershipType == 'ADMIN'}" value="0">공지사항</option>
 							</select>
 					</div>
 					<div class="subCategoryContainer">
@@ -128,6 +130,8 @@
 						<input type="hidden" id="subCateNm"name="subCateNm" value="1"> 
 							<select id="subCateId"name="subCateId" class="form-control" required>
 								<option value="">말머리를 선택하세요</option>
+								<!-- ADMIN만 볼 수 있도록 Thymeleaf 조건 추가 -->
+    							<option th:if="${session.membershipType == 'ADMIN'}" value="0" data-category="0">공지</option>
 								<option value="1" data-category="2">잡담</option>
 								<option value="2" data-category="2">일상이야기</option>
 								<option value="3" data-category="2">질문</option>
