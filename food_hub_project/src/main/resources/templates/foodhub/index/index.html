@@ -89,11 +89,14 @@
     
     .post-title {
 	    font-size: 1.2rem; /* 원하는 크기로 조정 */
-	    font-weight: 700; /* 글씨 두께 조정 (선택 사항) */
+	    font-weight: 700; /* 글씨 두께 조정 */
 	    color: #333;
 	    text-decoration: none;
 	    transition: color 0.2s ease-in-out;
-	}
+	    white-space: normal; /* 텍스트가 자동으로 줄 바꿈되도록 설정 */
+		word-wrap: break-word; /* 긴 단어를 강제로 줄 바꿈 */
+		overflow-wrap: break-word; /* 최신 브라우저 호환성을 위해 사용 */
+		}
     
     .post-title:hover {
         color: #555;
