@@ -119,33 +119,43 @@
 }
 </style>
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        function searchPosts() {
-            let searchType = document.getElementById("searchType").value;
-            let keyword = document.getElementById("searchKeyword").value.trim();
-            let categoryId = document.getElementById("categoryId").value;  // ✅ categoryId를 가져옴
+document.addEventListener("DOMContentLoaded", function () {
+    function searchPosts() {
+        let searchType = document.getElementById("searchType").value;
+        let keyword = document.getElementById("searchKeyword").value.trim();
+        let categoryId = document.getElementById("categoryId").value;
 
-            if (!categoryId) {
-                alert("카테고리 ID가 올바르지 않습니다.");
-                return;
-            }
-
-            if (keyword === "") {
-                alert("검색어를 입력하세요.");
-                return;
-            }
-
-            let url = `/foodhub/post/category/${categoryId}?page=1&searchType=${searchType}&keyword=${encodeURIComponent(keyword)}`;
-            window.location.href = url;
+        if (!categoryId) {
+            alert("카테고리 ID가 올바르지 않습니다.");
+            return;
         }
 
-        document.getElementById("searchBtn").addEventListener("click", searchPosts);
-        document.getElementById("searchKeyword").addEventListener("keypress", function (event) {
-            if (event.key === "Enter") {
-                searchPosts();
-            }
-        });
+        if (keyword === "") {
+            alert("검색어를 입력하세요.");
+            return;
+        }
+
+        let url = `/foodhub/post/category/${categoryId}?page=1&searchType=${searchType}&keyword=${encodeURIComponent(keyword)}`;
+        window.location.href = url;
+    }
+
+    // 검색 버튼 클릭 이벤트 추가
+    document.getElementById("searchBtn").addEventListener("click", searchPosts);
+    document.getElementById("searchKeyword").addEventListener("keypress", function (event) {
+        if (event.key === "Enter") {
+            searchPosts();
+        }
     });
+
+    // 페이지 로드 시 검색어 유지
+    const urlParams = new URLSearchParams(window.location.search);
+    const searchType = urlParams.get("searchType");
+    const keyword = urlParams.get("keyword");
+
+    if (searchType) document.getElementById("searchType").value = searchType;
+    if (keyword) document.getElementById("searchKeyword").value = keyword;
+});
+
 </script>
 </head>
 
@@ -183,29 +193,30 @@
                     <div class="no-posts" th:if="${postListMap.size() == 0}" align="center">작성된 게시글이 없습니다.</div>
                 </div>
 
-               <div class="pagination" th:if="${maxPages > 1}">
-				    <!-- 처음 페이지로 이동 -->
-				    <a th:href="@{/foodhub/post/category/{categoryId}(categoryId=${categoryId}, page=1)}"
-				       th:if="${page > 1}">&laquo; 첫 페이지</a>
-				
-				    <!-- 이전 페이지 그룹으로 이동 -->
-				    <a th:href="@{/foodhub/post/category/{categoryId}(categoryId=${categoryId}, page=${startPage - 1})}"
-				       th:if="${startPage > 1}">&lt;</a>
-				
-				    <!-- 현재 페이지 그룹 내 페이지들 표시 (5개 단위) -->
-				    <th:block th:each="i : ${#numbers.sequence(startPage, endPage)}">
-				        <a th:href="@{/foodhub/post/category/{categoryId}(categoryId=${categoryId}, page=${i})}"
-				           th:text="${i}" th:classappend="${i == page} ? 'active' : ''"></a>
-				    </th:block>
-				
-				    <!-- 다음 페이지 그룹으로 이동 -->
-				    <a th:href="@{/foodhub/post/category/{categoryId}(categoryId=${categoryId}, page=${endPage + 1})}"
-				       th:if="${endPage < maxPages}">&gt;</a>
-				
-				    <!-- 마지막 페이지로 이동 -->
-				    <a th:href="@{/foodhub/post/category/{categoryId}(categoryId=${categoryId}, page=${maxPages})}"
-				       th:if="${page < maxPages}">마지막 페이지 &raquo;</a>
-				</div>
+              <div class="pagination" th:if="${maxPages > 1}">
+			    <!-- 처음 페이지로 이동 -->
+			    <a th:href="@{/foodhub/post/category/{categoryId}(categoryId=${categoryId}, page=1, searchType=${param.searchType}, keyword=${param.keyword})}"
+			       th:if="${page > 1}">&laquo; 첫 페이지</a>
+			
+			    <!-- 이전 페이지 그룹으로 이동 -->
+			    <a th:href="@{/foodhub/post/category/{categoryId}(categoryId=${categoryId}, page=${startPage - 1}, searchType=${param.searchType}, keyword=${param.keyword})}"
+			       th:if="${startPage > 1}">&lt;</a>
+			
+			    <!-- 현재 페이지 그룹 내 페이지들 표시 (5개 단위) -->
+			    <th:block th:each="i : ${#numbers.sequence(startPage, endPage)}">
+			        <a th:href="@{/foodhub/post/category/{categoryId}(categoryId=${categoryId}, page=${i}, searchType=${param.searchType}, keyword=${param.keyword})}"
+			           th:text="${i}" th:classappend="${i == page} ? 'active' : ''"></a>
+			    </th:block>
+			
+			    <!-- 다음 페이지 그룹으로 이동 -->
+			    <a th:href="@{/foodhub/post/category/{categoryId}(categoryId=${categoryId}, page=${endPage + 1}, searchType=${param.searchType}, keyword=${param.keyword})}"
+			       th:if="${endPage < maxPages}">&gt;</a>
+			
+			    <!-- 마지막 페이지로 이동 -->
+			    <a th:href="@{/foodhub/post/category/{categoryId}(categoryId=${categoryId}, page=${maxPages}, searchType=${param.searchType}, keyword=${param.keyword})}"
+			       th:if="${page < maxPages}">마지막 페이지 &raquo;</a>
+			</div>
+
 
                
                 <!-- ✅ hidden input으로 categoryId를 JS에서 접근할 수 있도록 추가 -->
