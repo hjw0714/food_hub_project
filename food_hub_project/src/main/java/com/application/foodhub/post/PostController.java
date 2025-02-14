@@ -1,7 +1,5 @@
 package com.application.foodhub.post;
 
-
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -167,6 +165,57 @@ public class PostController {
 	    model.addAttribute("postListMap", postList);
 
 	    return "foodhub/post/categoryPostList";
+	}
+	
+	@GetMapping("/bestPostList")
+	public String bestPostList(
+	        @RequestParam(name = "page", defaultValue = "1") int page,
+	        @RequestParam(name = "searchType", required = false) String searchType,
+	        @RequestParam(name = "keyword", required = false) String keyword,
+	        Model model) {
+
+	    final int pageSize = 15; // 한 페이지당 게시글 개수
+	    final int pageGroupSize = 5; // 한 번에 보여줄 페이지 개수 (5개 단위)
+	    long totalPosts;
+	    List<Map<String, Object>> postList;
+
+	    int offset = (page - 1) * pageSize;
+
+	    if (keyword != null && !keyword.isEmpty()) {
+	        if ("title".equals(searchType)) {
+	            totalPosts = postService.countPostsByTitle(keyword);
+	            postList = postService.searchBestPostsByTitle(keyword, pageSize, offset);
+	        } else if ("title_content".equals(searchType)) {
+	            totalPosts = postService.countPostsByTitleAndContent(keyword);
+	            postList = postService.searchBestPostsByTitle(keyword, pageSize, offset);
+	        } else {
+	            totalPosts = postService.getBestPostCnt(); // ✅ 전체 게시글 수도 베스트 게시글 기준으로 가져오기
+	            postList = postService.getBestPostList(pageSize, offset);
+	        }
+	    } else {
+	        totalPosts = postService.getBestPostCnt(); // ✅ 추천순 기준으로 게시글 개수 가져오기
+	        postList = postService.getBestPostList(pageSize, offset);
+	    }
+
+	    int maxPages = (int) Math.ceil((double) totalPosts / pageSize);
+	    if (maxPages == 0) {
+	        maxPages = 1;
+	    }
+
+	    // 📌 5개 단위로 페이지네이션 설정
+	    int startPage = ((page - 1) / pageGroupSize) * pageGroupSize + 1;
+	    int endPage = Math.min(startPage + pageGroupSize - 1, maxPages);
+
+	    model.addAttribute("postListMap", postList);
+	    model.addAttribute("page", page);
+	    model.addAttribute("maxPages", maxPages);
+	    model.addAttribute("postCnt", totalPosts);
+	    model.addAttribute("searchType", searchType);
+	    model.addAttribute("keyword", keyword);
+	    model.addAttribute("startPage", startPage);
+	    model.addAttribute("endPage", endPage);
+
+	    return "foodhub/post/bestPostList";
 	}
 
 	@GetMapping("/category/{categoryId}/subcate/{subCateId}")
@@ -512,6 +561,7 @@ public class PostController {
 
 		return ResponseEntity.ok(response);
 	}
+	
 
 
 

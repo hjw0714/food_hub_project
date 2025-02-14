@@ -1,7 +1,5 @@
 package com.application.foodhub.post;
 
-
-
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +12,8 @@ public interface PostService {
 	public long getAllPostCnt();
 
 	public long getPostCnt();
+	
+	public long getBestPostCnt();
 
 	public Long createPost(PostDTO postDTO);
 
@@ -22,6 +22,10 @@ public interface PostService {
 	public List<Map<String, Object>> myPostList(String userId);
 
 	public List<Map<String, Object>> getPostList(int pageSize, int offset);
+
+	public List<Map<String, Object>> getBestPostList(int pageSize, int offset);
+
+	public void deletePost(long postId);
 
 	public void updatePost(PostDTO postDTO);
 
@@ -43,6 +47,10 @@ public interface PostService {
 
 	public List<Map<String, Object>> searchPostsByTitleAndContent(String keyword, int pageSize, int offset);
 	public long countPostsByTitleAndContent(String keyword);
+	
+
+    public List<Map<String, Object>> searchBestPostsByTitle(String keyword, int pageSize, int offset);
+    public List<Map<String, Object>> searchBestPostsByTitleAndContent(String keyword, int pageSize, int offset);
 
 	
 	public String getCategoryNameById(Long categoryId);

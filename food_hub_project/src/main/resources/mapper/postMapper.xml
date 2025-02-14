@@ -95,6 +95,7 @@
 		WHERE	POST_ID = #{postId}
 	</update>
 	
+	<!-- 게시글 CREATED_AT DESC으로 검색해서 불러오기 -->
 	<select id="getPostList" resultMap="postMap">
 	    SELECT  P.POST_ID AS POST_ID,
 	            P.TITLE AS TITLE,
@@ -115,6 +116,28 @@
 	    ORDER BY P.CREATED_AT DESC
 	    LIMIT    #{pageSize} 
 	    OFFSET   #{offset}
+	</select>
+	
+	<!-- 게시글 추천순으로 검색해서 불러오기 -->
+	<select id="getBestPostList" resultMap="postMap">
+	    SELECT  P.POST_ID AS POST_ID,
+	        	P.TITLE AS TITLE,
+	        	P.CREATED_AT AS CREATED_AT,
+	       	 	P.VIEW_CNT AS VIEW_CNT,
+	        	U.NICKNAME AS NICKNAME,
+	        	S.SUB_CATE_NM AS SUB_CATE_NM,
+	        	COALESCE(L.LIKE_COUNT, 0) AS LIKE_COUNT
+	    FROM 	POST P
+	    JOIN 	USER U ON P.USER_ID = U.USER_ID
+	    JOIN 	SUB_CATEGORY S ON P.SUB_CATE_ID = S.SUB_CATE_ID
+	    LEFT 	JOIN (  -- 서브쿼리 수정됨
+	        	SELECT POST_ID, COUNT(*) AS LIKE_COUNT 
+	        	FROM POST_LIKE 
+	        	GROUP BY POST_ID
+	    		) AS L ON P.POST_ID = L.POST_ID
+	    ORDER BY LIKE_COUNT DESC, P.CREATED_AT DESC
+	    LIMIT 	#{pageSize} 
+	    OFFSET 	#{offset}
 	</select>
 
 
@@ -298,8 +321,71 @@
         LIMIT   #{limit}
     </select>
 	
+
+	
+	<select id="getBestPostCnt" resultType="long">
+	    SELECT 	COUNT(*) 
+	    FROM 	POST P
+	    LEFT 	JOIN (  
+	        		SELECT POST_ID, COUNT(*) AS LIKE_COUNT 
+	        		FROM POST_LIKE 
+	        		GROUP BY POST_ID
+	    		) AS L 
+   		ON 		P.POST_ID = L.POST_ID
+	</select>
+	
+	<select id="searchBestPostsByTitle" resultMap="postMap">
+	    SELECT 		P.POST_ID 		AS POST_ID,
+	           		P.TITLE 		AS TITLE,
+	           		P.CREATED_AT 	AS CREATED_AT,
+	           		P.VIEW_CNT 		AS VIEW_CNT,
+	           		U.NICKNAME 		AS NICKNAME,
+	           		S.SUB_CATE_NM 	AS SUB_CATE_NM,
+	           		COALESCE(L.LIKE_COUNT, 0) AS LIKE_COUNT
+	    FROM 		POST P
+	    JOIN 		USER U ON P.USER_ID = U.USER_ID
+	    JOIN 		SUB_CATEGORY S ON P.SUB_CATE_ID = S.SUB_CATE_ID
+	    LEFT JOIN 	(  
+	        		SELECT 		POST_ID, COUNT(*) AS LIKE_COUNT 
+	        		FROM 		POST_LIKE 
+	        		GROUP BY 	POST_ID
+	    			) AS L 
+		ON 			P.POST_ID = L.POST_ID
+	    WHERE 		P.TITLE LIKE CONCAT('%', #{keyword}, '%')
+	    AND			P.STATUS != 'DELETED'
+	    ORDER BY 	LIKE_COUNT DESC, P.CREATED_AT DESC
+	    LIMIT 		#{pageSize} 
+	    OFFSET 		#{offset}
+	</select>
+	
+	<select id="searchBestPostsByTitleAndContent" resultMap="postMap">
+	    SELECT 		P.POST_ID 		AS POST_ID,
+	           		P.TITLE 		AS TITLE,
+	           		P.CREATED_AT 	AS CREATED_AT,
+	           		P.VIEW_CNT 		AS VIEW_CNT,
+	           		U.NICKNAME 		AS NICKNAME,
+	           		S.SUB_CATE_NM 	AS SUB_CATE_NM,
+	           		COALESCE(L.LIKE_COUNT, 0) AS LIKE_COUNT
+	    FROM 		POST P
+	    JOIN 		USER U ON P.USER_ID = U.USER_ID
+	    JOIN 		SUB_CATEGORY S ON P.SUB_CATE_ID = S.SUB_CATE_ID
+	    LEFT JOIN 	(  
+        			SELECT 		POST_ID, COUNT(*) AS LIKE_COUNT 
+	        		FROM 		POST_LIKE 
+	        		GROUP BY 	POST_ID
+	    			) AS L 
+	    ON 			P.POST_ID = L.POST_ID
+	    WHERE 		P.TITLE LIKE CONCAT('%', #{keyword}, '%') 
+       	OR 			P.CONTENT LIKE CONCAT('%', #{keyword}, '%')
+       	AND			P.STATUS != 'DELETED'
+	    ORDER BY 	LIKE_COUNT DESC, P.CREATED_AT DESC
+	    LIMIT 		#{pageSize} 
+	    OFFSET #{offset}
+	</select>
 	
 	
+	
+
   <!-- 🔹 제목으로 검색 (삭제된 게시글 제외) -->
     <select id="searchPostsByTitle" parameterType="map" resultMap="postMap">
         SELECT  P.POST_ID, 
@@ -421,6 +507,7 @@
     ORDER BY P.CREATED_AT DESC
     LIMIT #{pageSize} OFFSET #{offset}
 </select>
+
 
 <!-- 서브 카테고리 이름 가져오기 -->
 <select id="getSubCateNameById" resultType="String">

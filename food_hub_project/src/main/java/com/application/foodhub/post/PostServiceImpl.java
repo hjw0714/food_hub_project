@@ -1,7 +1,5 @@
 package com.application.foodhub.post;
 
-
-
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +28,11 @@ public class PostServiceImpl implements PostService {
 	@Override
 	public List<Map<String, Object>> getPostList(int pageSize, int offset) {
 		return postDAO.getPostList(pageSize, offset);
+	}
+	
+	@Override
+	public List<Map<String, Object>> getBestPostList(int pageSize, int offset) {
+		return postDAO.getBestPostList(pageSize, offset);
 	}
 
 	@Override
@@ -168,6 +171,24 @@ public class PostServiceImpl implements PostService {
 	    return postDAO.searchPostsByCategoryTitleAndContent(categoryId, keyword, pageSize, offset);
 	}
 
+
+	@Override
+	public long getBestPostCnt() {
+		long count = postDAO.getBestPostCnt();
+		return Math.max(count, 0); // 0 미만이 되지 않도록 보장
+	}
+
+	@Override
+	public List<Map<String, Object>> searchBestPostsByTitle(String keyword, int pageSize, int offset) {
+		return postDAO.searchBestPostsByTitle(keyword, pageSize, offset);
+	}
+
+	@Override
+	public List<Map<String, Object>> searchBestPostsByTitleAndContent(String keyword, int pageSize, int offset) {
+		return postDAO.searchBestPostsByTitleAndContent(keyword, pageSize, offset);
+	}
+
+
 	 @Override
 	    public Map<String, Object> getPostById(Long postId) {
 	        // MyBatis 매퍼를 통해 게시글 정보를 가져옴
@@ -215,6 +236,7 @@ public class PostServiceImpl implements PostService {
 	public List<Map<String, Object>> getPostListBySubCategory(Long subCateId, int pageSize, int offset) {
 		return postDAO.getPostListBySubCategory(subCateId, pageSize , offset);
 	}
+
 
 
 }
