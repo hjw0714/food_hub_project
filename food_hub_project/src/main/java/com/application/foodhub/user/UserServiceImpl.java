@@ -23,7 +23,7 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
-	@Override
+	@Override	// 회원 가입
 	public void register(UserDTO userDTO) {
 		
 		if (userDTO.getEmailYn() == null)
@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
 		return isValidId;
 	}
 
-	@Override
+	@Override	// 닉네임 중복 확인
 	public String checkValidNickname(String nickname) {
 		String isValidNickname = "n";
 		if (userDAO.checkValidNickname(nickname) == null) {
@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserService {
 		return isValidNickname;
 	}
 
-	@Override
+	@Override	// 이메일 중복 확인
 	public String checkValidEmail(String email) {
 		String isValidEmail = "n";
 		if (userDAO.checkValidEmail(email) == null) {
@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService {
 		return isValidEmail;
 	}
 
-	@Override
+	@Override	// 로그인
 	public boolean login(UserDTO userDTO) {
 
 		// System.out.println("입력된 userId: " + userDTO.getUserId());
@@ -81,12 +81,12 @@ public class UserServiceImpl implements UserService {
 		return false;
 	}
 
-	@Override
+	@Override	// 유저 정보 상세 조회
 	public UserDTO getUserDetail(String userId) {
 		return userDAO.getUserDetail(userId);
 	}
 
-	@Override
+	@Override	// 사용자 정보 업데이트
 	public void updateUser(MultipartFile uploadProfile, UserDTO userDTO) throws IllegalStateException, IOException {
 		// 기존 프로필 사진 유지
 		if (uploadProfile == null || uploadProfile.isEmpty()) {
@@ -121,7 +121,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	@Transactional
+	@Transactional	// 유저 탈퇴
 	public void deleteUser(String userId) {
 
 		String deleteProfile = userDAO.getDeleteUserProfile(userId);
@@ -129,7 +129,7 @@ public class UserServiceImpl implements UserService {
 		userDAO.deleteUser(userId);
 	}
 
-	@Override
+	@Override	// 아이디 찾기
 	public String findId(String email, String tel) {
 
 		Map<String, Object> params = new HashMap<>();
@@ -144,7 +144,7 @@ public class UserServiceImpl implements UserService {
 		return userId;
 	}
 
-	@Override
+	@Override	// 비밀번호 찾기
 	public String findPasswd(String userId, String email, String tel) {
 
 		Map<String, Object> params = new HashMap<>();
@@ -162,7 +162,7 @@ public class UserServiceImpl implements UserService {
 		return userPasswd;
 	}
 
-	@Override
+	@Override	// 비밀번호 초기화
 	public void resetPassword(String newPassword, String userId) {
 
 //	    System.out.println(newPassword);
@@ -178,9 +178,9 @@ public class UserServiceImpl implements UserService {
 		userDAO.resetPassword(userDTO);
 	}
 
-	@Override
+	@Override	// 유저아이디로 닉네임 조회
 	public String findNicknameByUserId(String userId) {
-		return userDAO.findNicknameByUserId(userId); // ✅ DAO를 통해 닉네임 조회
+		return userDAO.findNicknameByUserId(userId); 
 	}
 
 }

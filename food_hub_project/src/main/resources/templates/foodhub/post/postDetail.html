@@ -581,20 +581,22 @@ h2 {
 	    }
 	});
     
+	
+	// # 댓글 기능 #
+	
 	$(document).ready(function () {
         let postId = $("#postId").val();
         let userId = $("#userId").val();
-     // ✅ sortOrder를 localStorage에서 불러오기 (기본값: newest)
+     //  sortOrder를 localStorage에서 불러오기 (기본값: newest)
         let sortOrder = localStorage.getItem("commentSortOrder") || "newest";
-        
+        // 댓글 최신순 , 작성일 순 정렬
         function loadComments(sortOrder) {
-        	 console.log("현재 정렬 기준:", sortOrder);
             
-        	 // ✅ 정렬 상태를 localStorage에 저장
+        	 // 정렬 상태를 localStorage에 저장
              localStorage.setItem("commentSortOrder", sortOrder);
         	 
         	 $.ajax({
-                url: `/comments/post/${postId}/parents?userId=${userId}&sortOrder=${sortOrder}`,  // userId 추가
+                url: `/comments/post/${postId}/parents?userId=${userId}&sortOrder=${sortOrder}`, 
                 type: "GET",
                 dataType: "json",
                 success: function (parentComments) {
@@ -612,7 +614,7 @@ h2 {
                 }
             });
         }
-        
+        //  대댓글 불러오기
         function loadChildComments(parentId) {
             let userId = $("#userId").val();
 
@@ -906,6 +908,14 @@ h2 {
     });
     
     $(document).on("click", ".report-comment-btn", function () {
+    	let userId = $("#userId").val();
+    	
+    	if (!userId) {
+            alert("로그인이 필요합니다. 로그인 페이지로 이동합니다.");
+            window.location.href = "/foodhub/user/login"; // 로그인 페이지로 이동
+            return;
+        }
+    	
         let commentId = $(this).data("id");  // 클릭한 버튼의 댓글 ID 가져오기
         console.log("🚨 신고할 댓글 ID:", commentId);
         $("#commentId").val(commentId);      // 신고할 댓글 ID 저장
