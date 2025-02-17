@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 @Mapper
 public interface CommentDAO {
@@ -14,9 +15,9 @@ public interface CommentDAO {
 
 	//public List<CommentDTO> getChildComments(Long parentId);
 
-	public void insertComment(Map<String, Object> params);
+	public void insertComment(CommentDTO commentDTO);
 
-	public void updateComment(Map<String, Object> params);
+	public void updateComment(CommentDTO commentDTO);
 
 	public void deleteComment(Long commentId);
 
@@ -32,11 +33,17 @@ public interface CommentDAO {
 
 	public List<CommentDTO> getChildComments(Map<String, Object> params);
 	
-	 // ✅ 추가된 메서드
 	public int getCommentLikeCount(Long commentId); // 댓글 추천 수 조회
     public int checkUserLikedComment(Map<String, Object> params); // 특정 유저가 댓글을 추천했는지 확인
     public void insertCommentLike(Map<String, Object> params); // 댓글 추천 추가
     public void deleteCommentLike(Map<String, Object> params); // 댓글 추천 취소
 
     public int existsByCommentId(@Param("commentId") long commentId);
+
+    @Select("""
+    		SELECT  MAX(COMMENT_ID)
+    		FROM 	COMMENTS
+    			""")
+    	public long getTestCommentId();
+
 }

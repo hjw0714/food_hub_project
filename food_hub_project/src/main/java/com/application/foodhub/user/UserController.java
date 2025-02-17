@@ -59,16 +59,17 @@ public class UserController {
 	@PostMapping("/login")	// 로그인
 	@ResponseBody
 	public String login(@RequestBody UserDTO userDTO , HttpServletRequest request) {
-		String isValidUser = "n";
+		String isValidUser = "n"; // 유저 중복 검사
+		
 		if (userService.login(userDTO)) {
 	        HttpSession session = request.getSession();
 	        session.setAttribute("userId", userDTO.getUserId());
 
-	        // 🔹 닉네임을 DB에서 가져와서 세션에 저장
+	        // 닉네임을 DB에서 가져와서 세션에 저장
 	        String nickname = userService.findNicknameByUserId(userDTO.getUserId());
 	        session.setAttribute("nickname", nickname);
 	        
-	        // ✅ 유저 정보 조회하여 membershipType 가져오기
+	        // 유저 정보 조회하여 membershipType 가져오기
 	        UserDTO userInfo = userService.getUserDetail(userDTO.getUserId()); // DB에서 전체 정보 가져오기
 	        String membershipType = userInfo.getMembershipType(); // DB에서 가져온 값 사용
 	        session.setAttribute("membershipType", membershipType); // 세션에 저장

@@ -42,14 +42,14 @@ public class CommentServiceImpl implements CommentService {
 	
 	// 댓글 추가 (원댓글 또는 대댓글)
 	@Override
-	public void insertComment(Map<String, Object> params) {
-		commentDAO.insertComment(params);
+	public void insertComment(CommentDTO commentDTO) {
+		commentDAO.insertComment(commentDTO);
 	}
 
 	// 댓글 수정
 	@Override
-	public void updateComment(Map<String, Object> params) {
-		commentDAO.updateComment(params);
+	public void updateComment(CommentDTO commentDTO) {
+		commentDAO.updateComment(commentDTO);
 	}
 
 	// 댓글 삭제 (상태 변경)
