@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 @Mapper
 public interface PostDAO {
@@ -98,4 +99,12 @@ public interface PostDAO {
 	public List<Map<String, Object>> getPostListBySubCategory(@Param("subCateId") Long subCateId,
 			@Param("pageSize") int pageSize, @Param("offset") int offset);
 
+	
+	
+	//테스트
+	   @Select("""
+	          SELECT   MAX(POST_ID)
+	          FROM   POST
+	          """)
+	    public long getTestPostId();
 }

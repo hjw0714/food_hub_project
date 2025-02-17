@@ -7,7 +7,9 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,6 +20,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.application.foodhub.commentReport.CommentReportDTO;
 import com.application.foodhub.commentReport.CommentReportService;
 import com.application.foodhub.user.UserService;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/comments")
@@ -55,27 +60,20 @@ public class CommentController {
 	// 댓글 추가 (원댓글 또는 대댓글)
 	@PostMapping("/add")
 	@ResponseBody
-	public CommentDTO insertComment(@RequestParam("postId") Long postId, @RequestParam("userId") String userId,
-			@RequestParam(value = "parentId", required = false) Long parentId,
-			@RequestParam("content") String content) {
-		Map<String, Object> params = new HashMap<>();
-		params.put("postId", postId);
-		params.put("userId", userId);
-		params.put("parentId", parentId);
-		params.put("content", content);
+	public CommentDTO insertComment(@ModelAttribute CommentDTO commentDTO) {
 
-		commentService.insertComment(params);
+		commentService.insertComment(commentDTO);
 
 		// ✅ 방금 등록한 댓글 정보 다시 가져오기 (프로필 이미지 포함)
-		CommentDTO newComment = commentService.getLastInsertedComment(postId, userId);
+		CommentDTO newComment = commentService.getLastInsertedComment(commentDTO.getPostId() , commentDTO.getUserId());
 		return newComment;
 	}
 
 	@PostMapping("/update")
 	@ResponseBody
-	public String updateComment(@RequestParam("commentId") Long commentId, @RequestParam("content") String content,
-			@RequestParam("userId") String userId // 현재 로그인한 사용자 ID 추가
-	) {
+	public String updateComment(@RequestParam("commentId") long commentId ,@ModelAttribute CommentDTO commentDTO , HttpSession session) {
+		
+		String userId = (String) session.getAttribute("userId");
 		CommentDTO comment = commentService.getCommentById(commentId);
 
 		if (comment == null) {
@@ -86,11 +84,8 @@ public class CommentController {
 			return "본인이 작성한 댓글만 수정할 수 있습니다.";
 		}
 
-		Map<String, Object> params = new HashMap<>();
-		params.put("commentId", commentId);
-		params.put("content", content);
 
-		commentService.updateComment(params);
+		commentService.updateComment(commentDTO);
 		return "댓글이 성공적으로 수정되었습니다.";
 	}
 
