@@ -67,7 +67,7 @@ public class PostController {
 	    long totalPosts;
 	    List<Map<String, Object>> postList;
 
-	    int offset = (page - 1) * pageSize;
+	    int offset = (page - 1) * pageSize; // offset은 다음 페이지를 눌렀을때 건너뛸 게시글의 수
 
 	    if (keyword != null && !keyword.isEmpty()) {
 	        if ("title".equals(searchType)) {
