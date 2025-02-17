@@ -107,4 +107,12 @@ public interface PostDAO {
     		""")
     public long getTestPostId();
 
+	
+	
+	//테스트
+	   @Select("""
+	          SELECT   MAX(POST_ID)
+	          FROM   POST
+	          """)
+	    public long getTestPostId();
 }

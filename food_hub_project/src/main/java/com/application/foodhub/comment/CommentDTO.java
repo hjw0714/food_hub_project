@@ -23,7 +23,6 @@ public class CommentDTO {
     private String status;
     private String profileUUID;
     
-    // ✅ 추가된 필드
     private int likeCount;  // 추천 수
     private boolean likedByUser; // 로그인한 유저가 추천했는지 여부
 }

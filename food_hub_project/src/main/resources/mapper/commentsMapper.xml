@@ -60,7 +60,7 @@
 </select>
 	
 	<!-- 댓글 삽입 (원댓글 또는 대댓글) -->
-	<insert id="insertComment">
+	<insert id="insertComment" parameterType="CommentDTO">
 		INSERT 		INTO COMMENTS
 					(POST_ID,
 					 USER_ID, 

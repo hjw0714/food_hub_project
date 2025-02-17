@@ -11,9 +11,9 @@ public interface CommentService {
 
 	public List<CommentDTO> getChildComments(Long parentId ,String userId);
 
-	public void insertComment(Map<String, Object> params);
+	public void insertComment(CommentDTO commentDTO);
 
-	public void updateComment(Map<String, Object> params);
+	public void updateComment(CommentDTO commentDTO);
 
 	public void deleteComment(Long commentId);
 
@@ -30,6 +30,7 @@ public interface CommentService {
     public boolean isCommentDeleted(long commentId);
 
     public void markCommentsAsDeletedByPostId(long postId);
+
 
 	
 }
