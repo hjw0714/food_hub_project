@@ -23,9 +23,7 @@ public interface CommentService {
 
 	public List<Map<String, Object>> myCommentList(String userId); // 해당 유저가 쓴 댓글 불러오기
 
-	// ✅ 추가된 메서드
-	public int getCommentLikeCount(Long commentId);
-    public boolean toggleCommentLike(Long commentId, String userId);
+	
 
     public boolean isCommentDeleted(long commentId);
 

@@ -77,28 +77,7 @@ public class CommentServiceImpl implements CommentService {
 		return commentDAO.myCommentList(userId);
 	}
 	
-	 // ✅ 추가된 메서드
-    @Override
-    public int getCommentLikeCount(Long commentId) {
-        return commentDAO.getCommentLikeCount(commentId);
-    }
-
-    @Override
-    public boolean toggleCommentLike(Long commentId, String userId) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("commentId", commentId);
-        params.put("userId", userId);
-
-        int likeExists = commentDAO.checkUserLikedComment(params);
-
-        if (likeExists > 0) {
-            commentDAO.deleteCommentLike(params);
-            return false; // 추천 취소됨
-        } else {
-            commentDAO.insertCommentLike(params);
-            return true; // 추천 추가됨
-        }
-    }
+   
     
     @Override
     public boolean isCommentDeleted(long commentId) {

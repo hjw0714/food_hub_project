@@ -127,36 +127,9 @@
 		AND     C.STATUS != 'DELETED'  <!-- 삭제된 댓글 제외 -->
 	</select>
 	
-	   <!-- 댓글 추천 수 조회 -->
-    <select id="getCommentLikeCount" parameterType="Long" resultType="int">
-        SELECT COUNT(*) FROM COMMENT_LIKE
-         WHERE COMMENT_ID = #{commentId}
-    </select>
-
-    <!-- 특정 유저가 댓글을 추천했는지 확인 -->
-    <select id="checkUserLikedComment" parameterType="map" resultType="int">
-        SELECT COUNT(*) FROM COMMENT_LIKE 
-        WHERE COMMENT_ID = #{commentId} AND USER_ID = #{userId}
-    </select>
-
-    <!-- 댓글 추천 추가 -->
-    <insert id="insertCommentLike">
-        INSERT INTO COMMENT_LIKE (COMMENT_ID, USER_ID) 
-        VALUES (#{commentId}, #{userId})
-    </insert>
-
-    <!-- 댓글 추천 취소 -->
-    <delete id="deleteCommentLike">
-        DELETE FROM COMMENT_LIKE 
-        WHERE COMMENT_ID = #{commentId} AND USER_ID = #{userId}
-    </delete>
+	
     
-      <select id="existsByCommentId" resultType="int">
-	    SELECT EXISTS
-	    	(SELECT 1
-	    	FROM COMMENTS 
-	    	WHERE COMMENT_ID = #{commentId})
-		</select>
+
 		
 		<!-- 특정 게시글의 모든 댓글 상태를 DELETED로 변경 -->
 	<update id="markCommentsAsDeletedByPostId">
