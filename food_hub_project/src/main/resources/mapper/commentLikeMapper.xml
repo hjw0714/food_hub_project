@@ -28,12 +28,6 @@
         WHERE COMMENT_ID = #{commentId} AND USER_ID = #{userId}
     </delete>
 
-	 <select id="existsByCommentId" resultType="int">
-	    SELECT EXISTS
-	    	(SELECT 1
-	    	FROM COMMENTS 
-	    	WHERE COMMENT_ID = #{commentId})
-		</select>
-
+	 
 
 </mapper>

@@ -127,10 +127,6 @@
 		AND     C.STATUS != 'DELETED'  <!-- 삭제된 댓글 제외 -->
 	</select>
 	
-	
-    
-
-		
 		<!-- 특정 게시글의 모든 댓글 상태를 DELETED로 변경 -->
 	<update id="markCommentsAsDeletedByPostId">
 	    UPDATE COMMENTS 
@@ -138,4 +134,10 @@
 	    WHERE POST_ID = #{postId}
 	</update>
 		
+	<select id="existsByCommentId" resultType="int">
+    SELECT EXISTS
+    	(SELECT 1
+    	FROM COMMENTS 
+    	WHERE COMMENT_ID = #{commentId})
+	</select>
 </mapper>

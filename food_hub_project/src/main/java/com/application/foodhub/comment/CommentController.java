@@ -136,29 +136,10 @@ public class CommentController {
 	
 	@PostMapping("/report")
 	@ResponseBody
-	public ResponseEntity<Map<String, Object>> report(@RequestBody CommentReportDTO commentReportDTO) {
-		long commentId = commentReportDTO.getCommentId();
-		String userId = commentReportDTO.getUserId();
-		String content = commentReportDTO.getContent();
-		
-		boolean reportSuccess = commentReportService.reportComment(commentId, userId, content);
-		
-		Map<String, Object> response = new HashMap<>();
-		
-		if (!reportSuccess) {
-			response.put("success", false);
-			response.put("message", "이미 신고한 댓글입니다.");
-			response.put("redirectUrl", "/foodhub/post/postDetail?postId=" + commentReportDTO.getCommentId());
-			return ResponseEntity.ok(response); 
-		} else {
-			// 신고 성공 시
-			response.put("success", true);
-			response.put("message", "댓글이 신고되었습니다.");
-			response.put("redirectUrl", "/foodhub/post/postDetail?postId=" + commentReportDTO.getCommentId());
-
-			return ResponseEntity.ok(response);
-		}
+	public CommentReportDTO report(@RequestBody CommentReportDTO commentReportDTO) {
+	    return commentReportService.reportComment(commentReportDTO);
 	}
+
 	
 
 }

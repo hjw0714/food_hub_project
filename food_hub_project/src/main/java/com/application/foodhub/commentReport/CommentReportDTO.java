@@ -17,4 +17,7 @@ public class CommentReportDTO {
     private Date createdAt;
     @DateTimeFormat(pattern="yyyy-MM-dd-hh-mm")
     private Date updatedAt;
+	private boolean success;
+	private String message;
+	private String RedirectUrl;
 }
