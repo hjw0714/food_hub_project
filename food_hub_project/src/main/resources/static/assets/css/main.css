@@ -2283,7 +2283,6 @@ section,
       color: var(--default-color);
       font-family: var(--default-font);
     }
-
     .delete-box {
       max-width: 400px;
       width: 100%;
