@@ -138,5 +138,14 @@ public class CommentsDaoTest {
 		
 	}
 	
+	@Test @Order(4) @DisplayName("댓글 삭제")
+	void testDeleteComment() {
+		commentDAO.deleteComment(testCommentId);
+		CommentDTO commentDTO = commentDAO.getCommentById(testCommentId);
+		assertThat(commentDTO.getStatus().equals("DELETED"));
+
+	}
+	
+	
 	
 }
