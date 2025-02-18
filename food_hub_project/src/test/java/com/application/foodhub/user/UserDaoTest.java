@@ -1,4 +1,4 @@
-package com.application.foodhub.UserTest;
+package com.application.foodhub.user;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
