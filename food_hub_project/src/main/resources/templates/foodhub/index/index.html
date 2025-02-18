@@ -16,6 +16,244 @@
         padding: 20px 0;
     }
     
+    .swiper-slide {
+        position: relative;
+        background-size: cover;
+        background-position: center;
+        border-radius: 10px;
+        overflow: hidden;
+        min-height: 100px;
+    }
+    .swiper-slide .content {
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+        color: white;
+        background: rgba(0, 0, 0, 0.6);
+        padding: 15px;
+        border-radius: 10px;
+    }
+   
+  
+    .partners-banner {
+        background: #222;
+        color: white;
+        text-align: center;
+        padding: 60px 20px;
+        border-radius: 10px;
+    }
+    
+      /* 🔹 게시판 스타일 개선 */
+    .post-category {
+        background: #fff;
+        padding: 25px;
+        border-radius: 12px;
+        border: 1px solid #ddd;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease-in-out;
+    }
+    
+    .category-title {
+       font-size: 1.4rem;
+       font-weight: bold;
+       color: #333;
+       display: flex; /* 🔹 부모 요소가 전체 너비를 차지하도록 설정 */
+       align-items: center; /* 🔹 가운데 정렬 */
+       position: relative; /* 🔹 가상 요소를 위한 기준점 */
+       padding-bottom: 12px;  
+       margin-bottom: 25px;  
+   }
+   
+   .category-title::after {
+       content: '';  /* 가상 요소 생성 */
+       position: absolute;
+       left: 0;
+       bottom: 0;
+       width: 100%;  /* 🔹 너비를 100%로 설정하여 끝까지 border 확장 */
+       height: 3px;  /* 🔹 border 두께 */
+       background-color: #0056b3;  /* 기존 border 색상 유지 */
+   }
+
+    
+    /* 🔹 게시글 스타일 개선 */
+    .post-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .post-entry {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .post-title {
+       font-size: 1.2rem; /* 원하는 크기로 조정 */
+       font-weight: 700; /* 글씨 두께 조정 */
+       color: #333;
+       text-decoration: none;
+       transition: color 0.2s ease-in-out;
+       white-space: normal; /* 텍스트가 자동으로 줄 바꿈되도록 설정 */
+      word-wrap: break-word; /* 긴 단어를 강제로 줄 바꿈 */
+      overflow-wrap: break-word; /* 최신 브라우저 호환성을 위해 사용 */
+      }
+    
+    .post-title:hover {
+        color: #555;
+    }
+    
+    .no-posts {
+        font-size: 0.9rem;
+        color: #aaa;
+        text-align: center;
+    }
+    
+    /* 🔹 인기 게시글 스타일 개선 */
+    .top-liked-posts .post-entry.lg {
+        background: #f9f9f9;
+        padding: 15px;
+        border-radius: 12px;
+        border: 1px solid #ddd;
+        margin-bottom: 15px;
+        transition: all 0.3s ease-in-out;
+    }
+    
+    .top-liked-posts .post-entry.lg:hover {
+        background: #f0f0f0;
+        transform: translateY(-3px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .top-liked-posts .name {
+        font-weight: 700;
+        color: #333;
+    }
+    
+    .top-liked-posts .index-post-meta {
+        font-size: 0.9rem;
+        color: #666;
+    }
+    
+    /* 🔹 배너 섹션 아래쪽 여백 최소화 */
+   #slider {
+       margin-bottom: 5px !important; /* 🔹 기본적으로 있는 여백 제거 */
+       padding-bottom: 5px !important;
+   }
+   
+   /* 🔹 메인 콘텐츠 위아래 여백 최소화 */
+   .main {
+       padding: 5px 0 !important; /* 🔹 위아래 패딩 최소화 */
+   }
+   
+   /* 🔹 트렌딩 카테고리(게시판) 섹션 위쪽 여백 줄이기 */
+   .trending-category {
+       margin-top: 5px !important; /* 🔹 기본 여백 줄이기 */
+       padding-top: 5px !important;
+   }
+   
+   /* 🔹 컨테이너 내부 여백 줄이기 */
+   .container {
+       padding-top: 0px !important;
+       margin-top: 0px !important;
+   }
+   
+   /* 🔹 검색창 컨테이너: 오른쪽 정렬 + 위아래 여백 줄이기 */
+   .index-search-container {
+       display: flex;
+       justify-content: flex-end; /* 오른쪽 정렬 */
+       align-items: center;
+       margin-top: 10px; /* 🔹 위쪽 여백 줄이기 */
+       margin-bottom: 10px; /* 🔹 아래쪽 여백 줄이기 */
+       padding-right: 20px; /* 오른쪽 여백 유지 */
+   }
+   
+   /* 🔹 검색창 박스 크기 확장 */
+   .index-search-box {
+       display: flex;
+       align-items: center;
+       border: 2px solid #0056b3; /* 🔹 테두리 색상 변경 (사이트 분위기 맞춤) */
+       border-radius: 8px;
+       background-color: #ffffff;
+       padding: 6px;
+       width: 600px; /* 🔹 가로 길이 확장 */
+       max-width: 100%;
+       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 효과 */
+   }
+   
+   /* 🔹 드롭다운 (검색 기준 선택) */
+   .index-search-box select {
+       border: none;
+       background-color: #f8f9fa;
+       padding: 10px;
+       font-size: 16px;
+       outline: none;
+       border-right: 1px solid #ddd;
+       height: 42px;
+   }
+   
+   /* 🔹 검색 입력 필드 크기 확대 */
+   .index-search-box input {
+       border: none;
+       padding: 10px;
+       width: 400px; 
+       outline: none;
+       font-size: 16px;
+       background-color: transparent;
+   }
+   
+   /* 🔹 검색 버튼 색상 변경 */
+   .index-search-box button {
+       background-color: #B0D0E3; 
+       color: white;
+       border: none;
+       padding: 10px 15px;
+       cursor: pointer;
+       border-radius: 5px;
+       transition: background-color 0.3s ease-in-out;
+       font-size: 16px;
+   }
+   
+   /* 🔹 버튼 호버 효과 */
+   .index-search-box button:hover {
+       background-color: #0056b3 ; 
+   }
+   
+    /* 🔹 검색창 아래 여백 제거 */
+   .index-search-container {
+       margin-bottom: 5px !important;
+       padding-bottom: 5px !important;
+   }
+   
+    /* 🔹 검색창 컨테이너 위쪽 여백 최소화 */
+   .index-search-container {
+       margin-top: 5px !important; /* 🔹 검색창 위 여백 제거 */
+       padding-top: 5px !important;
+   }
+   
+    .index-post-meta {
+        font-size: 0.9rem;
+        color: #666;
+        display: flex;
+        justify-content: space-between;
+    }
+   
+      /* 🔹 반응형 - 화면 크기가 작아질 경우 검색창 너비 자동 조정 */
+   @media (max-width: 768px) {
+       .index-search-container {
+           justify-content: center; /* 작은 화면에서는 중앙 정렬 */
+           padding-right: 0;
+       }
+   
+       .index-search-box {
+           width: 90%; /* 작은 화면에서 너비 자동 조정 */
+       }
+   
+       .index-search-box input {
+           width: 60% !important; /* 모바일에서 검색 입력창 크기 조정 */
+       }
+   }
+
 </style>
 <script>
 document.addEventListener("DOMContentLoaded", function () {
@@ -140,8 +378,8 @@ document.addEventListener("DOMContentLoaded", function () {
 	
 	 <!-- 🔹 검색창 -->
 	<div class="container">
-	    <div class="search-container">
-	        <div class="search-box">
+	    <div class="index-search-container">
+	        <div class="index-search-box">
 	            <select id="searchType">
 	                <option value="title">제목</option>
 	                <option value="title_content">제목+내용</option>
@@ -172,7 +410,7 @@ document.addEventListener("DOMContentLoaded", function () {
 											👍 :</span> <span class="like-count" th:text="${post.likeCount}"></span>
 
 									</div>
-									<div class="post-meta">
+									<div class="index-post-meta">
 										<span class="date"
 											th:text="${#dates.format(post.createdAt, 'yyyy-MM-dd HH:mm')}"></span>
 									</div>
@@ -207,7 +445,7 @@ document.addEventListener("DOMContentLoaded", function () {
 													class="post-title"> <span
 													th:text="|[${post.subCateNm}] ${#strings.length(post.title) > 25 ? #strings.substring(post.title, 0, 25) + '...' : post.title}|"></span>
 												</a>
-												<div class="post-meta">
+												<div class="index-post-meta">
 													<span class="nickname" th:text="${post.nickname}"></span> <span
 														class="date"
 														th:text="${#dates.format(post.createdAt, 'yyyy-MM-dd HH:mm')}"></span>
@@ -232,7 +470,7 @@ document.addEventListener("DOMContentLoaded", function () {
 						                <a th:href="@{/foodhub/post/postDetail(postId=${post.postId})}" class="post-title">
 						                    <span th:text="|[${post.subCateNm}] ${#strings.length(post.title) > 25 ? #strings.substring(post.title, 0, 25) + '...' : post.title}|"></span>
 						                </a>
-						                <div class="post-meta">
+						                <div class="index-post-meta">
 						                    <span class="nickname" th:text="${post.nickname}"></span>
 						                    <span class="date" th:text="${#dates.format(post.createdAt, 'yyyy-MM-dd HH:mm')}"></span>
 						                </div>

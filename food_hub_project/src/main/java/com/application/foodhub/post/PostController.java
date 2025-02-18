@@ -149,7 +149,7 @@ public class PostController {
 		String jsScript = """
 				<script>
 					alert('커뮤니티 게시글이 작성 되었습니다.');
-					location.href = 'allPostList';
+					location.href = 'posts';
 				</script>""";
 
 		return jsScript;
