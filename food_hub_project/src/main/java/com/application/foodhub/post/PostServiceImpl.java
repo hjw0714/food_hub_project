@@ -25,27 +25,12 @@ public class PostServiceImpl implements PostService {
 	@Autowired
 	private CommentService commentService;
 
-	@Override
-	public List<Map<String, Object>> getPostList(int pageSize, int offset) {
-		return postDAO.getPostList(pageSize, offset);
-	}
 	
-	@Override
-	public List<Map<String, Object>> getBestPostList(int pageSize, int offset) {
-		return postDAO.getBestPostList(pageSize, offset);
-	}
-
 	@Override
 	public long getAllPostCnt() {
 		return postDAO.getAllPostCnt();
 	}
-
-	@Override
-	public long getPostCnt() {
-		long count = postDAO.getPostCnt();
-		return Math.max(count, 0); // 0 미만이 되지 않도록 보장
-	}
-
+	
 	@Override
     public Map<String, Object> getPostDetail(long postId, boolean isIncreaseReadCnt) {
         // ✅ 삭제된 게시글인지 확인
@@ -105,11 +90,6 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public List<Map<String, Object>> getPostListByCategory(Long categoryId, int pageSize, int offset) {
-		return postDAO.getPostListByCategory(categoryId, pageSize, offset);
-	}
-
-	@Override
 	public long getPostCntByCategory(Long categoryId) {
 		long count = postDAO.getPostCntByCategory(categoryId);
 		return Math.max(count, 0); // 0 미만이 되지 않도록 보장
@@ -125,106 +105,15 @@ public class PostServiceImpl implements PostService {
 		return postDAO.getLatestPostsByCategoryId(categoryId, limit);
 	}
 	
-
-	@Override
-	public List<Map<String, Object>> searchPostsByTitle(String keyword, int pageSize, int offset) {
-	    return postDAO.searchPostsByTitle(keyword, pageSize, offset);
-	}
-
-	@Override
-	public long countPostsByTitle(String keyword) {
-	    return postDAO.countPostsByTitle(keyword);
-	}
-
-	@Override
-	public List<Map<String, Object>> searchPostsByTitleAndContent(String keyword, int pageSize, int offset) {
-	    return postDAO.searchPostsByTitleAndContent(keyword, pageSize, offset);
-	}
-
-	@Override
-	public long countPostsByTitleAndContent(String keyword) {
-	    return postDAO.countPostsByTitleAndContent(keyword);
-	}
-	
 	@Override
 	public String getCategoryNameById(Long categoryId) {
 	    return postDAO.getCategoryNameById(categoryId);
 	}
 	
-	@Override
-	public long countPostsByCategoryTitle(Long categoryId, String keyword) {
-	    return postDAO.countPostsByCategoryTitle(categoryId, keyword);
-	}
-
-	@Override
-	public long countPostsByCategoryTitleAndContent(Long categoryId, String keyword) {
-	    return postDAO.countPostsByCategoryTitleAndContent(categoryId, keyword);
-	}
-
-	@Override
-	public List<Map<String, Object>> searchPostsByCategoryTitle(Long categoryId, String keyword, int pageSize, int offset) {
-	    return postDAO.searchPostsByCategoryTitle(categoryId, keyword, pageSize, offset);
-	}
-
-	@Override
-	public List<Map<String, Object>> searchPostsByCategoryTitleAndContent(Long categoryId, String keyword, int pageSize, int offset) {
-	    return postDAO.searchPostsByCategoryTitleAndContent(categoryId, keyword, pageSize, offset);
-	}
-
-
-	@Override
-	public long getBestPostCnt() {
-		long count = postDAO.getBestPostCnt();
-		return Math.max(count, 0); // 0 미만이 되지 않도록 보장
-	}
-
-	@Override
-	public List<Map<String, Object>> searchBestPostsByTitle(String keyword, int pageSize, int offset) {
-		return postDAO.searchBestPostsByTitle(keyword, pageSize, offset);
-	}
-
-	@Override
-	public List<Map<String, Object>> searchBestPostsByTitleAndContent(String keyword, int pageSize, int offset) {
-		return postDAO.searchBestPostsByTitleAndContent(keyword, pageSize, offset);
-	}
-
-
-	 @Override
-	    public Map<String, Object> getPostById(Long postId) {
-	        // MyBatis 매퍼를 통해 게시글 정보를 가져옴
-	        Map<String, Object> postMap = postDAO.getPostDetail(postId);
-
-	        // 게시글이 없거나, 상태가 'DELETED'라면 null 반환 (컨트롤러에서 404 페이지로 이동)
-	        if (postMap == null || "DELETED".equals(postMap.get("status"))) {
-	            return null;
-	        }
-
-	        return postMap;
-	    }
 
 	@Override
 	public String getSubCateNameById(Long subCateId) {
 		return postDAO.getSubCateNameById(subCateId);
-	}
-
-	@Override
-	public long countPostsBySubCategoryTitle(Long subCateId, String keyword) {
-		return postDAO.countPostsBySubCategoryTitle(subCateId , keyword);
-	}
-
-	@Override
-	public List<Map<String, Object>> searchPostsBySubCategoryTitle(Long subCateId, String keyword, int pageSize,int offset) {
-		return postDAO.searchPostsBySubCategoryTitle(subCateId , keyword , pageSize , offset);
-	}
-
-	@Override
-	public long countPostsBySubCategoryTitleAndContent(Long subCateId, String keyword) {
-		return postDAO.countPostsBySubCategoryTitleAndContent(subCateId , keyword);
-	}
-
-	@Override
-	public List<Map<String, Object>> searchPostsBySubCategoryTitleAndContent(Long subCateId, String keyword,int pageSize, int offset) {
-		return postDAO.searchPostsBySubCategoryTitleAndContent(subCateId , keyword , pageSize , offset);
 	}
 
 	@Override
@@ -233,9 +122,21 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public List<Map<String, Object>> getPostListBySubCategory(Long subCateId, int pageSize, int offset) {
-		return postDAO.getPostListBySubCategory(subCateId, pageSize , offset);
+	public long countPosts(String keyword, String searchType, Long categoryId, Long subCateId) {
+		return postDAO.countPosts(keyword, searchType, categoryId, subCateId);
 	}
+
+	@Override
+	public List<Map<String, Object>> getPostList(Long categoryId, Long subCateId, String orderType, String keyword,
+			String searchType, int pageSize, int offset) {
+		return postDAO.getPostList(categoryId, subCateId, orderType, keyword, searchType, pageSize, offset);
+	}
+
+	@Override
+	public List<Map<String, Object>> searchPosts(String keyword, String searchType, Long categoryId, Long subCateId, boolean isBest, int pageSize, int offset) {
+	    return postDAO.searchPosts(keyword, searchType, categoryId, subCateId, isBest, pageSize, offset);
+	}
+
 
 
 

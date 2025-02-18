@@ -259,25 +259,43 @@ document.addEventListener("DOMContentLoaded", function () {
     function searchPosts() {
         let searchType = document.getElementById("searchType").value;
         let keyword = document.getElementById("searchKeyword").value.trim();
+        let categoryId = document.getElementById("categoryId") ? document.getElementById("categoryId").value : null;
+        let subCateId = document.getElementById("subCateId") ? document.getElementById("subCateId").value : null;
+        let orderType = new URLSearchParams(window.location.search).get("orderType") || "newest"; // orderType 유지
 
         if (keyword === "") {
             alert("검색어를 입력하세요.");
             return;
         }
 
-        let url = `/foodhub/post/allPostList?page=1&searchType=${searchType}&keyword=${encodeURIComponent(keyword)}`;
+        let url = `/foodhub/post/posts?page=1&searchType=${searchType}&keyword=${encodeURIComponent(keyword)}`;
+
+        if (categoryId) {
+            url += `&categoryId=${categoryId}`;
+        }
+
+        if (subCateId) {
+            url += `&subCateId=${subCateId}`;
+        }
+
+        if (orderType) {
+            url += `&orderType=${orderType}`;
+        }
+
         window.location.href = url;
     }
 
-    // 검색 버튼 클릭 이벤트 추가
+    // ✅ 검색 버튼 클릭 이벤트 추가
     document.getElementById("searchBtn").addEventListener("click", searchPosts);
+    
+    // ✅ 엔터키 입력 시 검색 실행
     document.getElementById("searchKeyword").addEventListener("keypress", function (event) {
         if (event.key === "Enter") {
             searchPosts();
         }
     });
 
-    // 페이지 로드 시 검색어 유지
+    // ✅ 페이지 로드 시 검색어 유지
     const urlParams = new URLSearchParams(window.location.search);
     const searchType = urlParams.get("searchType");
     const keyword = urlParams.get("keyword");

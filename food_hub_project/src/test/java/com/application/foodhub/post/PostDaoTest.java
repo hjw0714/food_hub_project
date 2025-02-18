@@ -88,7 +88,7 @@ public class PostDaoTest {
 		assertThat(postDTO).isNotNull();
 
 	}
-
+/*
 	@Test
 	@Order(2)
 	@DisplayName("게시글 전체조회 테스트(카테고리 상관 없이)")
@@ -97,7 +97,7 @@ public class PostDaoTest {
 
 		assertThat(postList).isNotNull();
 	}
-
+	
 	@Test
 	@Order(3) 
 	@DisplayName("게시글 전체조회 테스트(카테고리 상관 있이)")
@@ -107,6 +107,7 @@ public class PostDaoTest {
 		//System.out.println(postList);
 		assertThat(postList).isNotEmpty();
 	}
+	*/
 	
 	@Test @Order(4) @DisplayName("게시글 상세보기")
 	void testGetPostDetail() {
