@@ -10,7 +10,9 @@ import lombok.Data;
 public class CommentLikeDTO {
     private Long commentId;
     private String userId;
-    private String status;
     @DateTimeFormat(pattern="yyyy-MM-dd-hh-mm")
     private Date createdAt;
+    private boolean liked; 
+    private int likeCount; 
+    private boolean success;
 }

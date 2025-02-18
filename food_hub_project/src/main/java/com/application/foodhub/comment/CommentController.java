@@ -1,5 +1,6 @@
 package com.application.foodhub.comment;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.application.foodhub.commentLike.CommentLikeDTO;
+import com.application.foodhub.commentLike.CommentLikeService;
 import com.application.foodhub.commentReport.CommentReportDTO;
 import com.application.foodhub.commentReport.CommentReportService;
 import com.application.foodhub.user.UserService;
@@ -33,6 +36,9 @@ public class CommentController {
 
 	@Autowired
 	private CommentService commentService;
+	
+	@Autowired
+	private CommentLikeService commentLikeService;
 	
 	@Autowired
 	private CommentReportService commentReportService;
@@ -113,15 +119,18 @@ public class CommentController {
 	
 	@PostMapping("/like")
     @ResponseBody
-    public Map<String, Object> toggleCommentLike(@RequestParam("commentId") Long commentId,
+    public CommentLikeDTO toggleCommentLike(@RequestParam("commentId") Long commentId,
                                                  @RequestParam("userId") String userId) {
-        boolean liked = commentService.toggleCommentLike(commentId, userId);
-        int likeCount = commentService.getCommentLikeCount(commentId);
+        CommentLikeDTO liked = commentLikeService.toggleCommentLike(commentId, userId);
+        int likeCount = commentLikeService.getCommentLikeCount(commentId);
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("success", true);
-        response.put("liked", liked);
-        response.put("likeCount", likeCount);
+        CommentLikeDTO response = new CommentLikeDTO();
+        response.setCommentId(commentId);
+        response.setUserId(userId);
+        response.setLiked(true); 
+        response.setLikeCount(likeCount); 
+        response.setSuccess(true);
+        
         return response;
     }
 	

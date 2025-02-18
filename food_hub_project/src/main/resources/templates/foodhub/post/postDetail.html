@@ -1008,7 +1008,7 @@ h2 {
     $(document).on("click", ".like-btn", function () {
         let button = $(this);
         let commentId = button.data("id");
-        let userId = $("#userId").val(); // 로그인한 사용자 ID
+        let userId = $("#userId").val(); 
 
         if (!userId) {
             alert("로그인이 필요합니다.");
@@ -1019,21 +1019,15 @@ h2 {
         $.ajax({
             type: "POST",
             url: "/comments/like",
-            data: { commentId: commentId, userId: userId }, // `application/x-www-form-urlencoded` 방식
+            data: { commentId: commentId, userId: userId },
             success: function (response) {
+
                 if (response.success) {
                     let likeCount = response.likeCount;
                     button.find(".like-count").text(likeCount);
 
-                    // 추천 버튼 색상 변경
-                    if (response.liked) {
-                        button.removeClass("btn-outline-success").addClass("btn-success");
-                    } 
-                    else {
-                        button.removeClass("btn-success").addClass("btn-outline-success");
-                    }
-                } 
-                else {
+                    button.toggleClass("btn-success btn-outline-success");
+                } else {
                     alert("추천 처리 실패");
                 }
             },
@@ -1043,6 +1037,7 @@ h2 {
             }
         });
     });
+
     
     // 댓글 정렬 클릭 이벤트
     $("#sortOldest").click(function () {

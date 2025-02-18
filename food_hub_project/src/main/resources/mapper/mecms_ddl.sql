@@ -97,7 +97,6 @@ CREATE TABLE POST_LIKE (
 CREATE TABLE COMMENT_LIKE (
     COMMENT_ID      BIGINT NOT NULL,                                           	-- 좋아요 대상 댓글/대댓글 ID
     USER_ID         VARCHAR(255) NOT NULL,                                     	-- 좋아요를 누른 사용자 ID
-    STATUS          ENUM('LIKED', 'CANCELLED') DEFAULT 'LIKED',                	-- 좋아요 상태 (LIKED: 좋아요, CANCELLED: 취소)
     CREATED_AT      TIMESTAMP DEFAULT NOW(),                       				-- 좋아요 누른 시간
     FOREIGN KEY (COMMENT_ID) REFERENCES COMMENTS(COMMENT_ID) ON DELETE CASCADE, -- 댓글/대댓글과 연결
     FOREIGN KEY (USER_ID) REFERENCES USER(USER_ID) ON DELETE CASCADE,           -- 유저와 연결
