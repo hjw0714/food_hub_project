@@ -40,6 +40,7 @@
 		 )
 	</insert>
 	
+	<!-- 아이디 중복 체크 -->
 	<select id="checkValidId" parameterType="String" resultType="String"> 
 		SELECT USER_ID
 		FROM   USER
@@ -53,33 +54,38 @@
 		WHERE  BINARY NICKNAME = #{nickname}
 	</select>
 	
+	<!-- 이메일 중복 체크 -->
 	<select id="checkValidEmail" parameterType="String" resultType="String"> 
 		SELECT EMAIL
 		FROM   USER
 		WHERE  BINARY EMAIL = #{email}
 	</select>
 	
+	<!-- 암호화한 비밀번호 불러오기 -->
 	<select id="getEncodedPasswd" parameterType="String" resultType="String">
 		SELECT 	PASSWD
 		FROM 	USER
 		WHERE	BINARY USER_ID = #{userId}
 	</select>
+	
+	<!-- 유저 정보 불러오기 -->
 	<select id="getUserDetail" parameterType="String" resultType="UserDTO">
 		SELECT	*
 		FROM	USER
 		WHERE 	USER_ID = #{userId}
 	</select>
 	
+	<!-- 유저 아이디를 통해 닉네임 불러오기 -->
 	<select id="findNicknameByUserId" parameterType="string" resultType="string">
-    	SELECT NICKNAME 
-    	FROM USER 
-    	WHERE USER_ID = #{userId}
+    	SELECT 	NICKNAME 
+    	FROM 	USER 
+    	WHERE 	USER_ID = #{userId}
 	</select>
 	
-	
+	<!-- 유저 정보 수정 -->
 	<update id="updateUser" parameterType="UserDTO">
 		UPDATE	USER
-		SET		PROFILE_ORIGINAL = #{profileOriginal},
+		SET		PROFILE_ORIGINAL 	  = #{profileOriginal},
 				PROFILE_UUID 		  = #{profileUUID},
 				NICKNAME			  = #{nickname},
 				TEL					  = #{tel},
@@ -95,15 +101,15 @@
 	
 	<!-- (회원탈퇴)회원탈퇴할 유저프로필 정보 조회 -->
     <select id="getDeleteUserProfile" resultType="String">
-      SELECT PROFILE_UUID
-      FROM   USER
-      WHERE  USER_ID = #{userId}
+      SELECT 	PROFILE_UUID
+      FROM   	USER
+      WHERE  	USER_ID = #{userId}
     </select>
    
     <!-- (회원탈퇴)유저정보 삭제 -->
     <delete id="deleteUser" parameterType="String">
-      DELETE FROM USER
-      WHERE      USER_ID = #{userId}
+      DELETE 	FROM USER
+      WHERE     USER_ID = #{userId}
     </delete>
     
     <!-- 이메일과 전화번호를 받아서 아이디 찾기 -->

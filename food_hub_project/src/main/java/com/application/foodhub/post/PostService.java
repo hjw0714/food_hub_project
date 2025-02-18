@@ -13,8 +13,6 @@ public interface PostService {
 	
 	public List<Map<String, Object>> getPostList(Long categoryId, Long subCateId, String orderType, String keyword, String searchType, int pageSize, int offset);
 
-	public long getAllPostCnt();
-
 	public Long createPost(PostDTO postDTO);
 
 	public List<Map<String, Object>> myPostList(String userId);
@@ -26,10 +24,6 @@ public interface PostService {
 
 	public Long getNextPostId(long postId, long categoryId);
 
-	public long getPostCntByCategory(Long categoryId);
-
-	public String getCategoryName(Long categoryId);
-	
 	public String getCategoryNameById(Long categoryId);
 	
 	public void markPostAsDeleted(long postId);

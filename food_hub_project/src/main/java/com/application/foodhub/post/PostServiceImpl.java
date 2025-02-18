@@ -4,10 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.application.foodhub.comment.CommentService;
@@ -25,11 +21,6 @@ public class PostServiceImpl implements PostService {
 	@Autowired
 	private CommentService commentService;
 
-	
-	@Override
-	public long getAllPostCnt() {
-		return postDAO.getAllPostCnt();
-	}
 	
 	@Override
     public Map<String, Object> getPostDetail(long postId, boolean isIncreaseReadCnt) {
@@ -55,7 +46,6 @@ public class PostServiceImpl implements PostService {
 
         return postMap;
     }
-
 
 	@Override
 	public Long createPost(PostDTO postDTO) {
@@ -87,17 +77,6 @@ public class PostServiceImpl implements PostService {
 	@Override
 	public Long getNextPostId(long postId, long categoryId) {
 		return postDAO.getNextPostId(postId, categoryId);
-	}
-
-	@Override
-	public long getPostCntByCategory(Long categoryId) {
-		long count = postDAO.getPostCntByCategory(categoryId);
-		return Math.max(count, 0); // 0 미만이 되지 않도록 보장
-	}
-
-	@Override
-	public String getCategoryName(Long categoryId) {
-		return postDAO.getCategoryName(categoryId);
 	}
 
 	@Override

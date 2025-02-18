@@ -83,7 +83,7 @@ public class PostController {
 	    // ✅ 모델에 데이터 추가
 	    model.addAttribute("categoryName", categoryName);
 	    model.addAttribute("categoryId", categoryId);
-	    model.addAttribute("subCateNm", subCateNm);
+	    model.addAttribute("subCateNm", subCateNm); 
 	    model.addAttribute("subCateId", subCateId);
 	    model.addAttribute("postListMap", postList);
 	    model.addAttribute("page", page);

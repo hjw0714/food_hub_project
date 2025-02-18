@@ -432,7 +432,7 @@ document.addEventListener("DOMContentLoaded", function () {
 										<!-- 게시판 제목 -->
 										<h3>
 											<a class="category-title"
-												th:href="@{'/foodhub/post/category/' + ${iterStat.index + 1}}"
+												th:href="@{'/foodhub/post/posts?categoryId=' + ${iterStat.index + 1}}"
 												th:text="${categoryNames[iterStat.index+1]}"> </a>
 										</h3>
 										<br>
@@ -461,7 +461,7 @@ document.addEventListener("DOMContentLoaded", function () {
 						<div class="col-lg-3">
 						    <div class="post-category">
 						        <h3>
-						            <a class="category-title" th:href="@{/foodhub/post/category/0}">📣 공지사항</a>
+						            <a class="category-title" th:href="@{/foodhub/post/posts(categoryId=0)}">📣 공지사항</a>
 						        </h3>
 						        <br>
 						        <div class="post-list">
