@@ -4,30 +4,30 @@
 <mapper namespace="com.application.foodhub.postLike.PostLikeDAO">
 
 	<resultMap id="postLikeMap" type="hashmap">
-			<result column="POST_ID"  	   	property="postId"/>
-			<result column="TITLE" 	   		property="title"/>
-			<result	column="SUB_CATE_NM"	property="subCateNm"/>
-			<result column="NICKNAME"     	property="nickname"/>
-			<result column="CREATED_AT"		property="createdAt"/>
-			<result column="LIKE_COUNT"		property="likeCount"/>
+		<result column="POST_ID"  	   	property="postId"/>
+		<result column="TITLE" 	   		property="title"/>
+		<result	column="SUB_CATE_NM"	property="subCateNm"/>
+		<result column="NICKNAME"     	property="nickname"/>
+		<result column="CREATED_AT"		property="createdAt"/>
+		<result column="LIKE_COUNT"		property="likeCount"/>
 	</resultMap>
 	
+	<!-- 게시글 추천 취소 -->
 	<delete id="deletePostLike">
 	    DELETE 	FROM POST_LIKE 
 	    WHERE 	POST_ID = #{postId} 
 	    AND 	USER_ID = #{userId}
 	</delete>
 	
+	<!-- 게시글 추천 -->
 	<insert id="insertPostLike">
-	    INSERT INTO POST_LIKE 
-	    		(
-	    		POST_ID, 
-	    		USER_ID) 
-   		VALUES (
-   				#{postId}, 
-   				#{userId})
+	    INSERT INTO POST_LIKE (POST_ID, 
+					    	   USER_ID) 
+ 		VALUES 				  (#{postId}, 
+ 							   #{userId})
 	</insert>
 	
+	<!-- 특정 게시글의 추천 여부 확인 -->
 	<select id="existsPostLike" parameterType="map" resultType="boolean">
 	    SELECT EXISTS (
 	        SELECT 	1 
@@ -37,7 +37,7 @@
 	    )
 	</select>
 
-	
+	<!-- 추천 게시글의 추천 수 확인 -->	
 	<select id="countPostLikes" resultType="int">
 	    SELECT 	COUNT(*) 
 	    FROM 	POST_LIKE 
@@ -46,19 +46,24 @@
 	
 	<!-- 좋아요 많은 순 5개 뽑아오기 -->
 	<select id="getTopLikedPosts" resultMap="postLikeMap">
-		SELECT		P.POST_ID			AS POST_ID,
-					P.TITLE				AS TITLE,
-					P.NICKNAME			AS NICKNAME,
-					P.SUB_CATE_NM 		AS SUB_CATE_NM,
-					P.CREATED_AT 		AS CREATED_AT,
-					COALESCE(COUNT(PL.POST_ID), 0) AS LIKE_COUNT
+		SELECT		P.POST_ID						AS POST_ID,
+					P.TITLE							AS TITLE,
+					P.NICKNAME						AS NICKNAME,
+					P.SUB_CATE_NM 					AS SUB_CATE_NM,
+					P.CREATED_AT 					AS CREATED_AT,
+					COALESCE(COUNT(PL.POST_ID), 0) 	AS LIKE_COUNT
 		FROM		POST P
 		LEFT JOIN 	POST_LIKE PL
 		ON			P.POST_ID = PL.POST_ID
 		WHERE 		P.CATEGORY_ID != 0
 		AND         P.STATUS != 'DELETED'
-		GROUP BY 	P.POST_ID, P.TITLE, P.NICKNAME, P.SUB_CATE_NM, P.CREATED_AT
-		ORDER BY	LIKE_COUNT DESC, P.CREATED_AT DESC
-		
+		GROUP BY 	P.POST_ID, 
+					P.TITLE, 
+					P.NICKNAME, 
+					P.SUB_CATE_NM, 
+					P.CREATED_AT
+		ORDER BY	LIKE_COUNT DESC, 
+					P.CREATED_AT DESC
 	</select>
+	
 </mapper>

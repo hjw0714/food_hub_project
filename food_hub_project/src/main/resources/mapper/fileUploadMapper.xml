@@ -2,15 +2,25 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.application.foodhub.fileUpload.FileUploadDAO">
 
- 	<!-- ✅ 파일 업로드 (INSERT) -->
+ 	<!-- 파일 업로드 (INSERT) -->
     <insert id="insertFileUpload">
-        INSERT INTO FILE_UPLOAD 
-        			(POST_ID, FILE_UUID, FILE_NAME, FILE_PATH ,UPLOAD_DATE)
-        VALUES  
-        			(#{postId}, #{fileUUID}, #{fileName}, #{filePath} , NOW())
+        INSERT INTO FILE_UPLOAD (
+        	POST_ID, 
+        	FILE_UUID, 
+        	FILE_NAME, 
+        	FILE_PATH,
+        	UPLOAD_DATE
+        )
+        VALUES (
+        	#{postId},
+        	#{fileUUID}, 
+        	#{fileName}, 
+        	#{filePath} , 
+        	NOW()
+        )
     </insert>
 
-    <!-- ✅ 파일 리스트 가져오기 -->
+    <!-- 파일 리스트 가져오기 -->
 	<select id="getFileListByPostId" parameterType="long" resultType="com.application.foodhub.fileUpload.FileUploadDTO">
 	    SELECT    FILE_ID,
 	              POST_ID,
@@ -21,9 +31,12 @@
 	    WHERE     POST_ID = #{postId}
 	</select>
 	
-	<!--  fileUUID로 원래 fileName 조회 -->
+	<!-- fileUUID로 원래 fileName 조회 -->
 	<select id="getFileByUUID" parameterType="string" resultType="com.application.foodhub.fileUpload.FileUploadDTO">
-	    SELECT	FILE_ID, POST_ID, FILE_UUID, FILE_NAME, FILE_PATH
+	    SELECT	FILE_ID, POST_ID, 
+	    		FILE_UUID, 
+	    		FILE_NAME, 
+	    		FILE_PATH
 	    FROM	FILE_UPLOAD
 	    WHERE	FILE_UUID = #{fileUUID}
 	</select>
@@ -34,9 +47,10 @@
 		WHERE		FILE_UUID = #{fileUUID}
 	</delete>
     
- <!-- 특정 게시물 모든 파일 삭제 -->
+ 	<!-- 특정 게시물 모든 파일 삭제 -->
     <delete id="deleteFilesByPostId">
-    	DELETE FROM FILE_UPLOAD WHERE POST_ID = #{postId}
+    	DELETE FROM FILE_UPLOAD 
+    	WHERE 		POST_ID = #{postId}
 	</delete>   
 	
 </mapper>
