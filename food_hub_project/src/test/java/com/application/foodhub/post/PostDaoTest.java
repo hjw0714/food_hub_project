@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.annotations.Param;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
@@ -79,44 +78,35 @@ public class PostDaoTest {
 		testPostId = postDAO.getTestPostId();
 	}
 
-	@Test
-	@Order(1)
-	@DisplayName("게시글 생성 테스트")
+	
+	@Test @Order(1) @DisplayName("게시글 생성 테스트")
 	void testCreatePost() {
 
 		Map<String, Object> postDTO = postDAO.getPostDetail(testPostId);
 		assertThat(postDTO).isNotNull();
 
 	}
-/*
+	
+
 	@Test
 	@Order(2)
 	@DisplayName("게시글 전체조회 테스트(카테고리 상관 없이)")
 	void testGetPostList() {
-		List<Map<String, Object>> postList = postDAO.getPostList(1, 0); // page = 0, offset = 0
+		List<Map<String, Object>> postList = postDAO.getPostList(testPostId, testPostId, null, null, null, 1, 0); // page = 0, offset = 0
 
 		assertThat(postList).isNotNull();
 	}
+
 	
-	@Test
-	@Order(3) 
-	@DisplayName("게시글 전체조회 테스트(카테고리 상관 있이)")
-	void testGetPostListByCategory() {
-		List<Map<String, Object>> postList = postDAO.getPostListByCategory((long) 0, 1, 0); // 카테고리 아이디 = 0(공지사항) page =
-																							// 0, offset = 0
-		//System.out.println(postList);
-		assertThat(postList).isNotEmpty();
-	}
-	*/
-	
-	@Test @Order(4) @DisplayName("게시글 상세보기")
+	@Test @Order(3) @DisplayName("게시글 상세보기")
 	void testGetPostDetail() {
 		Map<String, Object> postDTO = postDAO.getPostDetail(testPostId);
-		//System.out.println(postDTO);
+
 		assertThat(postDTO).isNotEmpty();
 	}
 	
-	@Test @Order(5) @DisplayName("게시글 수정")
+	
+	@Test @Order(4) @DisplayName("게시글 수정")
 	void testUpdatePost() {
 		Map<String, Object> before = postDAO.getPostDetail(testPostId);
 		System.out.println(before);
@@ -130,17 +120,12 @@ public class PostDaoTest {
 		updatePost.setViewCnt((long)before.get("viewCnt"));
 		updatePost.setStatus(before.get("status").toString());
 		
-		
 		updatePost.setTitle("수정된 제목");
 		updatePost.setContent("수정된 본문");
 		
 		postDAO.updatePost(updatePost);
 		
-		System.out.println(updatePost);
-		
 		Map<String, Object> after = postDAO.getPostDetail(testPostId);
-		
-		System.out.println(after);
 		
 		assertThat(after)
 	    .extracting(map -> map.get("title"), map -> map.get("content"))
@@ -148,14 +133,14 @@ public class PostDaoTest {
 		
 	}
 	
-	@Test @Order(6) @DisplayName("게시글 삭제")
+	
+	@Test @Order(5) @DisplayName("게시글 삭제")
 	void testMarkPostAsDeleted() {
 		
 		postDAO.markPostAsDeleted(testPostId);
 		
 		Map<String, Object> deletePost = postDAO.getPostDetail(testPostId); 
 		// ststus가 deleted이면 getPostDetail이 작동을 안해서 null로 출력
-		//System.out.println(deletePost);
 		
 		assertThat(deletePost).isNull();
 		
