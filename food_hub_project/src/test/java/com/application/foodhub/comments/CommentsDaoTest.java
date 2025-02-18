@@ -1,4 +1,4 @@
-package com.application.foodhub.CommentsTest;
+package com.application.foodhub.comments;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
