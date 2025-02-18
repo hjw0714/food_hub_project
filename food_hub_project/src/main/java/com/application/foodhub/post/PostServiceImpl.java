@@ -105,62 +105,15 @@ public class PostServiceImpl implements PostService {
 		return postDAO.getLatestPostsByCategoryId(categoryId, limit);
 	}
 	
-
-	@Override
-	public List<Map<String, Object>> searchPostsByTitle(String keyword, int pageSize, int offset) {
-	    return postDAO.searchPostsByTitle(keyword, pageSize, offset);
-	}
-
-
-
-	@Override
-	public List<Map<String, Object>> searchPostsByTitleAndContent(String keyword, int pageSize, int offset) {
-	    return postDAO.searchPostsByTitleAndContent(keyword, pageSize, offset);
-	}
-
 	@Override
 	public String getCategoryNameById(Long categoryId) {
 	    return postDAO.getCategoryNameById(categoryId);
 	}
 	
 
-
-	@Override
-	public List<Map<String, Object>> searchPostsByCategoryTitle(Long categoryId, String keyword, int pageSize, int offset) {
-	    return postDAO.searchPostsByCategoryTitle(categoryId, keyword, pageSize, offset);
-	}
-
-	@Override
-	public List<Map<String, Object>> searchPostsByCategoryTitleAndContent(Long categoryId, String keyword, int pageSize, int offset) {
-	    return postDAO.searchPostsByCategoryTitleAndContent(categoryId, keyword, pageSize, offset);
-	}
-
-
-	@Override
-	public List<Map<String, Object>> searchBestPostsByTitle(String keyword, int pageSize, int offset) {
-		return postDAO.searchBestPostsByTitle(keyword, pageSize, offset);
-	}
-
-	@Override
-	public List<Map<String, Object>> searchBestPostsByTitleAndContent(String keyword, int pageSize, int offset) {
-		return postDAO.searchBestPostsByTitleAndContent(keyword, pageSize, offset);
-	}
-
 	@Override
 	public String getSubCateNameById(Long subCateId) {
 		return postDAO.getSubCateNameById(subCateId);
-	}
-
-
-	@Override
-	public List<Map<String, Object>> searchPostsBySubCategoryTitle(Long subCateId, String keyword, int pageSize,int offset) {
-		return postDAO.searchPostsBySubCategoryTitle(subCateId , keyword , pageSize , offset);
-	}
-
-
-	@Override
-	public List<Map<String, Object>> searchPostsBySubCategoryTitleAndContent(Long subCateId, String keyword,int pageSize, int offset) {
-		return postDAO.searchPostsBySubCategoryTitleAndContent(subCateId , keyword , pageSize , offset);
 	}
 
 	@Override
@@ -178,6 +131,12 @@ public class PostServiceImpl implements PostService {
 			String searchType, int pageSize, int offset) {
 		return postDAO.getPostList(categoryId, subCateId, orderType, keyword, searchType, pageSize, offset);
 	}
+
+	@Override
+	public List<Map<String, Object>> searchPosts(String keyword, String searchType, Long categoryId, Long subCateId, boolean isBest, int pageSize, int offset) {
+	    return postDAO.searchPosts(keyword, searchType, categoryId, subCateId, isBest, pageSize, offset);
+	}
+
 
 
 

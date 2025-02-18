@@ -30,35 +30,19 @@ public interface PostService {
 
 	public String getCategoryName(Long categoryId);
 	
-	public List<Map<String, Object>> getLatestPostsByCategoryId(long categoryId, int limit);
-	
-	public List<Map<String, Object>> searchPostsByTitle(String keyword, int pageSize, int offset);
-	public List<Map<String, Object>> searchPostsByTitleAndContent(String keyword, int pageSize, int offset);
-
-    public List<Map<String, Object>> searchBestPostsByTitle(String keyword, int pageSize, int offset);
-    public List<Map<String, Object>> searchBestPostsByTitleAndContent(String keyword, int pageSize, int offset);
-
-	
 	public String getCategoryNameById(Long categoryId);
-
-	public List<Map<String, Object>> searchPostsByCategoryTitle(Long categoryId, String keyword, int pageSize, int offset);
-	public List<Map<String, Object>> searchPostsByCategoryTitleAndContent(Long categoryId, String keyword, int pageSize, int offset);
-
+	
 	public void markPostAsDeleted(long postId);
-
+	
 	public Map<String, Object> getPostDetail(long postId, boolean isIncreaseReadCnt);
 
 	public String getSubCateNameById(Long subCateId);
-
-	public List<Map<String, Object>> searchPostsBySubCategoryTitle(Long subCateId, String keyword, int pageSize,
-			int offset);
-
-	public List<Map<String, Object>> searchPostsBySubCategoryTitleAndContent(Long subCateId, String keyword,
-			int pageSize, int offset);
-
+	
 	public long getPostCntBySubCategory(Long subCateId);
-
-
-
+	
+	public List<Map<String, Object>> getLatestPostsByCategoryId(long categoryId, int limit);
+	
+	public List<Map<String, Object>> searchPosts(String keyword, String searchType, Long categoryId, Long subCateId, boolean isBest, int pageSize, int offset);
+	
 
 }
