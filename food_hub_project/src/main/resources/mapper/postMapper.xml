@@ -83,11 +83,6 @@
 </insert>
 
 	
-	<select id="getPostCnt" resultType="long">
-		SELECT COUNT(*)
-		FROM   POST
-	</select>
-	
 	<!-- 조회수 증가 -->
 	<update id="updateReadCnt" parameterType="long">
 		UPDATE	POST
@@ -95,50 +90,6 @@
 		WHERE	POST_ID = #{postId}
 	</update>
 	
-	<!-- 게시글 CREATED_AT DESC으로 검색해서 불러오기 -->
-	<select id="getPostList" resultMap="postMap">
-	    SELECT  P.POST_ID AS POST_ID,
-	            P.TITLE AS TITLE,
-	            P.CREATED_AT AS CREATED_AT,
-	            P.VIEW_CNT AS VIEW_CNT,
-	            U.NICKNAME AS NICKNAME,
-	            S.SUB_CATE_NM AS SUB_CATE_NM,
-	            COALESCE(L.LIKE_COUNT, 0) AS LIKE_COUNT
-	    FROM    POST P
-	    JOIN    USER U ON P.USER_ID = U.USER_ID
-	    JOIN    SUB_CATEGORY S ON P.SUB_CATE_ID = S.SUB_CATE_ID
-	    LEFT JOIN (  
-	        SELECT POST_ID, COUNT(*) AS LIKE_COUNT 
-	        FROM POST_LIKE 
-	        GROUP BY POST_ID
-	    ) AS L ON P.POST_ID = L.POST_ID
-	    WHERE   P.STATUS != 'DELETED'  <!-- ✅ 삭제된 게시글 제외 -->
-	    ORDER BY P.CREATED_AT DESC
-	    LIMIT    #{pageSize} 
-	    OFFSET   #{offset}
-	</select>
-	
-	<!-- 게시글 추천순으로 검색해서 불러오기 -->
-	<select id="getBestPostList" resultMap="postMap">
-	    SELECT  P.POST_ID AS POST_ID,
-	        	P.TITLE AS TITLE,
-	        	P.CREATED_AT AS CREATED_AT,
-	       	 	P.VIEW_CNT AS VIEW_CNT,
-	        	U.NICKNAME AS NICKNAME,
-	        	S.SUB_CATE_NM AS SUB_CATE_NM,
-	        	COALESCE(L.LIKE_COUNT, 0) AS LIKE_COUNT
-	    FROM 	POST P
-	    JOIN 	USER U ON P.USER_ID = U.USER_ID
-	    JOIN 	SUB_CATEGORY S ON P.SUB_CATE_ID = S.SUB_CATE_ID
-	    LEFT 	JOIN (  -- 서브쿼리 수정됨
-	        	SELECT POST_ID, COUNT(*) AS LIKE_COUNT 
-	        	FROM POST_LIKE 
-	        	GROUP BY POST_ID
-	    		) AS L ON P.POST_ID = L.POST_ID
-	    ORDER BY LIKE_COUNT DESC, P.CREATED_AT DESC
-	    LIMIT 	#{pageSize} 
-	    OFFSET 	#{offset}
-	</select>
 
 
 	
@@ -266,33 +217,6 @@
 	    ]]>	    
 	</select>
 	
-	<!-- 🔹 카테고리별 게시글 목록 (삭제된 게시글 제외) -->
-    <select id="getPostListByCategory" resultMap="postMap">
-        SELECT   P.POST_ID AS POST_ID, 
-                 S.SUB_CATE_NM AS SUB_CATE_NM, 
-                 P.TITLE AS TITLE, 
-                 U.NICKNAME AS NICKNAME, 
-                 P.CREATED_AT AS CREATED_AT, 
-                 P.VIEW_CNT AS VIEW_CNT,
-                 COALESCE(L.LIKE_COUNT, 0) AS LIKE_COUNT
-        FROM     POST P
-        JOIN     USER U ON P.USER_ID = U.USER_ID
-        JOIN     SUB_CATEGORY S ON P.SUB_CATE_ID = S.SUB_CATE_ID
-        LEFT JOIN (
-            SELECT POST_ID, COUNT(*) AS LIKE_COUNT 
-            FROM POST_LIKE 
-            GROUP BY POST_ID
-        ) AS L ON P.POST_ID = L.POST_ID
-        WHERE    P.CATEGORY_ID = #{categoryId}
-        AND      P.STATUS != 'DELETED'  <!-- ✅ 삭제된 게시글 제외 -->
-        ORDER BY P.CREATED_AT DESC
-        LIMIT    #{pageSize} OFFSET #{offset}
-    </select>
-    
-    
-	<select id="getPostCntByCategory" resultType="long">
-    	SELECT COUNT(*) FROM POST WHERE CATEGORY_ID = #{categoryId}
-	</select>
 
 	<select id="getCategoryName" resultType="string">
     	SELECT CATEGORY_NM FROM POST_CATEGORY WHERE CATEGORY_ID = #{categoryId}
@@ -322,17 +246,6 @@
     </select>
 	
 
-	
-	<select id="getBestPostCnt" resultType="long">
-	    SELECT 	COUNT(*) 
-	    FROM 	POST P
-	    LEFT 	JOIN (  
-	        		SELECT POST_ID, COUNT(*) AS LIKE_COUNT 
-	        		FROM POST_LIKE 
-	        		GROUP BY POST_ID
-	    		) AS L 
-   		ON 		P.POST_ID = L.POST_ID
-	</select>
 	
 	<select id="searchBestPostsByTitle" resultMap="postMap">
 	    SELECT 		P.POST_ID 		AS POST_ID,
@@ -382,9 +295,6 @@
 	    LIMIT 		#{pageSize} 
 	    OFFSET #{offset}
 	</select>
-	
-	
-	
 
   <!-- 🔹 제목으로 검색 (삭제된 게시글 제외) -->
     <select id="searchPostsByTitle" parameterType="map" resultMap="postMap">
@@ -437,28 +347,11 @@
         LIMIT    #{pageSize} OFFSET #{offset}
     </select>
 
-<select id="countPostsByTitleAndContent" parameterType="string" resultType="long">
-    SELECT COUNT(*) FROM POST 
-    WHERE TITLE LIKE CONCAT('%', #{keyword}, '%') 
-       OR CONTENT LIKE CONCAT('%', #{keyword}, '%')
-</select>
 
 <select id="getCategoryNameById" resultType="String">
     SELECT CATEGORY_NM FROM POST_CATEGORY WHERE category_id = #{categoryId}
 </select>
 
-<select id="countPostsByCategoryTitle" resultType="long">
-    SELECT COUNT(*) FROM POST 
-    WHERE CATEGORY_ID = #{categoryId} 
-    AND TITLE LIKE CONCAT('%', #{keyword}, '%')
-</select>
-
-<select id="countPostsByCategoryTitleAndContent" resultType="long">
-    SELECT COUNT(*) FROM POST 
-    WHERE CATEGORY_ID = #{categoryId} 
-    AND (TITLE LIKE CONCAT('%', #{keyword}, '%') 
-    OR CONTENT LIKE CONCAT('%', #{keyword}, '%'))
-</select>
 
 <select id="searchPostsByCategoryTitle" resultMap="postMap">
     SELECT 
@@ -551,7 +444,67 @@
 </select>
 
 
+<select id="countPosts" resultType="long">
+    SELECT COUNT(*) FROM POST
+    WHERE STATUS != 'DELETED'
+    <if test="keyword != null and keyword != ''">
+        <if test="searchType == 'title'">
+            AND TITLE LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+        <if test="searchType == 'title_content'">
+            AND (TITLE LIKE CONCAT('%', #{keyword}, '%') OR CONTENT LIKE CONCAT('%', #{keyword}, '%'))
+        </if>
+    </if>
+    <if test="categoryId != null">
+        AND CATEGORY_ID = #{categoryId}
+    </if>
+    <if test="subCateId != null">
+        AND SUB_CATE_ID = #{subCateId}
+    </if>
+</select>
 
+<select id="getPostList" resultMap="postMap">
+    SELECT  P.POST_ID AS POST_ID,
+            P.TITLE AS TITLE,
+            P.CREATED_AT AS CREATED_AT,
+            P.VIEW_CNT AS VIEW_CNT,
+            U.NICKNAME AS NICKNAME,
+            S.SUB_CATE_NM AS SUB_CATE_NM,
+            COALESCE(L.LIKE_COUNT, 0) AS LIKE_COUNT
+    FROM    POST P
+    JOIN    USER U ON P.USER_ID = U.USER_ID
+    JOIN SUB_CATEGORY S ON P.SUB_CATE_ID = S.SUB_CATE_ID
+    LEFT JOIN (  
+        SELECT POST_ID, COUNT(*) AS LIKE_COUNT 
+        FROM POST_LIKE 
+        GROUP BY POST_ID
+    ) AS L ON P.POST_ID = L.POST_ID
+    WHERE   P.STATUS != 'DELETED'
+    <if test="keyword != null and keyword != ''">
+        <if test="searchType == 'title'">
+            AND P.TITLE LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+        <if test="searchType == 'title_content'">
+            AND (P.TITLE LIKE CONCAT('%', #{keyword}, '%') OR P.CONTENT LIKE CONCAT('%', #{keyword}, '%'))
+        </if>
+    </if>
+    <if test="categoryId != null">
+        AND P.CATEGORY_ID = #{categoryId}
+    </if>
+    <if test="subCateId != null">
+        AND P.SUB_CATE_ID = #{subCateId}
+    </if>
+    ORDER BY 
+    <choose>
+        <when test="orderType == 'best'">
+            LIKE_COUNT DESC, P.CREATED_AT DESC
+        </when>
+        <otherwise>
+            P.CREATED_AT DESC
+        </otherwise>
+    </choose>
+    LIMIT #{pageSize} OFFSET #{offset}
+</select>
 
 	
 

@@ -9,14 +9,17 @@ import org.apache.ibatis.annotations.Select;
 
 @Mapper
 public interface PostDAO {
+	
+	long countPosts(@Param("keyword") String keyword, @Param("searchType") String searchType,
+			@Param("categoryId") Long categoryId, @Param("subCateId") Long subCateId);
 
-	public List<Map<String, Object>> getPostList(@Param("pageSize") int pageSize, @Param("offset") int offset);
-
-	public List<Map<String, Object>> getBestPostList(@Param("pageSize") int pageSize, @Param("offset") int offset);
+	//  게시글 목록 조회 (검색, 카테고리, 정렬 포함)
+	List<Map<String, Object>> getPostList(@Param("categoryId") Long categoryId, @Param("subCateId") Long subCateId,
+			@Param("orderType") String orderType, // "newest" (최신순) 또는 "best" (추천순)
+			@Param("keyword") String keyword, @Param("searchType") String searchType, @Param("pageSize") int pageSize,
+			@Param("offset") int offset);
 
 	public long getAllPostCnt();
-
-	public long getPostCnt();
 
 	public void createPost(PostDTO postDTO);
 
@@ -37,9 +40,6 @@ public interface PostDAO {
 
 	public Long getNextPostId(@Param("postId") long postId, @Param("categoryId") long categoryId);
 
-	public List<Map<String, Object>> getPostListByCategory(@Param("categoryId") Long categoryId,
-			@Param("pageSize") int pageSize, @Param("offset") int offset);
-
 	public long getPostCntByCategory(@Param("categoryId") Long categoryId);
 
 	public String getCategoryName(@Param("categoryId") Long categoryId);
@@ -52,28 +52,17 @@ public interface PostDAO {
 	public List<Map<String, Object>> searchPostsByTitle(@Param("keyword") String keyword,
 			@Param("pageSize") int pageSize, @Param("offset") int offset);
 
-	public long countPostsByTitle(@Param("keyword") String keyword);
-
 	// 제목+내용으로 검색
 	public List<Map<String, Object>> searchPostsByTitleAndContent(@Param("keyword") String keyword,
 			@Param("pageSize") int pageSize, @Param("offset") int offset);
 
-	public long countPostsByTitleAndContent(@Param("keyword") String keyword);
-
 	public String getCategoryNameById(@Param("categoryId") Long categoryId);
-
-	public long countPostsByCategoryTitle(@Param("categoryId") Long categoryId, @Param("keyword") String keyword);
-
-	public long countPostsByCategoryTitleAndContent(@Param("categoryId") Long categoryId,
-			@Param("keyword") String keyword);
 
 	public List<Map<String, Object>> searchPostsByCategoryTitle(@Param("categoryId") Long categoryId,
 			@Param("keyword") String keyword, @Param("pageSize") int pageSize, @Param("offset") int offset);
 
 	public List<Map<String, Object>> searchPostsByCategoryTitleAndContent(@Param("categoryId") Long categoryId,
 			@Param("keyword") String keyword, @Param("pageSize") int pageSize, @Param("offset") int offset);
-
-	public long getBestPostCnt();
 
 	public List<Map<String, Object>> searchBestPostsByTitle(@Param("keyword") String keyword,
 			@Param("pageSize") int pageSize, @Param("offset") int offset);
@@ -83,22 +72,14 @@ public interface PostDAO {
 
 	public String getSubCateNameById(@Param("subCateId") Long subCateId);
 
-	public long countPostsBySubCategoryTitle(@Param("subCateId") Long subCateId, @Param("keyword") String keyword);
-
 	public List<Map<String, Object>> searchPostsBySubCategoryTitle(@Param("subCateId") Long subCateId,
 			@Param("keyword") String keyword, @Param("pageSize") int pageSize, @Param("offset") int offset);
-
-	public long countPostsBySubCategoryTitleAndContent(@Param("subCateId") Long subCateId,
-			@Param("keyword") String keyword);
 
 	public List<Map<String, Object>> searchPostsBySubCategoryTitleAndContent(@Param("subCateId") Long subCateId,
 			@Param("keyword") String keyword, @Param("pageSize") int pageSize, @Param("offset") int offset);
 
 	public long getPostCntBySubCategory(@Param("subCateId") Long subCateId);
 
-	public List<Map<String, Object>> getPostListBySubCategory(@Param("subCateId") Long subCateId,
-			@Param("pageSize") int pageSize, @Param("offset") int offset);
-	
 	
 	//테스트
 	@Select("""
