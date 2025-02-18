@@ -15,8 +15,8 @@
 <script src="https://cdn.ckeditor.com/4.22.1/full/ckeditor.js"></script>
 <script>
 	$().ready(function() {
-	    function toggleSubCategory() {
-	        let categoryId = $("#categoryId").val();
+		$("#categoryId").change(function() {
+			let categoryId = $("#categoryId").val();
 	        let $subCategoryContainer = $(".subCategoryContainer");
 	        let $subCateId = $("#subCateId");
 
@@ -28,14 +28,9 @@
 	        } else {
 	            $subCategoryContainer.show();
 	            $subCateId.find("option").hide().filter("[value=''], [data-category='" + categoryId + "']").show();
-	            $subCateId.val(selectedSubCateId); // 기존 선택값 유지
+	            $subCateId.val(""); // 카테고리 id 변경하면 <option value="">말머리를 선택하세요</option> 으로 자동 초기화
 	        }
-	    }
-
-	    toggleSubCategory(); // 초기 실행
-	    $("#categoryId").change(toggleSubCategory); // 변경 이벤트 핸들링
-	    
-	    
+		});
 	    
 	});
 	
