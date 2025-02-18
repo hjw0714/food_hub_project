@@ -3,153 +3,40 @@
 
 <mapper namespace="com.application.foodhub.post.PostDAO">
 
-<resultMap id="postMap" type="hashmap">
-		<result column="POST_ID"  	   	property="postId"/>
-		<result column="TITLE" 	   		property="title"/>
-		<result column="CATEGORY_NM"	property="cateNm"/>
-		<result	column="SUB_CATE_NM"	property="subCateNm"/>
-		<result	column="CATEGORY_ID"	property="categoryId"/>
-		<result	column="SUB_CATE_ID"	property="subCateId"/>
-		<result column="CONTENT" 	   	property="content"/>
-		<result column="VIEW_CNT" 	   	property="viewCnt"/>
-		<result column="CREATED_AT" 	property="createdAt"/>
-		<result column="USER_ID"       	property="userId"/>
-		<result column="NICKNAME"     	property="nickname"/>
-		<result column="PROFILE_UUID"  	property="profileUUID"/>
-		<result column="FILE_UUID"		property="fileUUID"/>
-		<result column="STATUS"			property="status"/>
-</resultMap>
-
-<insert id="createPost" parameterType="PostDTO" useGeneratedKeys="true" keyProperty="postId">
-    INSERT INTO POST (
-        USER_ID,
-        NICKNAME,
-        CATEGORY_ID,
-        CATEGORY_NM,
-        SUB_CATE_ID,
-        SUB_CATE_NM,
-        TITLE,
-        CONTENT,
-        CREATED_AT
-    ) VALUES (
-        #{userId},
-        #{nickname},
-        #{categoryId},
-        CASE 
-        	WHEN #{categoryId} = 0 THEN '공지사항'
-            WHEN #{categoryId} = 1 THEN '외식업정보게시판'
-            WHEN #{categoryId} = 2 THEN '자유게시판'
-            WHEN #{categoryId} = 3 THEN '알바공고게시판'
-            WHEN #{categoryId} = 4 THEN '질문게시판'
-            WHEN #{categoryId} = 5 THEN '중고장비거래게시판'
-            WHEN #{categoryId} = 6 THEN '매장홍보게시판'
-            WHEN #{categoryId} = 7 THEN '협력업체게시판'
-            ELSE NULL
-        END,
-        #{subCateId},
-        CASE 
-            WHEN #{subCateId} = 0 THEN '공지'
-            WHEN #{subCateId} = 1 THEN '잡담'
-            WHEN #{subCateId} = 2 THEN '일상이야기'
-            WHEN #{subCateId} = 3 THEN '질문'
-            WHEN #{subCateId} = 4 THEN '업계뉴스'
-            WHEN #{subCateId} = 5 THEN '업체소식'
-            WHEN #{subCateId} = 6 THEN '트렌드'
-            WHEN #{subCateId} = 7 THEN '업계분석'
-            WHEN #{subCateId} = 8 THEN '새로운 맛집'
-            WHEN #{subCateId} = 9 THEN '직원 구인'
-            WHEN #{subCateId} = 10 THEN '알바 구인'
-            WHEN #{subCateId} = 11 THEN '구직'
-            WHEN #{subCateId} = 12 THEN '업계 질문'
-            WHEN #{subCateId} = 13 THEN '자유 질문'
-            WHEN #{subCateId} = 14 THEN '도움 요청'
-            WHEN #{subCateId} = 15 THEN '팁을 구합니다'
-            WHEN #{subCateId} = 16 THEN '판매'
-            WHEN #{subCateId} = 17 THEN '나눔'
-            WHEN #{subCateId} = 18 THEN '교환'
-            WHEN #{subCateId} = 19 THEN '구매희망'
-            WHEN #{subCateId} = 20 THEN '매장 소개'
-            WHEN #{subCateId} = 21 THEN '신규 오픈'
-            WHEN #{subCateId} = 22 THEN '이벤트'
-            WHEN #{subCateId} = 23 THEN '맛집 추천'
-            WHEN #{subCateId} = 24 THEN '업체 소개'
-            WHEN #{subCateId} = 25 THEN '협력 요청'
-            ELSE NULL
-        END,
-        #{title},
-        #{content},
-        NOW()
-    )
-</insert>
-
+	<resultMap id="postMap" type="hashmap">
+			<result column="POST_ID"  	   	property="postId"/>
+			<result column="TITLE" 	   		property="title"/>
+			<result column="CATEGORY_NM"	property="cateNm"/>
+			<result	column="SUB_CATE_NM"	property="subCateNm"/>
+			<result	column="CATEGORY_ID"	property="categoryId"/>
+			<result	column="SUB_CATE_ID"	property="subCateId"/>
+			<result column="CONTENT" 	   	property="content"/>
+			<result column="VIEW_CNT" 	   	property="viewCnt"/>
+			<result column="CREATED_AT" 	property="createdAt"/>
+			<result column="USER_ID"       	property="userId"/>
+			<result column="NICKNAME"     	property="nickname"/>
+			<result column="PROFILE_UUID"  	property="profileUUID"/>
+			<result column="FILE_UUID"		property="fileUUID"/>
+			<result column="STATUS"			property="status"/>
+	</resultMap>
 	
-	<!-- 조회수 증가 -->
-	<update id="updateReadCnt" parameterType="long">
-		UPDATE	POST
-		SET		VIEW_CNT = VIEW_CNT + 1
-		WHERE	POST_ID = #{postId}
-	</update>
-	
-
-
-	
-	
-	<!-- 게시글 정보만 가져오기 (파일 제외) -->
-	<select id="getPostDetail" parameterType="long" resultMap="postMap">
-	    SELECT    P.POST_ID        AS POST_ID,
-	              P.SUB_CATE_NM    AS SUB_CATE_NM,
-	              P.TITLE          AS TITLE,
-	              P.CATEGORY_ID    AS CATEGORY_ID,
-	              P.SUB_CATE_ID    AS SUB_CATE_ID,
-	              U.PROFILE_UUID   AS PROFILE_UUID,
-	              U.USER_ID        AS USER_ID,
-	              U.NICKNAME       AS NICKNAME,
-	              P.CREATED_AT     AS CREATED_AT,
-	              P.VIEW_CNT       AS VIEW_CNT,
-	              P.CONTENT        AS CONTENT,
-	              P.STATUS         AS STATUS
-	    FROM      POST P
-	    JOIN      USER U
-	      ON      P.USER_ID = U.USER_ID
-	    WHERE     P.POST_ID = #{postId}
-	      AND     P.STATUS != 'DELETED'
-	</select>
-	
-	<select id="getAllPosts" parameterType="map" resultMap="postMap">
-	    SELECT P.POST_ID 		AS POST_ID,
-	           P.SUB_CATE_NM 	AS SUB_CATE_NM,
-	           P.TITLE			AS TITLE,
-	           U.NICKNAME		AS NICKNAME,
-	           P.CREATED_AT		AS CREATED_AT,
-	           P.VIEW_CNT		AS VIEW_CNT
-	    FROM POST P
-	    JOIN USER U ON P.USER_ID = U.USER_ID
-	    ORDER BY P.CREATED_AT DESC
-	    LIMIT #{pageSize} OFFSET #{startRow}
-	</select>
-	
-	  <!-- 🔹 마이페이지에서 내가 작성한 글 목록 (삭제된 게시글 제외) -->
-    <select id="myPostList" parameterType="String" resultMap="postMap">
-        SELECT  P.POST_ID AS POST_ID, 
-                P.TITLE AS TITLE
-        FROM    POST P
-        JOIN    USER U ON P.USER_ID = U.USER_ID
-        WHERE   P.USER_ID = #{userId}
-        AND     P.STATUS != 'DELETED'  <!-- ✅ 삭제된 게시글 제외 -->
-    </select>
-	
-	<!-- 게시글 삭제 ////////////////////// -->
-	<update id="markPostAsDeleted">
-	    UPDATE POST 
-	    SET status = 'DELETED'
-	    WHERE POST_ID = #{postId}
-	</update>
-	
-	<update id="updatePost" parameterType="PostDTO">
-	    UPDATE POST 
-	    SET 
-	        CATEGORY_ID = #{categoryId},
-	        CATEGORY_NM = CASE 
+	<insert id="createPost" parameterType="PostDTO" useGeneratedKeys="true" keyProperty="postId">
+	    INSERT INTO POST (
+	        USER_ID,
+	        NICKNAME,
+	        CATEGORY_ID,
+	        CATEGORY_NM,
+	        SUB_CATE_ID,
+	        SUB_CATE_NM,
+	        TITLE,
+	        CONTENT,
+	        CREATED_AT
+	    ) VALUES (
+	        #{userId},
+	        #{nickname},
+	        #{categoryId},
+	        CASE 
+	        	WHEN #{categoryId} = 0 THEN '공지사항'
 	            WHEN #{categoryId} = 1 THEN '외식업정보게시판'
 	            WHEN #{categoryId} = 2 THEN '자유게시판'
 	            WHEN #{categoryId} = 3 THEN '알바공고게시판'
@@ -157,10 +44,11 @@
 	            WHEN #{categoryId} = 5 THEN '중고장비거래게시판'
 	            WHEN #{categoryId} = 6 THEN '매장홍보게시판'
 	            WHEN #{categoryId} = 7 THEN '협력업체게시판'
-	            ELSE CATEGORY_NM
+	            ELSE NULL
 	        END,
-	        SUB_CATE_ID = #{subCateId},
-	        SUB_CATE_NM = CASE 
+	        #{subCateId},
+	        CASE 
+	            WHEN #{subCateId} = 0 THEN '공지'
 	            WHEN #{subCateId} = 1 THEN '잡담'
 	            WHEN #{subCateId} = 2 THEN '일상이야기'
 	            WHEN #{subCateId} = 3 THEN '질문'
@@ -186,229 +74,335 @@
 	            WHEN #{subCateId} = 23 THEN '맛집 추천'
 	            WHEN #{subCateId} = 24 THEN '업체 소개'
 	            WHEN #{subCateId} = 25 THEN '협력 요청'
-	            ELSE SUB_CATE_NM
+	            ELSE NULL
 	        END,
-	        TITLE = #{title},
-	        CONTENT = #{content},
-	        UPDATED_AT = NOW()
-	    WHERE POST_ID = #{postId}
+	        #{title},
+	        #{content},
+	        NOW()
+	    )
+	</insert>
+
+	
+	<!-- 조회수 증가 -->
+	<update id="updateReadCnt" parameterType="long">
+		UPDATE	POST
+		SET		VIEW_CNT = VIEW_CNT + 1
+		WHERE	POST_ID = #{postId}
+	</update>
+	
+	
+	<!-- 게시글 정보만 가져오기 (파일 제외) -->
+	<select id="getPostDetail" parameterType="long" resultMap="postMap">
+	    SELECT    P.POST_ID        AS POST_ID,
+	              P.SUB_CATE_NM    AS SUB_CATE_NM,
+	              P.TITLE          AS TITLE,
+	              P.CATEGORY_ID    AS CATEGORY_ID,
+	              P.SUB_CATE_ID    AS SUB_CATE_ID,
+	              U.PROFILE_UUID   AS PROFILE_UUID,
+	              U.USER_ID        AS USER_ID,
+	              U.NICKNAME       AS NICKNAME,
+	              P.CREATED_AT     AS CREATED_AT,
+	              P.VIEW_CNT       AS VIEW_CNT,
+	              P.CONTENT        AS CONTENT,
+	              P.STATUS         AS STATUS
+	    FROM      POST P
+	    JOIN      USER U
+	      ON      P.USER_ID = U.USER_ID
+	    WHERE     P.POST_ID = #{postId}
+	      AND     P.STATUS != 'DELETED'
+	</select>
+	
+  	<!-- 🔹 마이페이지에서 내가 작성한 글 목록 (삭제된 게시글 제외) -->
+    <select id="myPostList" parameterType="String" resultMap="postMap">
+        SELECT  P.POST_ID AS POST_ID, 
+                P.TITLE AS TITLE
+        FROM    POST P
+        JOIN    USER U ON P.USER_ID = U.USER_ID
+        WHERE   P.USER_ID = #{userId}
+        AND     P.STATUS != 'DELETED'  <!-- ✅ 삭제된 게시글 제외 -->
+    </select>
+	
+	<!-- 게시글 삭제 -->
+	<update id="markPostAsDeleted">
+	    UPDATE 	POST 
+	    SET 	STATUS = 'DELETED'
+	    WHERE 	POST_ID = #{postId}
+	</update>
+	
+	<!-- 게시글 수정 -->
+	<update id="updatePost" parameterType="PostDTO">
+	    UPDATE 		POST 
+	    SET    		CATEGORY_ID = #{categoryId},
+	        		CATEGORY_NM = CASE 
+	            		WHEN #{categoryId} = 1 THEN '외식업정보게시판'
+	            		WHEN #{categoryId} = 2 THEN '자유게시판'
+	            		WHEN #{categoryId} = 3 THEN '알바공고게시판'
+			            WHEN #{categoryId} = 4 THEN '질문게시판'
+			            WHEN #{categoryId} = 5 THEN '중고장비거래게시판'
+			            WHEN #{categoryId} = 6 THEN '매장홍보게시판'
+			            WHEN #{categoryId} = 7 THEN '협력업체게시판'
+			            ELSE CATEGORY_NM
+       				END,
+	        		SUB_CATE_ID = #{subCateId},
+	        		SUB_CATE_NM = CASE 
+	            		WHEN #{subCateId} = 1 THEN '잡담'
+			            WHEN #{subCateId} = 2 THEN '일상이야기'
+			            WHEN #{subCateId} = 3 THEN '질문'
+			            WHEN #{subCateId} = 4 THEN '업계뉴스'
+			            WHEN #{subCateId} = 5 THEN '업체소식'
+			            WHEN #{subCateId} = 6 THEN '트렌드'
+			            WHEN #{subCateId} = 7 THEN '업계분석'
+			            WHEN #{subCateId} = 8 THEN '새로운 맛집'
+			            WHEN #{subCateId} = 9 THEN '직원 구인'
+			            WHEN #{subCateId} = 10 THEN '알바 구인'
+			            WHEN #{subCateId} = 11 THEN '구직'
+			            WHEN #{subCateId} = 12 THEN '업계 질문'
+			            WHEN #{subCateId} = 13 THEN '자유 질문'
+			            WHEN #{subCateId} = 14 THEN '도움 요청'
+			            WHEN #{subCateId} = 15 THEN '팁을 구합니다'
+			            WHEN #{subCateId} = 16 THEN '판매'
+			            WHEN #{subCateId} = 17 THEN '나눔'
+			            WHEN #{subCateId} = 18 THEN '교환'
+			            WHEN #{subCateId} = 19 THEN '구매희망'
+			            WHEN #{subCateId} = 20 THEN '매장 소개'
+			            WHEN #{subCateId} = 21 THEN '신규 오픈'
+			            WHEN #{subCateId} = 22 THEN '이벤트'
+			            WHEN #{subCateId} = 23 THEN '맛집 추천'
+			            WHEN #{subCateId} = 24 THEN '업체 소개'
+			            WHEN #{subCateId} = 25 THEN '협력 요청'
+			            ELSE SUB_CATE_NM
+	        		END,
+	        		TITLE = #{title},
+	        		CONTENT = #{content},
+	        		UPDATED_AT = NOW()
+	    WHERE 		POST_ID = #{postId}
 	</update>
 	
 	<!-- 이전글 다음글을 눌렀을때 카테고리 아이디가 같은 경우의 postId 가져오기 -->
 	<select id="getPrevPostId" resultType="long">
 		<![CDATA[
-	 	SELECT 		POST_ID
-     	FROM 		POST
-	    WHERE 		POST_ID  <  #{postId} 
-      	AND 		CATEGORY_ID = #{categoryId}
-      	ORDER BY 	POST_ID DESC
-	    LIMIT 1
+		 	SELECT 		POST_ID
+	     	FROM 		POST
+		    WHERE 		POST_ID  <  #{postId} 
+	      	AND 		CATEGORY_ID = #{categoryId}
+	      	ORDER BY 	POST_ID DESC
+		    LIMIT 1
 	    ]]>
 	</select>
 	
 	<select id="getNextPostId" resultType="long">
 		<![CDATA[
-	    SELECT 		POST_ID
-	    FROM 		POST
-	    WHERE 		POST_ID > #{postId} 
-      	AND 		CATEGORY_ID = #{categoryId}  
-	    ORDER BY 	POST_ID ASC
-	    LIMIT 1
+		    SELECT 		POST_ID
+		    FROM 		POST
+		    WHERE 		POST_ID > #{postId} 
+	      	AND 		CATEGORY_ID = #{categoryId}  
+		    ORDER BY 	POST_ID ASC
+		    LIMIT 1
 	    ]]>	    
 	</select>
 	
-
-	<select id="getCategoryName" resultType="string">
-    	SELECT CATEGORY_NM FROM POST_CATEGORY WHERE CATEGORY_ID = #{categoryId}
+	<!-- 카테고리 아이디로 카테고리 이름 불러오기 -->
+	<select id="getCategoryNameById" resultType="String">
+	    SELECT 			CATEGORY_NM 
+	    FROM 			POST_CATEGORY 
+	    WHERE 			CATEGORY_ID = #{categoryId}
 	</select>
 	
 	<!-- 🔹 카테고리별 최신 게시글 2개 가져오기 (삭제된 게시글 제외) -->
     <select id="getLatestPostsByCategoryId" resultMap="postMap">
-        SELECT  P.POST_ID AS POST_ID,
-                P.CATEGORY_NM AS CATEGORY_NM,
-                S.SUB_CATE_NM AS SUB_CATE_NM, 
-                P.TITLE AS TITLE, 
-                U.NICKNAME AS NICKNAME, 
-                P.CREATED_AT AS CREATED_AT, 
-                COALESCE(L.LIKE_COUNT, 0) AS LIKE_COUNT
-        FROM    POST P
-        JOIN    USER U ON P.USER_ID = U.USER_ID
-        JOIN    SUB_CATEGORY S ON P.SUB_CATE_ID = S.SUB_CATE_ID
-        LEFT JOIN (
-            SELECT POST_ID, COUNT(*) AS LIKE_COUNT 
-            FROM POST_LIKE 
-            GROUP BY POST_ID
-        ) AS L ON P.POST_ID = L.POST_ID
-        WHERE   P.CATEGORY_ID = #{categoryId}
-        AND     P.STATUS != 'DELETED'  <!-- ✅ 삭제된 게시글 제외 -->
-        ORDER BY P.CREATED_AT DESC
-        LIMIT   #{limit}
+        SELECT  	P.POST_ID 					AS POST_ID,
+                	P.CATEGORY_NM 				AS CATEGORY_NM,
+                	S.SUB_CATE_NM 				AS SUB_CATE_NM, 
+                	P.TITLE 					AS TITLE, 
+                	U.NICKNAME 					AS NICKNAME, 
+                	P.CREATED_AT 				AS CREATED_AT, 
+                	COALESCE(L.LIKE_COUNT, 0) 	AS LIKE_COUNT
+        FROM    	POST P
+        JOIN    	USER U 
+        ON 			P.USER_ID = U.USER_ID
+        JOIN    	SUB_CATEGORY S 
+        ON 			P.SUB_CATE_ID = S.SUB_CATE_ID
+        LEFT JOIN 	(
+            		SELECT 		POST_ID, 
+           						COUNT(*) 	AS LIKE_COUNT 
+            		FROM 		POST_LIKE 
+            		GROUP BY 	POST_ID
+       				) AS L 
+		ON 			P.POST_ID = L.POST_ID
+        WHERE   	P.CATEGORY_ID = #{categoryId}
+        AND     	P.STATUS != 'DELETED' 
+        ORDER BY 	P.CREATED_AT DESC
+        LIMIT   	#{limit}
     </select>
 	
-	
+	<!-- 게시글 검색 -->
 	<select id="searchPosts" resultMap="postMap">
-	    SELECT  P.POST_ID, 
-	            P.TITLE, 
-	            U.NICKNAME, 
-	            P.CREATED_AT, 
-	            P.VIEW_CNT, 
-	            COALESCE(L.LIKE_COUNT, 0) AS LIKE_COUNT
-	    FROM    POST P
-	    JOIN    USER U ON P.USER_ID = U.USER_ID
-	    LEFT JOIN (  
-	        SELECT POST_ID, COUNT(*) AS LIKE_COUNT 
-	        FROM POST_LIKE 
-	        GROUP BY POST_ID
-	    ) AS L ON P.POST_ID = L.POST_ID
-	    WHERE   P.STATUS != 'DELETED'
+	    SELECT  		P.POST_ID				  	AS POST_ID, 
+	            		P.TITLE					  	AS TITLE, 
+	            		U.NICKNAME				  	AS NICKNAME, 
+	            		P.CREATED_AT			  	AS CREATED_AT, 
+	            		P.VIEW_CNT				  	AS VIEW_CNT, 
+	            		COALESCE(L.LIKE_COUNT, 0) 	AS LIKE_COUNT
+	    FROM    		POST P
+	    JOIN    		USER U 
+	    ON 				P.USER_ID = U.USER_ID
+	    LEFT JOIN 		(  
+				        SELECT 		POST_ID, 
+				        			COUNT(*) 	AS LIKE_COUNT 
+				        FROM 		POST_LIKE 
+				        GROUP BY 	POST_ID
+				    	) AS L 
+	    ON 				P.POST_ID = L.POST_ID
+	    WHERE  	 		P.STATUS != 'DELETED'
 	    
 	    <if test="categoryId != null">
-	        AND P.CATEGORY_ID = #{categoryId}
+	        AND 		P.CATEGORY_ID = #{categoryId}
 	    </if>
 	    
 	    <if test="subCateId != null">
-	        AND P.SUB_CATE_ID = #{subCateId}
+	        AND 		P.SUB_CATE_ID = #{subCateId}
 	    </if>
 	    
 	    <if test="keyword != null and keyword != ''">
 	        <choose>
 	            <when test="searchType == 'title'">
-	                AND P.TITLE LIKE CONCAT('%', #{keyword}, '%')
+	                AND 	P.TITLE LIKE CONCAT('%', #{keyword}, '%')
 	            </when>
 	            <when test="searchType == 'title_content'">
-	                AND (P.TITLE LIKE CONCAT('%', #{keyword}, '%') OR P.CONTENT LIKE CONCAT('%', #{keyword}, '%'))
+	                AND 	(P.TITLE LIKE CONCAT('%', #{keyword}, '%') OR P.CONTENT LIKE CONCAT('%', #{keyword}, '%'))
 	            </when>
 	        </choose>
 	    </if>
 	    
 	    ORDER BY 
-	    <choose>
-	        <when test="isBest">
-	            LIKE_COUNT DESC, P.CREATED_AT DESC
-	        </when>
-	        <otherwise>
-	            P.CREATED_AT DESC
-	        </otherwise>
-	    </choose>
+		    <choose>
+		        <when test="isBest">
+		            LIKE_COUNT DESC, 
+		            P.CREATED_AT DESC
+		        </when>
+		        <otherwise>
+		            P.CREATED_AT DESC
+		        </otherwise>
+		    </choose>
 	    
-	    LIMIT #{pageSize} OFFSET #{offset}
+	    LIMIT 		#{pageSize} OFFSET #{offset}
 	</select>
 	
-
-
-<select id="countPostsByTitle" parameterType="string" resultType="long">
-    SELECT COUNT(*) FROM POST 
-    WHERE TITLE LIKE CONCAT('%', #{keyword}, '%')
-</select>
-
-
-<select id="getCategoryNameById" resultType="String">
-    SELECT CATEGORY_NM FROM POST_CATEGORY WHERE category_id = #{categoryId}
-</select>
-
-<!-- 서브 카테고리 이름 가져오기 -->
-<select id="getSubCateNameById" resultType="String">
-    SELECT 	SUB_CATE_NM 
-    FROM 	SUB_CATEGORY 
-    WHERE 	SUB_CATE_ID = #{subCateId}
-</select>
-
-<!-- 서브 카테고리 게시글 수 -->
-<select id="getPostCntBySubCategory" resultType="long">
-    SELECT 	COUNT(*) 
-    FROM 	POST 
-    WHERE	SUB_CATE_ID = #{subCateId} 
-    AND 	STATUS != 'DELETED'
-</select>
-
-<!-- 서브 카테고리별 게시글 리스트 -->
-<select id="getPostListBySubCategory" resultMap="postMap">
-    SELECT 	P.POST_ID, 
-    		P.CATEGORY_ID,
-    		P.SUB_CATE_ID,
-    		P.SUB_CATE_NM, 
-    		P.TITLE, U.NICKNAME, 
-    		P.CREATED_AT, 
-    		P.VIEW_CNT, 
-    		COALESCE(L.LIKE_COUNT, 0) AS LIKE_COUNT
-    FROM 	POST P
-    JOIN 	USER U 
-    ON 		P.USER_ID = U.USER_ID
-    LEFT 	JOIN (
-        	SELECT POST_ID, 
-        	COUNT(*) AS LIKE_COUNT 
-        	FROM POST_LIKE 
-        	GROUP BY POST_ID
-    		) AS L 
-    ON 		P.POST_ID = L.POST_ID
-    WHERE 	P.SUB_CATE_ID = #{subCateId} 
-    AND 	P.STATUS != 'DELETED'  <!-- ✅ 삭제된 게시글 제외 -->
-    ORDER 	BY P.CREATED_AT DESC
-    LIMIT 	#{pageSize} OFFSET #{offset}
-</select>
-
-
-<select id="countPosts" resultType="long">
-    SELECT COUNT(*) FROM POST
-    WHERE STATUS != 'DELETED'
-    <if test="keyword != null and keyword != ''">
-        <if test="searchType == 'title'">
-            AND TITLE LIKE CONCAT('%', #{keyword}, '%')
-        </if>
-        <if test="searchType == 'title_content'">
-            AND (TITLE LIKE CONCAT('%', #{keyword}, '%') OR CONTENT LIKE CONCAT('%', #{keyword}, '%'))
-        </if>
-    </if>
-    <if test="categoryId != null">
-        AND CATEGORY_ID = #{categoryId}
-    </if>
-    <if test="subCateId != null">
-        AND SUB_CATE_ID = #{subCateId}
-    </if>
-</select>
-
-<select id="getPostList" resultMap="postMap">
-    SELECT  P.POST_ID AS POST_ID,
-            P.TITLE AS TITLE,
-            P.CREATED_AT AS CREATED_AT,
-            P.VIEW_CNT AS VIEW_CNT,
-            U.NICKNAME AS NICKNAME,
-            S.SUB_CATE_NM AS SUB_CATE_NM,
-            COALESCE(L.LIKE_COUNT, 0) AS LIKE_COUNT
-    FROM    POST P
-    JOIN    USER U ON P.USER_ID = U.USER_ID
-    JOIN SUB_CATEGORY S ON P.SUB_CATE_ID = S.SUB_CATE_ID
-    LEFT JOIN (  
-        SELECT POST_ID, COUNT(*) AS LIKE_COUNT 
-        FROM POST_LIKE 
-        GROUP BY POST_ID
-    ) AS L ON P.POST_ID = L.POST_ID
-    WHERE   P.STATUS != 'DELETED'
-    <if test="keyword != null and keyword != ''">
-        <if test="searchType == 'title'">
-            AND P.TITLE LIKE CONCAT('%', #{keyword}, '%')
-        </if>
-        <if test="searchType == 'title_content'">
-            AND (P.TITLE LIKE CONCAT('%', #{keyword}, '%') OR P.CONTENT LIKE CONCAT('%', #{keyword}, '%'))
-        </if>
-    </if>
-    <if test="categoryId != null">
-        AND P.CATEGORY_ID = #{categoryId}
-    </if>
-    <if test="subCateId != null">
-        AND P.SUB_CATE_ID = #{subCateId}
-    </if>
-    ORDER BY 
-    <choose>
-        <when test="orderType == 'best'">
-            LIKE_COUNT DESC, P.CREATED_AT DESC
-        </when>
-        <otherwise>
-            P.CREATED_AT DESC
-        </otherwise>
-    </choose>
-    LIMIT #{pageSize} OFFSET #{offset}
-</select>
+	
+	
+	<!-- 서브 카테고리 이름 가져오기 -->
+	<select id="getSubCateNameById" resultType="String">
+	    SELECT 	SUB_CATE_NM 
+	    FROM 	SUB_CATEGORY 
+	    WHERE 	SUB_CATE_ID = #{subCateId}
+	</select>
+	
+	<!-- 서브 카테고리 게시글 수 -->
+	<select id="getPostCntBySubCategory" resultType="long">
+	    SELECT 	COUNT(*) 
+	    FROM 	POST 
+	    WHERE	SUB_CATE_ID = #{subCateId} 
+	    AND 	STATUS != 'DELETED'
+	</select>
+	
+	<!-- 서브 카테고리별 게시글 리스트 -->
+	<select id="getPostListBySubCategory" resultMap="postMap">
+	    SELECT 	P.POST_ID, 
+	    		P.CATEGORY_ID,
+	    		P.SUB_CATE_ID,
+	    		P.SUB_CATE_NM, 
+	    		P.TITLE, U.NICKNAME, 
+	    		P.CREATED_AT, 
+	    		P.VIEW_CNT, 
+	    		COALESCE(L.LIKE_COUNT, 0) AS LIKE_COUNT
+	    FROM 	POST P
+	    JOIN 	USER U 
+	    ON 		P.USER_ID = U.USER_ID
+	    LEFT 	JOIN (
+		        	SELECT 		POST_ID, 
+	        					COUNT(*) 	AS LIKE_COUNT 
+		        	FROM 		POST_LIKE 
+		        	GROUP BY 	POST_ID
+	    		) AS L 
+	    ON 		P.POST_ID = L.POST_ID
+	    WHERE 	P.SUB_CATE_ID = #{subCateId} 
+	    AND 	P.STATUS != 'DELETED' 
+	    ORDER 	BY P.CREATED_AT DESC
+	    LIMIT 	#{pageSize} 
+	    OFFSET 	#{offset}
+	</select>
+	
+	<!-- 게시글 모아보기에서 페지이 생성을 위한 게시글 count -->
+	<select id="countPosts" resultType="long">
+	    SELECT 		COUNT(*) 
+	    FROM 		POST
+	    WHERE 		STATUS != 'DELETED'
+	    <if test="keyword != null and keyword != ''">
+	        <if test="searchType == 'title'">
+	            AND 	TITLE LIKE CONCAT('%', #{keyword}, '%')
+	        </if>
+	        <if test="searchType == 'title_content'">
+	            AND 	(TITLE LIKE CONCAT('%', #{keyword}, '%') 
+	            OR 		CONTENT LIKE CONCAT('%', #{keyword}, '%'))
+	        </if>
+	    </if>
+	    <if test="categoryId != null">
+	        AND 	CATEGORY_ID = #{categoryId}
+	    </if>
+	    <if test="subCateId != null">
+	        AND 	SUB_CATE_ID = #{subCateId}
+	    </if>
+	</select>
+	
+	<!-- 해당 정보에 부합하는 게시글 불러오기 -->
+	<select id="getPostList" resultMap="postMap">
+	    SELECT  	P.POST_ID 					AS POST_ID,
+	            	P.TITLE 					AS TITLE,
+	            	P.CREATED_AT 				AS CREATED_AT,
+	            	P.VIEW_CNT 					AS VIEW_CNT,
+	            	U.NICKNAME 					AS NICKNAME,
+	            	S.SUB_CATE_NM 				AS SUB_CATE_NM,
+	            	COALESCE(L.LIKE_COUNT, 0) 	AS LIKE_COUNT
+	    FROM    	POST P
+	    JOIN    	USER U 
+	    ON 			P.USER_ID = U.USER_ID
+	    JOIN 		SUB_CATEGORY S 
+	    ON 			P.SUB_CATE_ID = S.SUB_CATE_ID
+	    LEFT JOIN 	(  
+			        SELECT POST_ID, COUNT(*) AS LIKE_COUNT 
+			        FROM POST_LIKE 
+			        GROUP BY POST_ID
+				    ) AS L 
+	    ON 			P.POST_ID = L.POST_ID
+    	WHERE   	P.STATUS != 'DELETED'
+	    <if test="keyword != null and keyword != ''">
+	        <if test="searchType == 'title'">
+	            AND 	P.TITLE LIKE CONCAT('%', #{keyword}, '%')
+	        </if>
+	        <if test="searchType == 'title_content'">
+	            AND 	(P.TITLE LIKE CONCAT('%', #{keyword}, '%') 
+	            OR 		P.CONTENT LIKE CONCAT('%', #{keyword}, '%'))
+	        </if>
+	    </if>
+	    <if test="categoryId != null">
+	        AND 	P.CATEGORY_ID = #{categoryId}
+	    </if>
+	    <if test="subCateId != null">
+	        AND 	P.SUB_CATE_ID = #{subCateId}
+	    </if>
+	    ORDER BY 
+		    <choose>
+		        <when test="orderType == 'best'">
+		            LIKE_COUNT DESC, 
+		            P.CREATED_AT DESC
+		        </when>
+		        <otherwise>
+		            P.CREATED_AT DESC
+		        </otherwise>
+		    </choose>
+	    LIMIT 	#{pageSize} 
+	    OFFSET 	#{offset}
+	</select>
 
 	
 
