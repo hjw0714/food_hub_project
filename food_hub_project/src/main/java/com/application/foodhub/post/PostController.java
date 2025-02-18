@@ -43,9 +43,6 @@ public class PostController {
 	private FileUploadService fileUploadService; // 파일 업로드 서비스 추가
 
 	@Autowired
-	private CommentService commentService;
-
-	@Autowired
 	private PostLikeService postLikeService;
 
 	@Autowired
