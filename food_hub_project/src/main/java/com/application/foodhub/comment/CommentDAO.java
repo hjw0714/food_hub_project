@@ -27,13 +27,11 @@ public interface CommentDAO {
 
 	public List<Map<String, Object>> myCommentList(String userId);
 
-	public void markCommentsAsDeletedByPostId(@Param("postId") long postId); /////////
+	public void commentsDeletedByPostId(@Param("postId") long postId); /////////
 
 	public List<CommentDTO> getParentComments(Map<String, Object> params);
 
 	public List<CommentDTO> getChildComments(Map<String, Object> params);
-	
-	
 
     public int existsByCommentId(@Param("commentId") long commentId);
 
