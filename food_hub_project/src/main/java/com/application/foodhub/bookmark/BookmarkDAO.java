@@ -8,7 +8,6 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 @Mapper
-@Repository
 public interface BookmarkDAO {
 
 	public void addBookmark(@Param("postId") Long postId, @Param("userId") String userId);
