@@ -51,7 +51,7 @@ public class UserDaoTest {
 		userDTO.setEmailYn("N");
 		userDTO.setJoinAt(new Date());
 		userDTO.setModifyAt(new Date());
-		
+		userDAO.register(userDTO);
 	} 
 	
 	@Test @Order(1) @DisplayName("회원가입 확인")
@@ -60,14 +60,14 @@ public class UserDaoTest {
 		
 	} 
 	
-	@Test @Order(2) @DisplayName("유저 상세 조회")
+	@Test @Order(2) @DisplayName("유저 상세 조회") 
 	void testGetuserDetail() {
 		UserDTO result = userDAO.getUserDetail(userDTO.getUserId());
 		assertThat(result).isNotNull();
 		
 	}
 	
-	@Test @Order(3) @DisplayName("비밀번호 암호화")
+	@Test @Order(3) @DisplayName("비밀번호 암호화") //
 	void testPasswdEncoded () {
 		String encodedPasswd = userDAO.getEncodedPasswd(userDTO.getUserId());
 		assertThat(passwordEncoder.matches("1234", encodedPasswd)).isTrue();
