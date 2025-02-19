@@ -96,11 +96,6 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public long getPostCntBySubCategory(Long subCateId) {
-		return postDAO.getPostCntBySubCategory(subCateId);
-	}
-
-	@Override
 	public long countPosts(String keyword, String searchType, Long categoryId, Long subCateId) {
 		return postDAO.countPosts(keyword, searchType, categoryId, subCateId);
 	}
