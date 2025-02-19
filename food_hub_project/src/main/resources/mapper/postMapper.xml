@@ -185,6 +185,7 @@
 	     	FROM 		POST
 		    WHERE 		POST_ID  <  #{postId} 
 	      	AND 		CATEGORY_ID = #{categoryId}
+	      	AND 		STATUS != 'DELETED'
 	      	ORDER BY 	POST_ID DESC
 		    LIMIT 1
 	    ]]>
@@ -196,6 +197,7 @@
 		    FROM 		POST
 		    WHERE 		POST_ID > #{postId} 
 	      	AND 		CATEGORY_ID = #{categoryId}  
+	      	AND 		STATUS != 'DELETED'
 		    ORDER BY 	POST_ID ASC
 		    LIMIT 1
 	    ]]>	    
@@ -295,14 +297,6 @@
 	    SELECT 	SUB_CATE_NM 
 	    FROM 	SUB_CATEGORY 
 	    WHERE 	SUB_CATE_ID = #{subCateId}
-	</select>
-	
-	<!-- 서브 카테고리 게시글 수 -->
-	<select id="getPostCntBySubCategory" resultType="long">
-	    SELECT 	COUNT(*) 
-	    FROM 	POST 
-	    WHERE	SUB_CATE_ID = #{subCateId} 
-	    AND 	STATUS != 'DELETED'
 	</select>
 	
 	<!-- 서브 카테고리별 게시글 리스트 -->

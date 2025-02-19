@@ -32,8 +32,6 @@ public interface PostService {
 
 	public String getSubCateNameById(Long subCateId);
 	
-	public long getPostCntBySubCategory(Long subCateId);
-	
 	public List<Map<String, Object>> getLatestPostsByCategoryId(long categoryId, int limit);
 	
 	public List<Map<String, Object>> searchPosts(String keyword, String searchType, Long categoryId, Long subCateId, boolean isBest, int pageSize, int offset);
