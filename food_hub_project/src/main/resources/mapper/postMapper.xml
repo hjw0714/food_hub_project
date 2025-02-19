@@ -185,6 +185,7 @@
 	     	FROM 		POST
 		    WHERE 		POST_ID  <  #{postId} 
 	      	AND 		CATEGORY_ID = #{categoryId}
+	      	AND 		STATUS != 'DELETED'
 	      	ORDER BY 	POST_ID DESC
 		    LIMIT 1
 	    ]]>
@@ -196,6 +197,7 @@
 		    FROM 		POST
 		    WHERE 		POST_ID > #{postId} 
 	      	AND 		CATEGORY_ID = #{categoryId}  
+	      	AND 		STATUS != 'DELETED'
 		    ORDER BY 	POST_ID ASC
 		    LIMIT 1
 	    ]]>	    
