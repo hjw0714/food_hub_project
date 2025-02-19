@@ -23,11 +23,9 @@ public interface CommentService {
 
 	public List<Map<String, Object>> myCommentList(String userId); // 해당 유저가 쓴 댓글 불러오기
 
-	
-
     public boolean isCommentDeleted(long commentId);
 
-    public void markCommentsAsDeletedByPostId(long postId);
+    public void commentsDeletedByPostId(long postId);
 
 
 	

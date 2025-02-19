@@ -61,7 +61,7 @@ public class PostServiceImpl implements PostService {
 	 @Override
 	    public void markPostAsDeleted(long postId) {
 	        postDAO.markPostAsDeleted(postId); // 게시글 상태 변경
-	        commentService.markCommentsAsDeletedByPostId(postId); // 해당 게시글의 댓글들 숨기기
+	        commentService.commentsDeletedByPostId(postId); // 해당 게시글의 댓글들 숨기기
 	    }
 
 	@Override

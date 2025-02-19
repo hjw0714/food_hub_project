@@ -128,7 +128,7 @@
 	</select>
 	
 		<!-- 특정 게시글의 모든 댓글 상태를 DELETED로 변경 -->
-	<update id="markCommentsAsDeletedByPostId">
+	<update id="commentsDeletedByPostId">
 	    UPDATE COMMENTS 
 	    SET status = 'DELETED'
 	    WHERE POST_ID = #{postId}

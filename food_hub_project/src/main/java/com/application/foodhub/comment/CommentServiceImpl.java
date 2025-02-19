@@ -85,8 +85,8 @@ public class CommentServiceImpl implements CommentService {
     }
     
     @Override
-    public void markCommentsAsDeletedByPostId(long postId) {
-        commentDAO.markCommentsAsDeletedByPostId(postId);
+    public void commentsDeletedByPostId(long postId) {
+        commentDAO.commentsDeletedByPostId(postId);
     }
 
 }
