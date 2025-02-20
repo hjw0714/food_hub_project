@@ -4,29 +4,26 @@
 	  layout:decorate="~{foodhub/index/headerAndFooter.html}">
 
 <head>
-  <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>Delete User - Food Hub</title>
-
-<script>
-
-  function confirmDeletion() {
-    const isChecked = document.getElementById('agreeTerms').checked;
-    if (!isChecked) {
-      alert('회원탈퇴 안내에 동의해야 탈퇴가 가능합니다.');
-      return;
-    }
-
-    if (confirm('정말로 회원탈퇴를 진행하시겠습니까? 이 작업은 되돌릴 수 없습니다.')) {
-    	document.getElementById("deleteAccountForm").submit(); // 폼 제출
-    
-    }
-  }
-
-</script>
- 
+  	<meta charset="utf-8">
+  	<meta content="width=device-width, initial-scale=1.0" name="viewport">
+  	<title>Delete User - Food Hub</title>
+	<script>
+	
+	  function confirmDeletion() {
+	    const isChecked = document.getElementById('agreeTerms').checked;
+	    if (!isChecked) {
+	      alert('회원탈퇴 안내에 동의해야 탈퇴가 가능합니다.');
+	      return;
+	    }
+	
+	    if (confirm('정말로 회원탈퇴를 진행하시겠습니까? 이 작업은 되돌릴 수 없습니다.')) {
+	    	document.getElementById("deleteAccountForm").submit(); // 폼 제출
+	    
+	    }
+	  }
+	
+	</script>
 </head>
-
 <body class="single-post-page">
 
 <div layout:fragment="content">
