@@ -26,6 +26,8 @@ public interface CommentService {
     public boolean isCommentDeleted(long commentId);
 
     public void commentsDeletedByPostId(long postId);
+    
+    public int countTotalCommentsByPostId(long postId);
 
 
 	

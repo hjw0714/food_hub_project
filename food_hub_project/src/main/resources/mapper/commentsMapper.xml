@@ -140,4 +140,12 @@
     	FROM COMMENTS 
     	WHERE COMMENT_ID = #{commentId})
 	</select>
+	
+	<select id="countTotalCommentsByPostId" parameterType="long" resultType="int">
+	    SELECT COUNT(*) 
+	    FROM COMMENTS 
+	    WHERE POST_ID = #{postId} 
+	    AND STATUS != 'DELETED'
+	</select>
+	
 </mapper>

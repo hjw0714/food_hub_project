@@ -140,6 +140,11 @@ public class CommentController {
 	    return commentReportService.reportComment(commentReportDTO);
 	}
 
+	@GetMapping("/post/{postId}/count")
+	@ResponseBody
+	public int getTotalCommentCount(@PathVariable("postId") Long postId) {
+	    return commentService.countTotalCommentsByPostId(postId);
+	}
 	
 
 }

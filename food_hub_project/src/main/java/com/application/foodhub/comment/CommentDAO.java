@@ -34,6 +34,8 @@ public interface CommentDAO {
 	public List<CommentDTO> getChildComments(Map<String, Object> params);
 
     public int existsByCommentId(@Param("commentId") long commentId);
+    
+    public int countTotalCommentsByPostId(@Param("postId") long postId);
 
     @Select("""
     		SELECT  MAX(COMMENT_ID)

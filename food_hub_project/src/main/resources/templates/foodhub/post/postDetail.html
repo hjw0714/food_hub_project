@@ -201,6 +201,25 @@
         let userId = $("#userId").val();	// 유저 아이디 가져오기
      //  sortOrder를 localStorage에서 불러오기 (기본값: 최신순)
         let sortOrder = localStorage.getItem("commentSortOrder") || "newest";
+       
+        $.ajax({
+            url: `/comments/post/${postId}/count`,
+            type: "GET",
+            success: function (count) {
+                $("#commentCount").text(`(${count})`);
+            },
+            error: function (xhr, status, error) {
+                console.error("댓글 개수 불러오기 오류:", error);
+            }
+        });
+        
+        function updateCommentCount(change) {
+            let currentCount = parseInt($("#commentCount").text().replace(/\D/g, ""), 10) || 0;
+            let newCount = currentCount + change;
+            $("#commentCount").text(`(${newCount})`);
+        }
+
+        
         // 댓글 로드창
         function loadComments(sortOrder) {
             
@@ -361,6 +380,8 @@
                     $("#commentContent").val(""); // 입력창 초기화
                     let newCommentHtml = createCommentHtml(response);
                     $("#commentList").prepend(newCommentHtml);
+                    
+                    updateCommentCount(1);
                 }
             });
         });
@@ -419,6 +440,8 @@
                 let newReplyHtml = createReplyHtml(response);
                 replyBox.append(newReplyHtml); // 대댓글 추가
                 replyBox.find(".reply-form").remove(); // 입력창 제거
+                
+                updateCommentCount(1);
             }
         });
     });
@@ -507,6 +530,8 @@
             success: function (response) {
                 if (response === "댓글이 삭제 처리되었습니다.") {
                     $(`.comment-box[data-id='${commentId}']`).remove(); // ✅ UI에서 제거
+                    
+                    updateCommentCount(-1);
                 } 
                 else {
                     alert("삭제 실패: " + response);
@@ -592,6 +617,8 @@
             }
         });
     });
+    
+    
 
     
     // 댓글 정렬 클릭 이벤트
@@ -752,7 +779,9 @@
 				<!-- 댓글 섹션 -->
 				<section id="comments" class="comments section">
 					<div class="d-flex align-items-center justify-content-between mb-3">
-						<h4 class="mb-0">댓글</h4>
+
+						<h4 class="mb-0">댓글 <span id="commentCount"></span></h4>
+
 						<div class="d-flex align-items-center">
 							<span id="sortOldest" class="sort-text">작성일 순</span>
 							<span class="mx-2">|</span> 
