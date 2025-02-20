@@ -35,7 +35,17 @@
     * Author: BootstrapMade.com
     * License: https://bootstrapmade.com/license/
     ======================================================== -->
-  
+  	<style>
+  		.manual-link {
+		    color: white; /* 글자 색상을 흰색으로 설정 */
+		    text-decoration: none; /* 밑줄 제거 */
+		    font-size: 16px; /* 글씨 크기 조정 */
+		}
+		
+		.manual-link:hover {
+		    color: #f8d210; /* 마우스 오버 시 색상 변경 (푸터의 광고 문의와 동일) */
+		}
+  	</style>
  
 </head>
 <body class="index-page">
@@ -164,7 +174,9 @@
                 <div class="col-lg-4 col-md-6 footer-about">
                     <a th:href="@{/foodhub}" class="logo d-flex align-items-center">
                         <span class="sitename">Food Hub</span>
+                        
                     </a>
+                    <a href="/assets/manual/06. 매뉴얼.pdf" target="_blank" class="manual-link">📄 매뉴얼 보기</a>
                     <div class="footer-contact pt-3">
                         <p>06129</p>
                         <p>서울 강남구 강남대로94길 13 삼경빌딩</p>
@@ -175,115 +187,117 @@
                 </div>
             </div>
         </div>
+        
+        
 	
 		 <div class="footer-bottom text-center mt-3">
     		<a href="#" id="ad-sponsorship-link" class="ad-sponsorship-text">광고 / 후원 문의</a>
 		</div>
-</footer>
-
-<!-- 광고 / 후원 문의 팝업 -->
-<div id="ad-sponsorship-popup" class="popup-overlay" style="display: none;">
-    <div class="popup-content">
-        <p><strong>Food Hub은 귀사의 광고 제휴 제안을 환영합니다.</strong></p>
-        <p>아래의 항목을 포함하여 <strong>foodhub@example.com</strong>로 보내주시면, 담당자가 검토 후 직접 연락 드리도록 하겠습니다.</p>
-
-        <ul style="text-align: left; padding-left: 20px;">
-            <li><strong>광고/제휴 내용</strong>
-                <ul>
-                    <li>제안 내용</li>
-                </ul>
-            </li>
-            <br>
-            <li><strong>회사 정보</strong>
-                <ul>
-                    <li>회사(기관)명</li>
-                    <li>회사 URL</li>
-                </ul>
-            </li>
-            <br>
-            <li><strong>담당자 정보</strong>
-                <ul>
-                    <li>담당자명 (직함)</li>
-                    <li>이메일</li>
-                    <li>연락처 / 휴대폰</li>
-                </ul>
-            </li>
-        </ul>
-
-        <button id="close-popup">닫기</button>
-    </div>
-</div>
-
-    <!-- Scroll Top -->
-    <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-
-    <!-- Preloader -->
-    <div id="preloader"></div>
-
-    <!-- Vendor JS Files -->
-    <script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="/assets/vendor/php-email-form/validate.js"></script>
-    <script src="/assets/vendor/aos/aos.js"></script>
-    <script src="/assets/vendor/swiper/swiper-bundle.min.js"></script>
-
-    <!-- Main JS File -->
-    <script src="/assets/js/main.js"></script>
+	</footer>
 	
-	<style>
-	 
-    .ad-sponsorship-text {
-        font-size: 20px; /* 글씨 크기 조정 (기본값보다 크게 설정) */
-        font-weight: bold; /* 굵은 글씨 적용 */
-        color: white; /* 글씨 색상 유지 */
-        text-decoration: none; /* 밑줄 제거 */
-    }
-
-    .ad-sponsorship-text:hover {
-        color: #f8d210; /* 마우스 오버 시 색상 변경 */
-    }
-
-    .popup-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .popup-content {
-        background: white;
-        padding: 20px;
-        border-radius: 8px;
-        text-align: center;
-    }
-
-    .popup-content button {
-        margin-top: 10px;
-        padding: 5px 10px;
-        border: none;
-        background: #333;
-        color: white;
-        cursor: pointer;
-        border-radius: 5px;
-    }
-    
-</style>
-
-<!-- 팝업 스크립트 -->
-<script>
-    document.getElementById("ad-sponsorship-link").addEventListener("click", function(event) {
-        event.preventDefault();
-        document.getElementById("ad-sponsorship-popup").style.display = "flex";
-    });
-
-    document.getElementById("close-popup").addEventListener("click", function() {
-        document.getElementById("ad-sponsorship-popup").style.display = "none";
-    });
-</script>  
+	<!-- 광고 / 후원 문의 팝업 -->
+	<div id="ad-sponsorship-popup" class="popup-overlay" style="display: none;">
+	    <div class="popup-content">
+	        <p><strong>Food Hub은 귀사의 광고 제휴 제안을 환영합니다.</strong></p>
+	        <p>아래의 항목을 포함하여 <strong>foodhub@example.com</strong>로 보내주시면, 담당자가 검토 후 직접 연락 드리도록 하겠습니다.</p>
+	
+	        <ul style="text-align: left; padding-left: 20px;">
+	            <li><strong>광고/제휴 내용</strong>
+	                <ul>
+	                    <li>제안 내용</li>
+	                </ul>
+	            </li>
+	            <br>
+	            <li><strong>회사 정보</strong>
+	                <ul>
+	                    <li>회사(기관)명</li>
+	                    <li>회사 URL</li>
+	                </ul>
+	            </li>
+	            <br>
+	            <li><strong>담당자 정보</strong>
+	                <ul>
+	                    <li>담당자명 (직함)</li>
+	                    <li>이메일</li>
+	                    <li>연락처 / 휴대폰</li>
+	                </ul>
+	            </li>
+	        </ul>
+	
+	        <button id="close-popup">닫기</button>
+	    </div>
+	</div>
+	
+	    <!-- Scroll Top -->
+	    <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+	
+	    <!-- Preloader -->
+	    <div id="preloader"></div>
+	
+	    <!-- Vendor JS Files -->
+	    <script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+	    <script src="/assets/vendor/php-email-form/validate.js"></script>
+	    <script src="/assets/vendor/aos/aos.js"></script>
+	    <script src="/assets/vendor/swiper/swiper-bundle.min.js"></script>
+	
+	    <!-- Main JS File -->
+	    <script src="/assets/js/main.js"></script>
+		
+		<style>
+		 
+	    .ad-sponsorship-text {
+	        font-size: 20px; /* 글씨 크기 조정 (기본값보다 크게 설정) */
+	        font-weight: bold; /* 굵은 글씨 적용 */
+	        color: white; /* 글씨 색상 유지 */
+	        text-decoration: none; /* 밑줄 제거 */
+	    }
+	
+	    .ad-sponsorship-text:hover {
+	        color: #f8d210; /* 마우스 오버 시 색상 변경 */
+	    }
+	
+	    .popup-overlay {
+	        position: fixed;
+	        top: 0;
+	        left: 0;
+	        width: 100%;
+	        height: 100%;
+	        background: rgba(0, 0, 0, 0.5);
+	        display: flex;
+	        align-items: center;
+	        justify-content: center;
+	    }
+	
+	    .popup-content {
+	        background: white;
+	        padding: 20px;
+	        border-radius: 8px;
+	        text-align: center;
+	    }
+	
+	    .popup-content button {
+	        margin-top: 10px;
+	        padding: 5px 10px;
+	        border: none;
+	        background: #333;
+	        color: white;
+	        cursor: pointer;
+	        border-radius: 5px;
+	    }
+	    
+	</style>
+	
+	<!-- 팝업 스크립트 -->
+	<script>
+	    document.getElementById("ad-sponsorship-link").addEventListener("click", function(event) {
+	        event.preventDefault();
+	        document.getElementById("ad-sponsorship-popup").style.display = "flex";
+	    });
+	
+	    document.getElementById("close-popup").addEventListener("click", function() {
+	        document.getElementById("ad-sponsorship-popup").style.display = "none";
+	    });
+	</script>  
 </body>
 
 
