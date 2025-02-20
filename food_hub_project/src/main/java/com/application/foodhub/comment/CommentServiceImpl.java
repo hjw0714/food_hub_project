@@ -89,4 +89,9 @@ public class CommentServiceImpl implements CommentService {
         commentDAO.commentsDeletedByPostId(postId);
     }
 
+	@Override
+	public int countTotalCommentsByPostId(long postId) {
+		return commentDAO.countTotalCommentsByPostId(postId);
+	}
+
 }
