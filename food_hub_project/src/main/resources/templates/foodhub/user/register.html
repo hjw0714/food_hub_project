@@ -3,118 +3,14 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{foodhub/index/headerAndFooter.html}">
 <head>
-<style>
-:root {
-	--background-color: #f8f9fa;
-	--surface-color: #ffffff;
-	--accent-color: #6c757d;
-	--accent-hover: color-mix(in srgb, #6c757d, transparent 20%);
-	--text-color: #333;
-}
 
-body {
-	font-family: Arial, sans-serif;
-	background-color: var(--background-color);
-	margin: 0;
-	padding: 0;
-	justify-content: center;
-	align-items: center;
- 	height: auto; /* 높이를 자동으로 조정 */
-    min-height: 100vh; /* 최소 높이 설정 */
-	box-sizing: border-box; /* 모든 요소가 테두리와 패딩을 포함하여 크기를 계산하도록 함 */
-}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>회원가입</title>
 
-.signup-page {
-	background: var(--surface-color);
-	padding: 20px;
-	border-radius: 10px;
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-	width: 100%; /* 화면 너비에 맞게 */
-	max-width: 500px; /* 최대 너비 설정 */
-	box-sizing: border-box; /* 패딩과 테두리를 포함한 크기 계산 */
-	margin-top: 80px; /* 헤더 높이에 맞춰 조정 */
-	margin: 0 auto;
-}
+<!-- css 연결 -->
+<link href="/assets/css/register.css" rel="stylesheet">
 
-.signup-page h1 {
-	text-align: center;
-	margin-bottom: 20px;
-	color: var(--text-color);
-}
-
-.form-group {
-	margin-bottom: 15px;
-}
-
-.form-group label {
-	display: block;
-	margin-bottom: 5px;
-	color: var(--text-color);
-}
-
-.form-group input, .form-group select {
-	width: 100%; /* 100% 너비로 설정 */
-	padding: 10px;
-	border: 1px solid #ddd;
-	border-radius: 5px;
-	box-sizing: border-box; /* 패딩 포함하여 너비 계산 */
-}
-
-.form-group input[type="radio"] {
-	width: auto;
-	margin-right: 5px;
-}
-
-.form-actions {
-	text-align: center;
-}
-
-.form-actions button {
-	padding: 10px 20px;
-	border: none;
-	background-color: var(--accent-color);
-	color: white;
-	border-radius: 5px;
-	cursor: pointer;
-	font-size: 16px;
-	transition: 0.3s;
-}
-
-.form-actions button:hover {
-	background-color: var(--accent-hover);
-}
-
-.hidden {
-	display: none;
-}
-
-.check-button {
-	margin-top: 5px;
-	padding: 5px 10px;
-	border: none;
-	background-color: var(--accent-color);
-	color: white;
-	border-radius: 5px;
-	cursor: pointer;
-	transition: 0.3s;
-}
-
-.check-button:hover {
-	background-color: var(--accent-hover);
-}
-
-.inline-checkbox {
-	display: inline-block;
-	align-items: center; /* 수평 및 수직 가운데 정렬 */
-	margin-left: 10px;
-	vertical-align: middle; /* 체크박스를 중간 정렬 */
-	margin-top: 10px; /* 체크박스를 살짝 아래로 내림 */
-}
-
-#emailOptIn {
-	vertical-align: middle; /* 체크박스를 텍스트와 동일한 수평 위치로 조정 */
-}
-</style>
 <script>
 	$().ready(function() {
 

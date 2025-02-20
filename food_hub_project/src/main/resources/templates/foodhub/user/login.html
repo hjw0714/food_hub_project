@@ -3,99 +3,41 @@
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	  layout:decorate="~{foodhub/index/headerAndFooter.html}">
 <head>
-<style>
-    .login-page {
-      background-color: var(--background-color);
-      color: var(--default-color);
-      font-family: var(--default-font);
-    }
 
-    .login-box {
-      max-width: 400px;
-      width: 100%;
-      margin: 15px auto;
-      padding: 30px;
-      border-radius: 8px;
-      background-color: var(--surface-color);
-      box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
-    }
 
-    .login-box h2 {
-      font-size: 28px;
-      font-family: var(--heading-font);
-      color: var(--heading-color);
-      margin-bottom: 20px;
-      text-align: center;
-    }
-
-    .login-box .form-control {
-      border-radius: 4px;
-      font-size: 14px;
-      padding: 10px;
-      margin-bottom: 20px;
-    }
-
-    .login-box .btn-primary {
-      background-color: var(--accent-color);
-      border-color: var(--accent-color);
-      font-size: 16px;
-      padding: 10px 20px;
-      border-radius: 4px;
-      transition: 0.3s;
-    }
-
-    .login-box .btn-primary:hover {
-      background-color: color-mix(in srgb, var(--accent-color), transparent 20%);
-      border-color: color-mix(in srgb, var(--accent-color), transparent 20%);
-    }
-
-    .login-box .links a {
-      font-size: 14px;
-      color: var(--accent-color);
-      text-decoration: none;
-      transition: 0.3s;
-    }
-
-    .login-box .links a:hover {
-      color: color-mix(in srgb, var(--accent-color), transparent 20%);
-    }
-
-    .login-box .links {
-      display: flex;
-      justify-content: space-between;
-    }
- </style>
- <script th:src="@{/jquery/jquery-3.7.1.min.js}"></script>
- <script>
-  $(document).ready(function() {
-	    $("#loginBtn").click(function(event) {
-	        event.preventDefault();
-			
-	        let loginData = {
-	                "userId": $("#userId").val().trim(),  // 공백 제거 (대소문자 변환 X)
-	                "passwd": $("#passwd").val().trim()
-            };
-			
-			$.ajax({
-	            url: "/foodhub/user/login",
-	            type: "POST",
-	            contentType: "application/json; charset=UTF-8",  // JSON 형식으로 전송
-	            data: JSON.stringify(loginData),
-	            success: function(response) {
-	                if (response === "y") {
-	                    location.href = "/foodhub";
-	                } else {
-	                    $("#failMsg").html("<span style='color:red;'>아이디와 비밀번호를 확인하세요.</span>");
-	                }
-	            }
-	          
-	        });
-	    });
-	});
-</script>
-
-<meta charset="UTF-8">
-<title>login</title>
+	<meta charset="UTF-8">
+	<title>로그인</title>
+	
+	<!-- css 연결 -->
+	<link href="/assets/css/login.css" rel="stylesheet">
+	
+	<script>
+	  $(document).ready(function() {
+		    $("#loginBtn").click(function(event) {
+		        event.preventDefault();
+				
+		        let loginData = {
+		                "userId": $("#userId").val().trim(),  // 공백 제거 (대소문자 변환 X)
+		                "passwd": $("#passwd").val().trim()
+	            };
+				
+				$.ajax({
+		            url: "/foodhub/user/login",
+		            type: "POST",
+		            contentType: "application/json; charset=UTF-8",  // JSON 형식으로 전송
+		            data: JSON.stringify(loginData),
+		            success: function(response) {
+		                if (response === "y") {
+		                    location.href = "/foodhub";
+		                } else {
+		                    $("#failMsg").html("<span style='color:red;'>아이디와 비밀번호를 확인하세요.</span>");
+		                }
+		            }
+		          
+		        });
+		    });
+		});
+	</script>
 </head>
 <body>
 

@@ -1,0 +1,162 @@
+@charset "UTF-8";
+
+:root {
+	--background-color: #f8f9fa;
+	--surface-color: #ffffff;
+	--accent-color: #6c757d;
+	--accent-hover: color-mix(in srgb, #6c757d, transparent 20%);
+	--text-color: #333;
+	--font-size: 16px;
+}
+
+body {
+	font-family: Arial, sans-serif;
+	background-color: var(--background-color);
+	margin: 0;
+	padding: 0;
+	justify-content: center;
+	align-items: center;
+	min-height: 100vh;
+	box-sizing: border-box; /* 모든 요소가 테두리와 패딩을 포함하여 크기를 계산하도록 함 */
+}
+
+.mypage {
+	background: var(--surface-color);
+	padding: 20px;
+	border-radius: 10px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	width: 100%; /* 화면 너비에 맞게 */
+	max-width: 500px;
+	box-sizing: border-box; /* 패딩과 테두리를 포함한 크기 계산 */
+	margin: 0 auto;
+}
+
+.mypage h1 {
+	text-align: center;
+	margin-bottom: 20px;
+	color: var(--text-color);
+}
+
+.profile-photo {
+	display: flex;
+	justify-content: center;
+	margin-bottom: 20px;
+}
+
+.profile-photo img {
+	width: 120px;
+	height: 120px;
+	border-radius: 50%;
+	border: 2px solid var(--accent-color);
+	object-fit: cover;
+}
+
+.profile-info {
+	margin-bottom: 20px;
+}
+
+.profile-info p {
+	margin: 8px 0;
+	color: var(--text-color);
+	font-size: var(--font-size);
+	line-height: 1.6;
+}
+
+.section ul {
+	list-style: none; /* 기본 리스트 스타일 제거 */
+	padding: 0; /* 기본 패딩 제거 */
+	text-align: left; /* 텍스트 왼쪽 정렬 */
+}
+
+/* 북마크 리스트의 각 항목 스타일 */
+.section ul li {
+	display: flex; /* 요소를 가로로 정렬 */
+	align-items: center; /* 세로 가운데 정렬 */
+	padding: 10px;
+	border: 1px solid #ddd;
+	border-radius: 5px;
+	background: #fdfdfd;
+	margin: 10px 20px; /* 위아래 10px, 양쪽(왼쪽, 오른쪽) 20px 간격 추가 */
+}
+
+/* 번호와 제목 사이 기본 스타일 */
+.section ul li span {
+	margin-right: 8px; /* 번호와 제목 간 간격 */
+	font-weight: bold;
+}
+
+/* 제목 스타일 */
+.section ul li a {
+	flex-grow: 1; /* 제목이 가능한 공간을 차지하도록 설정 */
+	text-decoration: none;
+	color: var(--text-color);
+}
+
+/* 북마크 해제 버튼 스타일 */
+.section ul li button.remove-bookmark {
+	margin-left: auto; /* 버튼을 오른쪽 끝으로 이동 */
+	padding: 5px 5px;
+	border: none;
+	background-color: var(--accent-color);
+	color: white;
+	border-radius: 5px;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+}
+
+.section ul li button.remove-bookmark:hover {
+	background-color: var(--accent-hover); /* 버튼 호버 시 색상 변경 */
+}
+
+.actions {
+	display: flex;
+	justify-content: space-between;
+	align-items: center; /* 수직 정렬 */
+	margin-top: 20px;
+}
+
+.actions a {
+	margin-right: 10px; /* 버튼들 간의 간격을 추가 */
+}
+
+.actions button {
+	padding: 10px 20px;
+	border: none;
+	background-color: var(--accent-color);
+	color: white;
+	border-radius: 5px;
+	cursor: pointer;
+	font-size: 16px;
+	transition: 0.3s;
+}
+
+.actions button:hover {
+	background-color: var(--accent-hover);
+}
+
+.actions a:last-child {
+	margin-left: auto; /* 마지막 버튼을 오른쪽으로 밀기 */
+}
+
+.pagination {
+	display: flex;
+	justify-content: center; /* 중앙 정렬 */
+	align-items: center;
+	gap: 10px; /* 버튼 간격 조절 */
+	margin-top: 10px;
+}
+
+.pagination button {
+	padding: 6px 12px; /* 기존보다 작은 패딩 */
+	border: none;
+	background-color: var(--accent-color);
+	color: white;
+	border-radius: 5px;
+	cursor: pointer;
+	font-size: 14px; /* 기존보다 작은 글씨 크기 */
+	transition: 0.3s;
+}
+
+.pagination button:hover {
+	background-color: var(--accent-hover);
+}
