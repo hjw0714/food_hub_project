@@ -1,0 +1,35 @@
+@charset "UTF-8";
+
+    .find-id-box {
+      max-width: 400px;
+      width: 100%;
+      margin: 15px auto;
+      padding: 30px;
+      border-radius: 8px;
+      background-color: var(--surface-color);
+      box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .find-id-box h2 {
+      font-size: 28px;
+      font-family: var(--heading-font);
+      color: var(--heading-color);
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .find-id-box .form-control {
+      border-radius: 4px;
+      font-size: 14px;
+      padding: 10px;
+      margin-bottom: 20px;
+    }
+
+    .find-id-box .btn-primary {
+      background-color: var(--accent-color);
+      border-color: var(--accent-color);
+      font-size: 16px;
+      padding: 10px 20px;
+      border-radius: 4px;
+      transition: 0.3s;
+    }
