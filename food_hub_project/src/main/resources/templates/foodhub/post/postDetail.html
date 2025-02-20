@@ -861,11 +861,6 @@
 
      // 로그인 여부 확인 후 답글 입력창 추가
         $(document).on("click", ".reply-btn", function () {
-            if (!userId) {
-                alert("로그인이 필요합니다. 로그인 페이지로 이동합니다.");
-                window.location.href = "/foodhub/user/login";
-                return;
-            }
 
             let parentId = $(this).data("id");
             let commentBox = $(this).closest(".comment-box");
@@ -1020,11 +1015,6 @@
     $(document).on("click", ".report-comment-btn", function () {
     	let userId = $("#userId").val();
     	
-    	if (!userId) {
-            alert("로그인이 필요합니다. 로그인 페이지로 이동합니다.");
-            window.location.href = "/foodhub/user/login"; // 로그인 페이지로 이동
-            return;
-        }
     	
         let commentId = $(this).data("id");  // 클릭한 버튼의 댓글 ID 가져오기
         console.log("🚨 신고할 댓글 ID:", commentId);
