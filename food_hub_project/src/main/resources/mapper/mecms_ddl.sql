@@ -10,7 +10,7 @@ CREATE TABLE USER (
     EMAIL 				VARCHAR(255) UNIQUE NOT NULL,           -- 이메일 (유니크 제약 조건)
     TEL 				VARCHAR(20),                            -- 전화번호
     GENDER 				CHAR(1) NOT NULL,             	-- 성별 (M: 남성, F: 여성)
-    BIRTHDAY 			DATE,                                  	-- 생년월일
+    BIRTHDAY 			DATE 	NOT NULL,                                  	-- 생년월일
     MEMBERSHIP_TYPE 	ENUM('COMMON', 'BUSSI', 'ADMIN') NOT NULL, -- 멤버십 유형
     FOUNDING_AT 		DATE , 							-- 회원가입일
     BUSINESS_TYPE 		VARCHAR(255),                      		-- 사업 유형
