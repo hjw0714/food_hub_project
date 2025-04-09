@@ -20,7 +20,7 @@ import com.application.foodhub.user.UserDTO;
 
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@Transactional
+//@Transactional
 public class UserDaoTest {
 	
 	@Autowired
@@ -35,11 +35,11 @@ public class UserDaoTest {
 	void setUpTestData() {
 		
 		userDTO = new UserDTO();
-		userDTO.setUserId("yocasu1");
+		userDTO.setUserId("admin");
 		userDTO.setProfileOriginal("404.png");
 		userDTO.setProfileUUID("qwer-asdf-zxcv");
 		userDTO.setNickname("yocasu1");
-		userDTO.setPasswd(passwordEncoder.encode("1234"));
+		userDTO.setPasswd(passwordEncoder.encode("1111"));
 		userDTO.setEmail("qwerasdf@gmail.com");
 		userDTO.setTel("010-1111-1111");
 		userDTO.setGender("M");
@@ -51,7 +51,9 @@ public class UserDaoTest {
 		userDTO.setEmailYn("N");
 		userDTO.setJoinAt(new Date());
 		userDTO.setModifyAt(new Date());
-		userDAO.register(userDTO);
+		userDTO.setStatus("ACTIVE");
+		userDTO.setDeletedAt(null);
+		//userDAO.register(userDTO);
 	} 
 	
 	@Test @Order(1) @DisplayName("회원가입 확인")
@@ -89,7 +91,7 @@ public class UserDaoTest {
 	
 	@Test @Order(5) @DisplayName("유저 정보 삭제")
 	void testDeleteUser() {
-		userDAO.deleteUser(userDTO.getUserId());
+		userDAO.softDeleteUser(userDTO.getUserId());
 		UserDTO result = userDAO.getUserDetail(userDTO.getUserId());
 		assertThat(result).isNull();
 	}

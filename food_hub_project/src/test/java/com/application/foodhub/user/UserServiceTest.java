@@ -61,6 +61,8 @@ public class UserServiceTest {
 		userDTO.setEmailYn("N");
 		userDTO.setJoinAt(new Date());
 		userDTO.setModifyAt(new Date());
+		userDTO.setStatus("ACTIVE");
+		userDTO.setDeletedAt(null);
 	}
 	
 	@Test @Order(1) @DisplayName("회원가입")
@@ -106,7 +108,7 @@ public class UserServiceTest {
 	void testDeleteUser() {
 		userService.deleteUser(userDTO.getUserId());
 		
-		verify(userDAO , times(1)).deleteUser(userDTO.getUserId());
+		verify(userDAO , times(1)).softDeleteUser(userDTO.getUserId());
 	}
 	
  }

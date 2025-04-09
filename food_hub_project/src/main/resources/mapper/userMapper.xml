@@ -20,7 +20,9 @@
 			SMS_YN,
 			EMAIL_YN,
 			JOIN_AT,
-			MODIFY_AT
+			MODIFY_AT,
+			STATUS,
+			DELETED_AT
 		) 
 		VALUES (
 			#{userId},
@@ -36,7 +38,9 @@
 			#{smsYn},			
 			#{emailYn},
 			NOW(),
-			NOW()
+			NOW(),
+			'ACTIVE',
+			NULL
 		 )
 	</insert>
 	
@@ -45,6 +49,7 @@
 		SELECT USER_ID
 		FROM   USER
 		WHERE  BINARY USER_ID = #{userId}
+		AND    STATUS = 'ACTIVE'
 	</select>
 	
 	<!-- 닉네임 중복 체크 -->
@@ -52,6 +57,7 @@
 		SELECT NICKNAME
 		FROM   USER
 		WHERE  BINARY NICKNAME = #{nickname}
+		AND    STATUS = 'ACTIVE'
 	</select>
 	
 	<!-- 이메일 중복 체크 -->
@@ -59,6 +65,7 @@
 		SELECT EMAIL
 		FROM   USER
 		WHERE  BINARY EMAIL = #{email}
+		AND    STATUS = 'ACTIVE'
 	</select>
 	
 	<!-- 암호화한 비밀번호 불러오기 -->
@@ -106,11 +113,19 @@
       WHERE  	USER_ID = #{userId}
     </select>
    
-    <!-- (회원탈퇴)유저정보 삭제 -->
+    <!-- (회원탈퇴)유저정보 삭제 
     <delete id="deleteUser" parameterType="String">
       DELETE 	FROM USER
       WHERE     USER_ID = #{userId}
-    </delete>
+    </delete>-->
+    
+    <update id="softDeleteUser" parameterType="String">
+	UPDATE 	USER
+	SET 	STATUS = 'DELETED',
+			DELETED_AT = NOW()
+	WHERE USER_ID = #{userId}
+	</update>
+    
     
     <!-- 이메일과 전화번호를 받아서 아이디 찾기 -->
     <select id="findId" parameterType="map" resultType="String">
@@ -135,5 +150,12 @@
 		SET		PASSWD = #{passwd}
 		WHERE	BINARY USER_ID = #{userId}
     </update>
+    
+    <select id="findUserForLogin" parameterType="String" resultType="UserDTO">
+    	SELECT *
+    	FROM USER
+    	WHERE BINARY USER_ID = #{userId}
+	</select>
+    
     
 </mapper>

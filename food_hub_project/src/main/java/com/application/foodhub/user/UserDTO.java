@@ -24,8 +24,14 @@ public class UserDTO {
     private String businessType;
     private String smsYn = "N";
     private String emailYn = "N";
-    @DateTimeFormat(pattern="yyyy-MM-dd-hh-mm")
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date joinAt;
-    @DateTimeFormat(pattern="yyyy-MM-dd-hh-mm")
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date modifyAt;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date deletedAt;
+    private String status;
+		
 }
+    
+
