@@ -1,22 +1,3 @@
-
-stat
-
-before
-id  cate join_cnt delete_cnt
-
-after
-id  cate  분류 cnt
-1   user   join_cnt   10
-2   user   delete_cnt 10
-
-
-stat_분류
-1  join_cnt
-2 delete_cnt
-3 신고_cnt
-4 ??_cnt
-
-
 CREATE DATABASE MECMS;
 USE MECMS;
 
@@ -43,7 +24,7 @@ CREATE TABLE USER (
 
 CREATE TABLE STATS (
 	STATS_ID		BIGINT		AUTO_INCREMENT PRIMARY KEY,		-- 통계 아이디
-	CATEGORY_ID		INT 		NOT NULL, 						-- 1) USER_JOIN, 2) USER_DELETE , 3) POST_CREATE , 4) POST_DELETE , 5) COMMENT_CREATE , 6) COMMENT_DELETE 등
+	CATEGORY_ID		INT 		NOT NULL, 						-- 1) 가입한 유저 통계 , 2) 탈퇴한 유저 통계 , 3) 총 유저 통계 , 4) 총 게시글 통계 , 5) 카테고리별 게시글 , 6) 댓글 통계
 	STAT_DATE		DATE 		NOT NULL,  						-- 통계 기간 
 	STAT_CNT		BIGINT 		DEFAULT 0,		  				-- 통계 수
 	CREATED_AT		TIMESTAMP 	DEFAULT NOW(),					-- 테이블 생성시간
@@ -171,7 +152,7 @@ CREATE TABLE BOOKMARKS (
 
 
 INSERT INTO POST_CATEGORY (CATEGORY_ID, CATEGORY_NM) VALUES
-(0, '공지사항'),
+(0, '공지사항'), 
 (1, '외식업정보게시판'),
 (2, '자유게시판'),
 (3, '알바공고게시판'),
