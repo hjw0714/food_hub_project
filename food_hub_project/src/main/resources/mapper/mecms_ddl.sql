@@ -1,3 +1,22 @@
+
+stat
+
+before
+id  cate join_cnt delete_cnt
+
+after
+id  cate  분류 cnt
+1   user   join_cnt   10
+2   user   delete_cnt 10
+
+
+stat_분류
+1  join_cnt
+2 delete_cnt
+3 신고_cnt
+4 ??_cnt
+
+
 CREATE DATABASE MECMS;
 USE MECMS;
 
@@ -17,19 +36,19 @@ CREATE TABLE USER (
     SMS_YN 				CHAR(1)   	 NOT NULL,            -- SMS 수신 여부 (N: 아니오, Y: 예)
 	EMAIL_YN 			CHAR(1)   	 NOT NULL,            -- 이메일 수신 여부 (N: 아니오, Y: 예)
 	JOIN_AT 			TIMESTAMP DEFAULT NOW(),   				-- 가입일
-	MODIFY_AT 			TIMESTAMP DEFAULT NOW() ON UPDATE NOW() -- 수정일
+	MODIFY_AT 			TIMESTAMP DEFAULT NOW() ON UPDATE NOW(), -- 수정일
 	DELETED_AT 			DATETIME DEFAULT NULL,
 	STATUS 				VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE STATS (
 	STATS_ID		BIGINT		AUTO_INCREMENT PRIMARY KEY,		-- 통계 아이디
-	CATE			VARCHAR(50) NOT NULL, 						-- USER , POST , COMMENT , POST_REPORT , COMMENT_REPORT
-	TERM			DATE 		NOT NULL,  						-- 기간 
-	JOIN_CNT		BIGINT 		DEFAULT 0,		  				-- 기간동안의 가입 수
-	DELETED_CNT     BIGINT 		DEFAULT 0,						-- 기간동안의 탈퇴 수
+	CATEGORY_ID		INT 		NOT NULL, 						-- 1) USER_JOIN, 2) USER_DELETE , 3) POST_CREATE , 4) POST_DELETE , 5) COMMENT_CREATE , 6) COMMENT_DELETE 등
+	STAT_DATE		DATE 		NOT NULL,  						-- 통계 기간 
+	STAT_CNT		BIGINT 		DEFAULT 0,		  				-- 통계 수
 	CREATED_AT		TIMESTAMP 	DEFAULT NOW(),					-- 테이블 생성시간
-	UPDATED_AT		TIMESTAMP 	DEFAULT NOW() ON UPDATE NOW()	-- 테이블 수정시간
+	UPDATED_AT		TIMESTAMP 	DEFAULT NOW() ON UPDATE NOW(),	-- 테이블 수정시간
+	UNIQUE KEY UNIQUE_STAT (STAT_DATE, CATEGORY_ID)
 );
 
 CREATE TABLE POST_CATEGORY (
