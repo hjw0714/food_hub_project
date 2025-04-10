@@ -130,7 +130,8 @@
 		<!-- 특정 게시글의 모든 댓글 상태를 DELETED로 변경 -->
 	<update id="commentsDeletedByPostId">
 	    UPDATE COMMENTS 
-	    SET status = 'DELETED'
+	    SET status = 'DELETED',
+	    	UPDATED_AT = NOW()
 	    WHERE POST_ID = #{postId}
 	</update>
 		
