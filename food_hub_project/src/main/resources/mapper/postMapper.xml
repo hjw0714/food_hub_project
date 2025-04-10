@@ -125,7 +125,8 @@
 	<!-- 게시글 삭제 -->
 	<update id="markPostAsDeleted">
 	    UPDATE 	POST 
-	    SET 	STATUS = 'DELETED'
+	    SET 	STATUS = 'DELETED',
+	    		UPDATED_AT = NOW()
 	    WHERE 	POST_ID = #{postId}
 	</update>
 	
