@@ -6,9 +6,6 @@
     <link href="/assets/css/chat.css" rel="stylesheet">
 </head>
 <body>
-<noscript>
-    <h2>Sorry! Your browser doesn't support Javascript</h2>
-</noscript>
 
 <div id="username-page">
     <div class="username-page-container">
@@ -18,7 +15,8 @@
                 <input type="text" id="name" th:value="${session.nickname}" autocomplete="off" class="form-control" readonly/>
             </div>
             <div class="form-group">
-                <button type="submit" class="accent username-submit">채팅방 입장</button>
+                <button type="submit" class="accent username-submit">공개 채팅방 입장</button>
+                <button type="submit" class="accent username-submit">비공개 채팅방 입장</button>
             </div>
         </form>
     </div>

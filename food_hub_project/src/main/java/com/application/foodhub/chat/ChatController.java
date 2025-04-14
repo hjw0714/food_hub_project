@@ -1,5 +1,6 @@
 package com.application.foodhub.chat;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -7,13 +8,18 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.application.foodhub.user.UserDTO;
+import com.application.foodhub.user.UserService;
+
+import jakarta.servlet.http.HttpSession;
 
 
 @Controller
 public class ChatController {
+
 
 
 	
@@ -43,4 +49,5 @@ public class ChatController {
         headerAccessor.getSessionAttributes().put("username", chatMessage.getSender());
         return chatMessage;
     }
+    
 }
