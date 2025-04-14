@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.application.foodhub.stats.StatsDAO">
+	
+	<!-- 오늘 날짜의 방문자 통계 조회 -->
+	<select id="getVisitorCnt" resultType="Long">
+		SETECT  STAT_CNT
+		FROM	STATS
+		WHERE	CATEGORY_ID = #{categoryId}
+		AND		STAT_DATE = #{statDate}
+	</select>
+	
+	<!-- 방문자 수 증가 -->
+	<update id="incrementVisitorCnt">
+		INSERT INTO STATS (
+			CATEGORY_ID,
+			STAT_DATE,
+			STAT_CNT,
+			CREATED_AT,
+			UPDATED_AT
+		)
+		VALUES (
+			#{categoryId},
+			#{statDate},
+			1,
+			NOW(),
+			NOW()
+		)
+		ON DUPLICATE KEY UPDATE
+		STAT_CNT = STAT_CNT + 1,
+		UPDATED_AT = NOW()
+	</update>
+	
+	<!-- 새로운 통계 기록 삽입 -->
+	<insert id="insertVisitorStats">
+		INSERT INTO STATS (
+			CATEGORY_ID,
+			STAT_DATE,
+			STAT_CNT,
+			CREATED_AT,
+			UPDATED_AT
+		)
+		VALUES (
+			#{categoryId},
+			#{statDate},
+			0,
+			NOW(),
+			NOW()
+		)
+	</insert>
+	
+	<!-- IP로 방문자 로그 조회 -->
+    <select id="getVisitorLogByIp" parameterType="String" resultType="com.application.foodhub.stats.VisitorLogDTO">
+    	SELECT	VISITOR_ID,
+    			IP_ADDRESS,
+    			LAST_VISIT,
+    			USER_ID
+		FROM	VISITOR_LOG
+		WHERE	IP_ADDRESS = #{ipAddress}
+    </select>
+    
+    <!-- 방문자 로그 삽입 -->
+    <insert id="insertVisitorLog" parameterType="com.application.foodhub.stats.VisitorLogDTO">
+    	INSERT INTO VISITOR_LOG (
+    		IP_ADDRESS,
+    		LAST_VISIT,
+    		USER_ID
+    	)
+    	VALUES (
+    		#{ipAddress},
+    		NOW(),
+    		#{userId}
+    	)
+    </insert>
+    
+    <!-- 방문자 로그 업데이트 -->
+    <update id="updateVisitorLog" parameterType="com.application.foodhub.stats.VisitorLogDTO">
+    	UPDATE	VISITOR_LOG
+    	SET		LAST_VISIT = NOW(),
+    			USER_ID = #{userId}
+		WHERE	IP_ADDRESS = #{ipAddress}
+    </update>
+	
+</mapper>

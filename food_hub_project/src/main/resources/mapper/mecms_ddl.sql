@@ -24,12 +24,20 @@ CREATE TABLE USER (
 
 CREATE TABLE STATS (
 	STATS_ID		BIGINT		AUTO_INCREMENT PRIMARY KEY,		-- 통계 아이디
-	CATEGORY_ID		INT 		NOT NULL, 						-- 1) 가입한 유저 통계 , 2) 탈퇴한 유저 통계 , 3) 총 유저 통계 , 4) 총 게시글 통계 , 5) 카테고리별 게시글 , 6) 댓글 통계
+	CATEGORY_ID		INT 		NOT NULL, 						-- 1) 가입한 유저 통계 , 2) 탈퇴한 유저 통계 , 3) 총 유저 통계 , 4) 총 게시글 통계 , 5) 카테고리별 게시글 , 6) 댓글 통계 , 7) 방문자 통계
 	STAT_DATE		DATE 		NOT NULL,  						-- 통계 기간 
 	STAT_CNT		BIGINT 		DEFAULT 0,		  				-- 통계 수
 	CREATED_AT		TIMESTAMP 	DEFAULT NOW(),					-- 테이블 생성시간
 	UPDATED_AT		TIMESTAMP 	DEFAULT NOW() ON UPDATE NOW(),	-- 테이블 수정시간
 	UNIQUE KEY UNIQUE_STAT (STAT_DATE, CATEGORY_ID)
+);
+
+CREATE TABLE VISITOR_LOG (
+    VISITOR_ID      BIGINT      AUTO_INCREMENT PRIMARY KEY,  -- 방문자 로그 ID
+	IP_ADDRESS      VARCHAR(45) NOT NULL,         	      	 -- 클라이언트 IP (IPv4/IPv6 지원)
+    LAST_VISIT      TIMESTAMP   DEFAULT NOW(),         		 -- 마지막 방문 시간
+    USER_ID         VARCHAR(255) DEFAULT NULL,         		 -- 로그인한 사용자 ID (NULL 가능)
+    UNIQUE KEY UNIQUE_IP (IP_ADDRESS)                      	 -- IP별 유니크 제약
 );
 
 CREATE TABLE POST_CATEGORY (
