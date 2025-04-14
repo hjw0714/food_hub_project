@@ -4,6 +4,8 @@ package com.application.foodhub.user;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +29,7 @@ import com.application.foodhub.bookmark.BookmarkDTO;
 import com.application.foodhub.bookmark.BookmarkService;
 import com.application.foodhub.comment.CommentService;
 import com.application.foodhub.post.PostService;
+import com.application.foodhub.stats.StatsService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -50,6 +53,9 @@ public class UserController {
 	
 	@Autowired
 	private BookmarkService bookmarkService;
+	
+	@Autowired
+	private StatsService statsService;
 	
 	@GetMapping("/login")	// 로그인
 	public String login() {
@@ -165,7 +171,7 @@ public class UserController {
         model.addAttribute("currentCommentPage", commentPage);
         model.addAttribute("totalCommentPages", totalCommentPages);
         
-        // 로그인한 유저가 작성한 전체 북마크 가져오기
+        // 로그인한 유저가 저장한 전체 북마크 가져오기
         List<BookmarkDTO> bookmarks = bookmarkService.getBookmarksByUserId(userId);
         int totalBookmarks = bookmarks.size();
         int totalBookmarkPages = (int) Math.ceil((double) totalBookmarks / size);
@@ -335,5 +341,25 @@ public class UserController {
 
 	    return jsScript;
 	}
+	
+//	@GetMapping
+//    public String index(HttpServletRequest request, Model model) {
+//        HttpSession session = request.getSession();
+//        String userId = (String) session.getAttribute("userId");
+//        Boolean hasVisited = (Boolean) session.getAttribute("hasVisited");
+//
+//        // 세션에 방문 기록이 없으면 방문자로 기록
+//        if (hasVisited == null || !hasVisited) {
+//            statsService.recordVisitor(userId != null ? userId : "anonymous");
+//            session.setAttribute("hasVisited", true);
+//        }
+//
+//        // 오늘 방문자 수 조회
+//        String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+//        Long visitorCnt = statsService.getVisitorCnt(today);
+//        model.addAttribute("visitorCnt", visitorCnt);
+//        
+//        return "foodhub/index";
+//    }
 
 }
