@@ -154,9 +154,11 @@
                         <a href="/foodhub/user/myPage" class="login-btn d-flex align-items-center ms-3">
                             <i class="bi bi-person-circle me-1"></i> 마이페이지
                         </a>
+					<a th:if="${session.userId != null}" href="/foodhub/chat/chat">채팅방 가기</a>
                         <a href="/foodhub/user/logout" class="login-btn d-flex align-items-center">
                             <i></i> 로그아웃
                         </a>
+                        	<!-- 로그인한 사용자만 보이게 -->
                     </div>
                 </div>
             </div>
