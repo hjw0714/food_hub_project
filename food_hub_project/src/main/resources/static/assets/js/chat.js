@@ -116,3 +116,42 @@ function getAvatarColor(messageSender) {
 
 usernameForm.addEventListener('submit', connect, true)
 messageForm.addEventListener('submit', sendMessage, true)
+
+document.querySelectorAll('.username-submit')[1].addEventListener('click', function (e) {
+    e.preventDefault();
+    document.getElementById("username-page").classList.add("hidden");
+    document.getElementById("private-chat-page").classList.remove("hidden");
+    loadMyPrivateChatRooms();
+});
+
+function loadMyPrivateChatRooms() {
+    $.ajax({
+        url: "/chat/private/list",
+        method: "GET",
+        success: function(data) {
+            const list = $('#myChatRoomList');
+            list.empty();
+            data.forEach(room => {
+                list.append(`<li><button onclick="enterChatRoom(${room.roomId})">${room.otherUserNickname}</button></li>`);
+            });
+        }
+    });
+}
+
+
+$('#searchBtn').on('click', function () {
+    const nickname = $('#searchNickname').val();
+    $.ajax({
+        url: "/chat/private/create",
+        method: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({nickname: nickname}),
+        success: function(data) {
+            enterChatRoom(data.roomId);
+        }
+    });
+});
+
+function enterChatRoom(roomId) {
+    location.href = `/chat/private/room/${roomId}`;
+}

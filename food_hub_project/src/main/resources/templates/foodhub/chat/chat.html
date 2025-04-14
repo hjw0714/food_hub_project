@@ -44,6 +44,25 @@
     </div>
 </div>
 
+
+<!-- 비공개 채팅방 UI -->
+<div id="private-chat-page" class="hidden">
+    <div class="chat-container">
+        <div class="chat-header">
+            <h2>나의 1:1 채팅방</h2>
+        </div>
+
+        <!-- 🔍 검색 -->
+        <div class="form-group">
+            <input type="text" id="searchNickname" placeholder="닉네임 검색" class="form-control"/>
+            <button type="button" id="searchBtn">검색</button>
+        </div>
+
+        <!-- 🔽 채팅방 리스트 -->
+        <ul id="myChatRoomList"></ul>
+    </div>
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 <script src="/assets/js/chat.js"></script>
