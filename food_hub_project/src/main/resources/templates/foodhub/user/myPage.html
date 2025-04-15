@@ -105,130 +105,148 @@
             <p th:utext="|<strong>가입일자</strong> : ${#dates.format(userDTO.joinAt, 'yyyy-MM-dd')}|"></p>
           </div>
         </div>
-
-        <!-- 게시글 북마크 리스트 -->
-        <div class="section">
-		   <h4>&ensp;게시글 북마크 리스트</h4>
-		   <ul>
-		       <li th:each="bookmark, iterStat : ${bookmarks}">
-		           <!-- 번호 -->
-		           <span th:text="${(currentBookmarkPage - 1) * 5 + iterStat.index + 1} + '.'"></span>
-		           <!-- 제목 -->
-		           <a th:href="@{/foodhub/post/postDetail(postId=${bookmark.postId})}" 
-		              th:text="${#strings.length(bookmark.title) > 15 ? #strings.substring(bookmark.title, 0, 15) + '...' : bookmark.title}">
-		           </a>
-		           <!-- 북마크 해제 버튼 -->
-		           <button class="remove-bookmark" th:data-post-id="${bookmark.postId}">북마크 해제</button>
-		       </li>
-		   </ul>
-		
-			<!-- 페이징 버튼 -->
-			<div class="pagination">
-				<!-- 첫 페이지 버튼 -->
-				<button th:if="${currentBookmarkPage > 1}"
-				        th:onclick="'location.href=\'/foodhub/user/myPage?bookmarkPage=1&postPage=' + @{${currentPostPage}} + '&commentPage=' + @{${currentCommentPage}} + '\''">
-				    첫 페이지
-				</button>
-				
-				<!-- 이전 버튼 -->
-				<button th:if="${currentBookmarkPage > 1}"
-				        th:onclick="'location.href=\'/foodhub/user/myPage?bookmarkPage=' + @{${currentBookmarkPage - 1}} + '&postPage=' + @{${currentPostPage}} + '&commentPage=' + @{${currentCommentPage}} + '\''">
-				    이전
-				</button>
-				
-				<!-- 현재 페이지 표시 -->
-				<span th:text="|${currentBookmarkPage} / ${totalBookmarkPages}|" style="font-size: 16px; font-weight: bold;"></span>
-				
-				<!-- 다음 버튼 -->
-				<button th:if="${currentBookmarkPage < totalBookmarkPages}"
-				        th:onclick="'location.href=\'/foodhub/user/myPage?bookmarkPage=' + @{${currentBookmarkPage + 1}} + '&postPage=' + @{${currentPostPage}} + '&commentPage=' + @{${currentCommentPage}} + '\''">
-				    다음
-				</button>
-				
-				<!-- 마지막 페이지 버튼 -->
-			    <button th:if="${currentBookmarkPage < totalBookmarkPages}"
-			            th:onclick="'location.href=\'/foodhub/user/myPage?bookmarkPage=' + @{${totalBookmarkPages}} + '&postPage=' + @{${currentPostPage}} + '&commentPage=' + @{${currentCommentPage}} + '\''">
-			        마지막 페이지
-			    </button>
-			</div>
+        
+        <!-- 일반 유저 전용 영역: 북마크, 게시글, 댓글 리스트 -->
+		<div th:if="${userDTO.membershipType != 'ADMIN'}">
+		  
+			<!-- 게시글 북마크 리스트 -->
+	        <div class="section">
+			   <h4>&ensp;게시글 북마크 리스트</h4>
+			   <ul>
+			       <li th:each="bookmark, iterStat : ${bookmarks}">
+			           <!-- 번호 -->
+			           <span th:text="${(currentBookmarkPage - 1) * 5 + iterStat.index + 1} + '.'"></span>
+			           <!-- 제목 -->
+			           <a th:href="@{/foodhub/post/postDetail(postId=${bookmark.postId})}" 
+			              th:text="${#strings.length(bookmark.title) > 15 ? #strings.substring(bookmark.title, 0, 15) + '...' : bookmark.title}">
+			           </a>
+			           <!-- 북마크 해제 버튼 -->
+			           <button class="remove-bookmark" th:data-post-id="${bookmark.postId}">북마크 해제</button>
+			       </li>
+			   </ul>
 			
+				<!-- 페이징 버튼 -->
+				<div class="pagination">
+					<!-- 첫 페이지 버튼 -->
+					<button th:if="${currentBookmarkPage > 1}"
+					        th:onclick="'location.href=\'/foodhub/user/myPage?bookmarkPage=1&postPage=' + @{${currentPostPage}} + '&commentPage=' + @{${currentCommentPage}} + '\''">
+					    첫 페이지
+					</button>
+					
+					<!-- 이전 버튼 -->
+					<button th:if="${currentBookmarkPage > 1}"
+					        th:onclick="'location.href=\'/foodhub/user/myPage?bookmarkPage=' + @{${currentBookmarkPage - 1}} + '&postPage=' + @{${currentPostPage}} + '&commentPage=' + @{${currentCommentPage}} + '\''">
+					    이전
+					</button>
+					
+					<!-- 현재 페이지 표시 -->
+					<span th:text="|${currentBookmarkPage} / ${totalBookmarkPages}|" style="font-size: 16px; font-weight: bold;"></span>
+					
+					<!-- 다음 버튼 -->
+					<button th:if="${currentBookmarkPage < totalBookmarkPages}"
+					        th:onclick="'location.href=\'/foodhub/user/myPage?bookmarkPage=' + @{${currentBookmarkPage + 1}} + '&postPage=' + @{${currentPostPage}} + '&commentPage=' + @{${currentCommentPage}} + '\''">
+					    다음
+					</button>
+					
+					<!-- 마지막 페이지 버튼 -->
+				    <button th:if="${currentBookmarkPage < totalBookmarkPages}"
+				            th:onclick="'location.href=\'/foodhub/user/myPage?bookmarkPage=' + @{${totalBookmarkPages}} + '&postPage=' + @{${currentPostPage}} + '&commentPage=' + @{${currentCommentPage}} + '\''">
+				        마지막 페이지
+				    </button>
+				</div>
+				
+			</div>
+	
+	        <!-- 나의 게시글 리스트 -->
+	       <div class="section">
+			    <h4>&ensp;나의 게시글 리스트</h4>
+			    <ul>
+			        <li th:each="post, postList : ${myPostList}">
+			            <div style="display: flex; align-items: center;">
+			                <span th:text="${(currentPostPage - 1) * 5 + postList.count} + '.'" style="margin-right: 8px;"></span>
+			                <a th:href="@{/foodhub/post/postDetail(postId=${post.postId})}" 
+			               		th:text="${#strings.length(post.title) > 20 ? #strings.substring(post.title, 0, 20) + '...' : post.title}">
+		               		</a>
+			            </div>
+			        </li>
+			    </ul>
+			
+			    <!-- 페이징 버튼 -->
+			    <div class="pagination">
+				    <button th:if="${currentPostPage > 1}"
+				            th:onclick="'location.href=\'/foodhub/user/myPage?postPage=' + @{${currentPostPage - 1}} + '\''">
+				        이전
+				    </button>
+				
+				    <span th:text="|${currentPostPage} / ${totalPostPages}|" style="font-size: 16px; font-weight: bold;"></span>
+				
+				    <button th:if="${currentPostPage < totalPostPages}"
+				            th:onclick="'location.href=\'/foodhub/user/myPage?postPage=' + @{${currentPostPage + 1}} + '\''">
+				        다음
+				    </button>
+				</div>
+			</div>
+				       
+	 		<!-- 나의 댓글 리스트 -->
+	        <div class="section">
+	            <h4>&ensp; 나의 댓글 리스트</h4>
+	            <ul>
+			        <li th:each="comment, commetList : ${myCommentList}">
+			            <div style="display: flex; align-items: center;">
+			                <span th:text="${(currentCommentPage - 1) * 5 + commetList.count} + '.'" style="margin-right: 8px;"></span>
+			                <a th:href="@{/foodhub/post/postDetail(postId=${comment.postId})}"
+			                   th:text="${#strings.length(comment.content) > 20 ? #strings.substring(comment.content, 0, 20) + '...' : comment.content}">
+			                </a>
+			            </div>
+			        </li>
+			    </ul>
+			    <!-- 페이징 버튼 -->
+			    <div class="pagination">
+				    <button th:if="${currentCommentPage > 1}"
+				            th:onclick="'location.href=\'/foodhub/user/myPage?commentPage=' + @{${currentCommentPage - 1}} + '\''">
+				        이전
+				    </button>
+				
+				    <span th:text="|${currentCommentPage} / ${totalCommentPages}|" style="font-size: 16px; font-weight: bold;"></span>
+				
+				    <button th:if="${currentCommentPage < totalCommentPages}"
+				            th:onclick="'location.href=\'/foodhub/user/myPage?commentPage=' + @{${currentCommentPage + 1}} + '\''">
+				        다음
+				    </button>
+				</div>
+	        </div>
+	
+	        <div class="actions">
+	            <!-- 프로필 수정 버튼을 링크로 변경 -->
+	            <a th:href="@{/foodhub/user/modifyPage}">
+	                <button>프로필 수정</button>
+	            </a>
+	
+	            <!-- 비밀번호 변경 버튼을 링크로 추가 -->
+	            <a th:href="@{/foodhub/user/changePassword}">
+	                <button>비밀번호 변경</button>
+	            </a>
+	            
+	            <!-- 회원 탈퇴 버튼을 링크로 변경 -->
+	            <a th:href="@{/foodhub/user/deleteUser}">
+	                <button>회원 탈퇴</button>
+	            </a>
+	        </div>
+
+		</div>
+		
+		<!-- 관리자 전용 영역 -->
+		<div class="section admin-only-section" th:if="${userDTO.membershipType == 'ADMIN'}">
+		  <h4>👑 관리자 전용 👑</h4>
+		  <div class="admin-box">
+		    <p style="margin: 10px 0;">관리자 기능은 별도 페이지에서 확인할 수 있어요.</p>
+		    <a href="http://localhost:5173/admin/login" target="_blank" class="admin-link">
+		      <button>관리자 페이지로 이동</button>
+		    </a>
+		  </div>
 		</div>
 
-        <!-- 나의 게시글 리스트 -->
-       <div class="section">
-		    <h4>&ensp;나의 게시글 리스트</h4>
-		    <ul>
-		        <li th:each="post, postList : ${myPostList}">
-		            <div style="display: flex; align-items: center;">
-		                <span th:text="${(currentPostPage - 1) * 5 + postList.count} + '.'" style="margin-right: 8px;"></span>
-		                <a th:href="@{/foodhub/post/postDetail(postId=${post.postId})}" 
-		               		th:text="${#strings.length(post.title) > 20 ? #strings.substring(post.title, 0, 20) + '...' : post.title}">
-	               		</a>
-		            </div>
-		        </li>
-		    </ul>
-		
-		    <!-- 페이징 버튼 -->
-		    <div class="pagination">
-			    <button th:if="${currentPostPage > 1}"
-			            th:onclick="'location.href=\'/foodhub/user/myPage?postPage=' + @{${currentPostPage - 1}} + '\''">
-			        이전
-			    </button>
-			
-			    <span th:text="|${currentPostPage} / ${totalPostPages}|" style="font-size: 16px; font-weight: bold;"></span>
-			
-			    <button th:if="${currentPostPage < totalPostPages}"
-			            th:onclick="'location.href=\'/foodhub/user/myPage?postPage=' + @{${currentPostPage + 1}} + '\''">
-			        다음
-			    </button>
-			</div>
-		</div>
-			       
- 		<!-- 나의 댓글 리스트 -->
-        <div class="section">
-            <h4>&ensp; 나의 댓글 리스트</h4>
-            <ul>
-		        <li th:each="comment, commetList : ${myCommentList}">
-		            <div style="display: flex; align-items: center;">
-		                <span th:text="${(currentCommentPage - 1) * 5 + commetList.count} + '.'" style="margin-right: 8px;"></span>
-		                <a th:href="@{/foodhub/post/postDetail(postId=${comment.postId})}"
-		                   th:text="${#strings.length(comment.content) > 20 ? #strings.substring(comment.content, 0, 20) + '...' : comment.content}">
-		                </a>
-		            </div>
-		        </li>
-		    </ul>
-		    <!-- 페이징 버튼 -->
-		    <div class="pagination">
-			    <button th:if="${currentCommentPage > 1}"
-			            th:onclick="'location.href=\'/foodhub/user/myPage?commentPage=' + @{${currentCommentPage - 1}} + '\''">
-			        이전
-			    </button>
-			
-			    <span th:text="|${currentCommentPage} / ${totalCommentPages}|" style="font-size: 16px; font-weight: bold;"></span>
-			
-			    <button th:if="${currentCommentPage < totalCommentPages}"
-			            th:onclick="'location.href=\'/foodhub/user/myPage?commentPage=' + @{${currentCommentPage + 1}} + '\''">
-			        다음
-			    </button>
-			</div>
-        </div>
-
-        <div class="actions">
-            <!-- 프로필 수정 버튼을 링크로 변경 -->
-            <a th:href="@{/foodhub/user/modifyPage}">
-                <button>프로필 수정</button>
-            </a>
-
-            <!-- 비밀번호 변경 버튼을 링크로 추가 -->
-            <a th:href="@{/foodhub/user/changePassword}">
-                <button>비밀번호 변경</button>
-            </a>
-            
-            <!-- 회원 탈퇴 버튼을 링크로 변경 -->
-            <a th:href="@{/foodhub/user/deleteUser}">
-                <button>회원 탈퇴</button>
-            </a>
-        </div>
+        
     </div>
 
 </div>
