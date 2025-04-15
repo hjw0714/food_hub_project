@@ -3,6 +3,7 @@ package com.application.foodhub.user;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface UserDAO {
@@ -22,6 +23,8 @@ public interface UserDAO {
 
 	public void softDeleteUser(String userId);
 	public UserDTO findUserForLogin(String userId);  		// userId로 status까지 포함한 사용자 정보 조회
+	
+	public UserDTO findByNickname(@Param("nickname")String nickname);			// 채팅 유저 닉네임 검색
 
 
 }

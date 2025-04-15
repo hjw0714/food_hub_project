@@ -157,5 +157,12 @@
     	WHERE BINARY USER_ID = #{userId}
 	</select>
     
+    <!-- 채팅 유저 닉네임 찾기 -->
+    <select id="findByNickname" resultType="UserDTO">
+        SELECT *
+        FROM USER
+        WHERE NICKNAME = #{nickname}
+        LIMIT 1
+    </select>
     
 </mapper>

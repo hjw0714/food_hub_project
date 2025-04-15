@@ -70,7 +70,7 @@ public class UserController {
 		if (userService.login(userDTO)) {
 	        HttpSession session = request.getSession();
 	        session.setAttribute("userId", userDTO.getUserId());
-
+	        
 	        // 닉네임을 DB에서 가져와서 세션에 저장
 	        String nickname = userService.findNicknameByUserId(userDTO.getUserId());
 	        session.setAttribute("nickname", nickname);
@@ -79,8 +79,9 @@ public class UserController {
 	        UserDTO userInfo = userService.getUserDetail(userDTO.getUserId()); // DB에서 전체 정보 가져오기
 	        String membershipType = userInfo.getMembershipType(); // DB에서 가져온 값 사용
 	        session.setAttribute("membershipType", membershipType); // 세션에 저장
+	        session.setAttribute("userDTO", userInfo);
 
-	        System.out.println("로그인 성공 - UserId: " + userDTO.getUserId() + ", 닉네임: " + nickname + ", 회원 타입: " + membershipType);
+	        System.out.println("로그인 성공 - UserId: " + userDTO.getUserId() + ", 닉네임: " + nickname + ", 회원 타입: " + membershipType + userInfo);
 
 	        isValidUser = "y";
 	    }
@@ -209,7 +210,7 @@ public class UserController {
 	
 	@PostMapping("/updateUser")
 	   @ResponseBody
-	   public String updateUser(
+	   public String updateUser(HttpServletRequest request,
 	           @RequestParam(value = "uploadProfile", required = false) MultipartFile uploadProfile,
 	           @RequestParam("existingProfileImage") String existingProfileImage,
 	           @ModelAttribute UserDTO userDTO) throws IllegalStateException, IOException {
@@ -219,7 +220,15 @@ public class UserController {
 	           userDTO.setProfileUUID(existingProfileImage);
 	       }
 
+	      
 	       userService.updateUser(uploadProfile, userDTO);
+	       HttpSession session = request.getSession();
+	       UserDTO userInfo = userService.getUserDetail(userDTO.getUserId());
+	       // ✅ 세션에 최신 정보 반영
+	       session.setAttribute("userId", userDTO.getUserId());
+	       session.setAttribute("nickname", userDTO.getNickname());
+	       session.setAttribute("profileUUID", userDTO.getProfileUUID());
+	       session.setAttribute("userDTO", userInfo);
 
 	       String jsScript = """
 	               <script>
