@@ -33,11 +33,10 @@ CREATE TABLE STATS (
 );
 
 CREATE TABLE VISITOR_LOG (
-    VISITOR_ID      BIGINT      AUTO_INCREMENT PRIMARY KEY,  -- 방문자 로그 ID
-	IP_ADDRESS      VARCHAR(45) NOT NULL,         	      	 -- 클라이언트 IP (IPv4/IPv6 지원)
-    LAST_VISIT      TIMESTAMP   DEFAULT NOW(),         		 -- 마지막 방문 시간
-    USER_ID         VARCHAR(255) DEFAULT NULL,         		 -- 로그인한 사용자 ID (NULL 가능)
-    UNIQUE KEY UNIQUE_IP (IP_ADDRESS)                      	 -- IP별 유니크 제약
+    VISITOR_ID      BIGINT       AUTO_INCREMENT PRIMARY KEY,  -- 방문자 로그 ID
+    IP_ADDRESS      VARCHAR(45)  NOT NULL,               	  -- 클라이언트 IP (IPv4/IPv6 지원)
+    VISIT_TIME      TIMESTAMP    DEFAULT NOW(),         	  -- 마지막 방문 시간
+    USER_ID         VARCHAR(255) DEFAULT NULL         		  -- 로그인한 사용자 ID (NULL 가능)
 );
 
 CREATE TABLE POST_CATEGORY (

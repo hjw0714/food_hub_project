@@ -103,6 +103,7 @@
 			    <strong>업종: </strong><span th:text="${userDTO.businessType}"></span>
 			</p>
             <p th:utext="|<strong>가입일자</strong> : ${#dates.format(userDTO.joinAt, 'yyyy-MM-dd')}|"></p>
+            <p><strong>총 방문 횟수:</strong> <span th:text="${userVisitCnt}"></span>회</p>
           </div>
         </div>
 

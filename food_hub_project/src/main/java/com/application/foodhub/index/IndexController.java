@@ -1,7 +1,7 @@
 package com.application.foodhub.index;
 
-
-
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,6 +14,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import com.application.foodhub.post.PostService;
 import com.application.foodhub.postLike.PostLikeService;
+import com.application.foodhub.stats.StatsService;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class IndexController {
@@ -24,13 +28,30 @@ public class IndexController {
 	@Autowired
 	private PostService postService;
 
+	@Autowired
+	private StatsService statsService;
+
 	@GetMapping
 	public String index() {
 		return "redirect:/foodhub";
 	}
 
 	@GetMapping("/foodhub")
-	public String foodhub(Model model) {
+	public String foodhub(HttpServletRequest request, Model model) {
+		HttpSession session = request.getSession();
+		String userId = (String) session.getAttribute("userId");
+
+		// 방문자 기록
+		statsService.recordVisitor(request, userId);
+
+		// 오늘 방문자 수
+		String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+		Long visitorCnt = statsService.getVisitorCnt(today);
+		model.addAttribute("visitorCnt", visitorCnt);
+
+		// 전체 방문자 수
+		Long totalVisitorCnt = statsService.getTotalVisitorCnt();
+		model.addAttribute("totalVisitorCnt", totalVisitorCnt);
 
 		List<Map<String, Object>> topLikedPosts = postLikeService.getTopLikedPosts();
 
@@ -45,7 +66,7 @@ public class IndexController {
 		Map<Integer, String> categoryNames = new HashMap<>(); // 카테고리 ID와 이름 매핑
 
 		// 카테고리 이름 설정
-		
+
 		categoryNames.putIfAbsent(1, "🍽️외식업정보게시판");
 		categoryNames.putIfAbsent(2, "💬자유게시판");
 		categoryNames.putIfAbsent(3, "🛎️알바공고게시판");
@@ -65,7 +86,7 @@ public class IndexController {
 			categoryLatestPosts.put(categoryId, latestPosts);
 
 		}
-		
+
 		// 공지사항은 따로
 		List<Map<String, Object>> noticePosts = postService.getLatestPostsByCategoryId(0, 4);
 		if (noticePosts == null || noticePosts.isEmpty()) {
