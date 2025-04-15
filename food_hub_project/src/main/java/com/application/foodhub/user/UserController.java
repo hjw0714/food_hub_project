@@ -5,6 +5,7 @@ package com.application.foodhub.user;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -56,29 +57,54 @@ public class UserController {
 		return "foodhub/user/login";
 	}
 	
-	@PostMapping("/login")	// 로그인
+//	@PostMapping("/login")	// 로그인
+//	@ResponseBody
+//	public String login(@RequestBody UserDTO userDTO , HttpServletRequest request) {
+//		String isValidUser = "n"; // 유저 중복 검사
+//		
+//		if (userService.login(userDTO)) {
+//	        HttpSession session = request.getSession();
+//	        session.setAttribute("userId", userDTO.getUserId());
+//
+//	        // 닉네임을 DB에서 가져와서 세션에 저장
+//	        String nickname = userService.findNicknameByUserId(userDTO.getUserId());
+//	        session.setAttribute("nickname", nickname);
+//	        
+//	        // 유저 정보 조회하여 membershipType 가져오기
+//	        UserDTO userInfo = userService.getUserDetail(userDTO.getUserId()); // DB에서 전체 정보 가져오기
+//	        String membershipType = userInfo.getMembershipType(); // DB에서 가져온 값 사용
+//	        session.setAttribute("membershipType", membershipType); // 세션에 저장
+//
+//	        System.out.println("로그인 성공 - UserId: " + userDTO.getUserId() + ", 닉네임: " + nickname + ", 회원 타입: " + membershipType);
+//
+//	        isValidUser = "y";
+//	    }
+//		return isValidUser;
+//	}
+	
+	@PostMapping("/login")
 	@ResponseBody
-	public String login(@RequestBody UserDTO userDTO , HttpServletRequest request) {
-		String isValidUser = "n"; // 유저 중복 검사
-		
-		if (userService.login(userDTO)) {
+	public Map<String, String> login(@RequestBody UserDTO userDTO , HttpServletRequest request) {
+	    Map<String, String> result = new HashMap<>();
+
+	    if (userService.login(userDTO)) {
 	        HttpSession session = request.getSession();
 	        session.setAttribute("userId", userDTO.getUserId());
 
-	        // 닉네임을 DB에서 가져와서 세션에 저장
 	        String nickname = userService.findNicknameByUserId(userDTO.getUserId());
 	        session.setAttribute("nickname", nickname);
-	        
-	        // 유저 정보 조회하여 membershipType 가져오기
-	        UserDTO userInfo = userService.getUserDetail(userDTO.getUserId()); // DB에서 전체 정보 가져오기
-	        String membershipType = userInfo.getMembershipType(); // DB에서 가져온 값 사용
-	        session.setAttribute("membershipType", membershipType); // 세션에 저장
 
-	        System.out.println("로그인 성공 - UserId: " + userDTO.getUserId() + ", 닉네임: " + nickname + ", 회원 타입: " + membershipType);
+	        UserDTO userInfo = userService.getUserDetail(userDTO.getUserId());
+	        String membershipType = userInfo.getMembershipType();  // ADMIN, USER 등
+	        session.setAttribute("membershipType", membershipType);
 
-	        isValidUser = "y";
+	        result.put("status", "success");
+	        result.put("membershipType", membershipType); // 클라이언트로도 전달
+	    } else {
+	        result.put("status", "fail");
 	    }
-		return isValidUser;
+
+	    return result;
 	}
 	
 	@GetMapping("/register") 	// 회원가입
