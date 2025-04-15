@@ -68,6 +68,9 @@ document.addEventListener("DOMContentLoaded", function () {
 	<!-- Slider Section -->
 	<section id="slider" class="slider section dark-background">
 	  <div class="container" data-aos="fade-up" data-aos-delay="100">
+	  	<div>
+	  		<p>오늘의 방문자 수: <span th:text="${visitorCount}"></span>명</p>
+	  	</div>
 	    <div class="swiper init-swiper">
 	      <script type="application/json" class="swiper-config">
         {
@@ -106,7 +109,6 @@ document.addEventListener("DOMContentLoaded", function () {
 	    </div>
 	  </div>
 	</section>
-	
 	 <!-- 🔹 검색창 -->
 	<div class="container" data-aos="fade-up" data-aos-delay="100">
 	    <div class="index-search-container">

@@ -4,6 +4,8 @@ package com.application.foodhub.user;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +30,7 @@ import com.application.foodhub.bookmark.BookmarkDTO;
 import com.application.foodhub.bookmark.BookmarkService;
 import com.application.foodhub.comment.CommentService;
 import com.application.foodhub.post.PostService;
+import com.application.foodhub.stats.StatsService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -51,6 +54,9 @@ public class UserController {
 	
 	@Autowired
 	private BookmarkService bookmarkService;
+	
+	@Autowired
+	private StatsService statsService;
 	
 	@GetMapping("/login")	// 로그인
 	public String login() {
@@ -91,12 +97,22 @@ public class UserController {
 	        HttpSession session = request.getSession();
 	        session.setAttribute("userId", userDTO.getUserId());
 
+
+
+
+	        
+	        // 닉네임을 DB에서 가져와서 세션에 저장
 	        String nickname = userService.findNicknameByUserId(userDTO.getUserId());
 	        session.setAttribute("nickname", nickname);
+	        
+	        // 유저 정보 조회하여 membershipType 가져오기
+	        UserDTO userInfo = userService.getUserDetail(userDTO.getUserId()); // DB에서 전체 정보 가져오기
+	        String membershipType = userInfo.getMembershipType(); // DB에서 가져온 값 사용
+	        session.setAttribute("membershipType", membershipType); // 세션에 저장
+	        session.setAttribute("userDTO", userInfo);
 
-	        UserDTO userInfo = userService.getUserDetail(userDTO.getUserId());
-	        String membershipType = userInfo.getMembershipType();  // ADMIN, USER 등
-	        session.setAttribute("membershipType", membershipType);
+	        System.out.println("로그인 성공 - UserId: " + userDTO.getUserId() + ", 닉네임: " + nickname + ", 회원 타입: " + membershipType + userInfo);
+
 
 	        result.put("status", "success");
 	        result.put("membershipType", membershipType); // 클라이언트로도 전달
@@ -191,7 +207,7 @@ public class UserController {
         model.addAttribute("currentCommentPage", commentPage);
         model.addAttribute("totalCommentPages", totalCommentPages);
         
-        // 로그인한 유저가 작성한 전체 북마크 가져오기
+        // 로그인한 유저가 저장한 전체 북마크 가져오기
         List<BookmarkDTO> bookmarks = bookmarkService.getBookmarksByUserId(userId);
         int totalBookmarks = bookmarks.size();
         int totalBookmarkPages = (int) Math.ceil((double) totalBookmarks / size);
@@ -229,7 +245,7 @@ public class UserController {
 	
 	@PostMapping("/updateUser")
 	   @ResponseBody
-	   public String updateUser(
+	   public String updateUser(HttpServletRequest request,
 	           @RequestParam(value = "uploadProfile", required = false) MultipartFile uploadProfile,
 	           @RequestParam("existingProfileImage") String existingProfileImage,
 	           @ModelAttribute UserDTO userDTO) throws IllegalStateException, IOException {
@@ -239,7 +255,15 @@ public class UserController {
 	           userDTO.setProfileUUID(existingProfileImage);
 	       }
 
+	      
 	       userService.updateUser(uploadProfile, userDTO);
+	       HttpSession session = request.getSession();
+	       UserDTO userInfo = userService.getUserDetail(userDTO.getUserId());
+	       // ✅ 세션에 최신 정보 반영
+	       session.setAttribute("userId", userDTO.getUserId());
+	       session.setAttribute("nickname", userDTO.getNickname());
+	       session.setAttribute("profileUUID", userDTO.getProfileUUID());
+	       session.setAttribute("userDTO", userInfo);
 
 	       String jsScript = """
 	               <script>
@@ -361,5 +385,25 @@ public class UserController {
 
 	    return jsScript;
 	}
+	
+//	@GetMapping
+//    public String index(HttpServletRequest request, Model model) {
+//        HttpSession session = request.getSession();
+//        String userId = (String) session.getAttribute("userId");
+//        Boolean hasVisited = (Boolean) session.getAttribute("hasVisited");
+//
+//        // 세션에 방문 기록이 없으면 방문자로 기록
+//        if (hasVisited == null || !hasVisited) {
+//            statsService.recordVisitor(userId != null ? userId : "anonymous");
+//            session.setAttribute("hasVisited", true);
+//        }
+//
+//        // 오늘 방문자 수 조회
+//        String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+//        Long visitorCnt = statsService.getVisitorCnt(today);
+//        model.addAttribute("visitorCnt", visitorCnt);
+//        
+//        return "foodhub/index";
+//    }
 
 }

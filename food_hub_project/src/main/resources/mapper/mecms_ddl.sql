@@ -1,22 +1,3 @@
-
-stat
-
-before
-id  cate join_cnt delete_cnt
-
-after
-id  cate  분류 cnt
-1   user   join_cnt   10
-2   user   delete_cnt 10
-
-
-stat_분류
-1  join_cnt
-2 delete_cnt
-3 신고_cnt
-4 ??_cnt
-
-
 CREATE DATABASE MECMS;
 USE MECMS;
 
@@ -43,12 +24,20 @@ CREATE TABLE USER (
 
 CREATE TABLE STATS (
 	STATS_ID		BIGINT		AUTO_INCREMENT PRIMARY KEY,		-- 통계 아이디
-	CATEGORY_ID		INT 		NOT NULL, 						-- 1) USER_JOIN, 2) USER_DELETE , 3) POST_CREATE , 4) POST_DELETE , 5) COMMENT_CREATE , 6) COMMENT_DELETE 등
+	CATEGORY_ID		INT 		NOT NULL, 						-- 1) 가입한 유저 통계 , 2) 탈퇴한 유저 통계 , 3) 총 유저 통계 , 4) 총 게시글 통계 , 5) 카테고리별 게시글 , 6) 댓글 통계 , 7) 방문자 통계
 	STAT_DATE		DATE 		NOT NULL,  						-- 통계 기간 
 	STAT_CNT		BIGINT 		DEFAULT 0,		  				-- 통계 수
 	CREATED_AT		TIMESTAMP 	DEFAULT NOW(),					-- 테이블 생성시간
 	UPDATED_AT		TIMESTAMP 	DEFAULT NOW() ON UPDATE NOW(),	-- 테이블 수정시간
 	UNIQUE KEY UNIQUE_STAT (STAT_DATE, CATEGORY_ID)
+);
+
+CREATE TABLE VISITOR_LOG (
+    VISITOR_ID      BIGINT      AUTO_INCREMENT PRIMARY KEY,  -- 방문자 로그 ID
+	IP_ADDRESS      VARCHAR(45) NOT NULL,         	      	 -- 클라이언트 IP (IPv4/IPv6 지원)
+    LAST_VISIT      TIMESTAMP   DEFAULT NOW(),         		 -- 마지막 방문 시간
+    USER_ID         VARCHAR(255) DEFAULT NULL,         		 -- 로그인한 사용자 ID (NULL 가능)
+    UNIQUE KEY UNIQUE_IP (IP_ADDRESS)                      	 -- IP별 유니크 제약
 );
 
 CREATE TABLE POST_CATEGORY (
@@ -169,9 +158,36 @@ CREATE TABLE BOOKMARKS (
     UNIQUE (USER_ID, POST_ID)											-- 북마크 중복 방지	
 );
 
+CREATE TABLE CHAT_ROOM (
+	ROOM_ID			BIGINT			AUTO_INCREMENT PRIMARY KEY,		-- 채팅방 아이디
+	PRTCP_USER1		VARCHAR(255)	NOT NULL,						-- 참여자1
+	PRTCP_USER2		VARCHAR(255)	NOT NULL,						-- 참여자2
+	STATUS			ENUM('ACTIVE' , 'DELETED') DEFAULT 'ACTIVE', 	-- 방 상태
+	CREATED_AT		TIMESTAMP 		DEFAULT CURRENT_TIMESTAMP,		-- 방 생성일
+	UPDATED_AT		TIMESTAMP 		DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- 방 업데이트일
+	DELETED_AT		DATETIME		DEFAULT NULL,					-- 방 삭제일
+	FOREIGN KEY (PRTCP_USER1) REFERENCES USER(USER_ID),
+	FOREIGN KEY (PRTCP_USER2) REFERENCES USER(USER_ID)
+);
+
+
+
+CREATE TABLE CHAT_MESSAGE (
+	MESSAGE_ID 		BIGINT			AUTO_INCREMENT PRIMARY KEY,		-- 메세지 아이디
+	ROOM_ID			BIGINT 			NOT NULL,						-- 채팅방 아이디
+	SENDER_ID		VARCHAR(255) 	NOT NULL,						-- 발신자 아이디
+	RECEIVE_ID      VARCHAR(255) 	NOT NULL,						-- 수신자 아이디
+	CHAT_CONTENT	TEXT 			NOT NULL,						-- 채팅 내용
+	CREATED_AT		TIMESTAMP 		DEFAULT NOW(),					-- 채팅 생성 시간
+	FOREIGN KEY (ROOM_ID) REFERENCES CHAT_ROOM(ROOM_ID),
+	FOREIGN KEY (SENDER_ID) REFERENCES USER(USER_ID),
+	FOREIGN KEY (RECEIVE_ID) REFERENCES USER(USER_ID)
+);
+
+
 
 INSERT INTO POST_CATEGORY (CATEGORY_ID, CATEGORY_NM) VALUES
-(0, '공지사항'),
+(0, '공지사항'), 
 (1, '외식업정보게시판'),
 (2, '자유게시판'),
 (3, '알바공고게시판'),

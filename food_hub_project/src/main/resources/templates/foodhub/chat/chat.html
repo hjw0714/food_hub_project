@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <title>Spring Boot WebSocket Chat Application</title>
+    <link href="/assets/css/chat.css" rel="stylesheet">
+</head>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<body>
+
+<div id="username-page">
+    <div class="username-page-container">
+        <h1 class="title">Food Hub Chat</h1>
+        <form id="usernameForm" name="usernameForm">
+            <div class="form-group">
+                <input type="text" id="name" th:value="${session.nickname}" autocomplete="off" class="form-control" readonly/>
+              	<input type="hidden" id="userId" th:value="${session.userId}" />
+            </div>
+            <div class="form-group">
+                <button type="submit" class="accent username-submit">공개 채팅방 입장</button>
+                <button type="submit" class="accent username-submit">비공개 채팅방 입장</button>
+            </div>
+        </form>
+        <div class="form-group">
+    		<button type="button" id="goToMainBtn" class="default">메인으로 돌아가기</button>
+		</div>
+    </div>
+</div>
+
+<div id="chat-page" class="hidden">
+    <div class="chat-container">
+        <div class="chat-header">
+            <h2>Food Hub 공개 채팅방 &emsp;<button id="backFromPublicChatBtn">돌아가기</button></h2>
+        </div>
+        <div class="connecting">
+            Connecting...
+        </div>
+        <ul id="messageArea">
+
+        </ul>
+        <form id="messageForm" name="messageForm">
+            <div class="form-group">
+                <div class="input-group clearfix">
+                    <input type="text" id="message" placeholder="메세지를 입력하세요" autocomplete="off" class="form-control"/>
+                    <button type="submit" class="primary">Send</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<!-- ✅ 비공개 채팅방 리스트 페이지 -->
+<div id="private-chat-page" class="hidden">
+    <div class="chat-container">
+        <div class="chat-header">
+            <h2>나의 1:1 채팅방 &emsp;<button id="backFromPrivateListBtn">돌아가기</button></h2>
+        </div>
+
+        <div class="form-group">
+            <input type="text" id="searchNickname" placeholder="닉네임 검색" class="form-control"/>
+            <button type="button" id="searchBtn">검색</button>
+        </div>
+
+        <ul id="myChatRoomList"></ul>
+    </div>
+</div>
+
+<!-- ✅ 비공개 채팅 메시지 송수신 UI -->
+<div id="private-message-page" class="hidden">
+    <div class="chat-container">
+        <div class="chat-header">
+            <h2>1:1 비공개 채팅방 &emsp;<button id="backFromPrivateChatBtn">돌아가기</button></h2>
+        </div>
+        	
+        <ul id="privateMessageArea">
+        
+        </ul>
+        <div class="form-group">
+            <div class="input-group clearfix">
+                <input type="text" id="privateMessageInput" placeholder="메세지를 입력하세요" autocomplete="off" class="form-control"/>
+                <button id="privateSendBtn" class="primary">전송</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<script src="/assets/js/chat.js"></script>
+</body>
+</html>

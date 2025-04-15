@@ -19,4 +19,6 @@ public interface UserService {
 	public void resetPassword(String newPassword, String userId);
 	public String findNicknameByUserId(String userId);
 	
+	public UserDTO findByNickname(String nickname); //채팅 닉네임 조회
+	
 }
