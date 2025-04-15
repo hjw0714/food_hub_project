@@ -1,23 +1,36 @@
 package com.application.foodhub.index;
 
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+
+
+
+import java.net.MalformedURLException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.application.foodhub.banner.BannerService;
 import com.application.foodhub.post.PostService;
 import com.application.foodhub.postLike.PostLikeService;
 import com.application.foodhub.stats.StatsService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+
 
 @Controller
 public class IndexController {
@@ -27,6 +40,12 @@ public class IndexController {
 
 	@Autowired
 	private PostService postService;
+	
+	@Autowired
+	private BannerService bannerService;
+	
+	@Value("${file.repo.path}")       
+    private String fileRepositoryPath;
 
 	@Autowired
 	private StatsService statsService;
@@ -96,8 +115,15 @@ public class IndexController {
 		model.addAttribute("categoryLatestPosts", categoryLatestPosts);
 		model.addAttribute("categoryNames", categoryNames);
 		model.addAttribute("noticePosts", noticePosts);
+		model.addAttribute("banners", bannerService.selectAllBanners());
 
 		return "foodhub/index/index";
 	}
+	
+	@GetMapping("/foodhub/banner/image")
+    @ResponseBody
+    public Resource getBannerImage(@RequestParam("fileName") String fileName) throws MalformedURLException {
+        return new UrlResource("file:" + fileRepositoryPath + fileName);
+    }
 
 }

@@ -122,12 +122,13 @@ button.accent {
 }
 
 
-#chat-page {
+#chat-page , #private-message-page{
     position: relative;
     height: 100%;
 }
 
-.chat-container {
+#chat-page .chat-container,
+#private-message-page .chat-container {
     max-width: 700px;
     margin-left: auto;
     margin-right: auto;
@@ -139,7 +140,8 @@ button.accent {
     position: relative;
 }
 
-#chat-page ul {
+#chat-page ul,
+#private-message-page ul {
     list-style-type: none;
     background-color: #FFF;
     margin: 0;
@@ -153,14 +155,16 @@ button.accent {
     padding: 20px;
 }
 
-#chat-page ul li {
+#chat-page ul li,
+#private-message-page ul li  {
     line-height: 1.5rem;
     padding: 10px 20px;
     margin: 0;
     border-bottom: 1px solid #f4f4f4;
 }
 
-#chat-page ul li p {
+#chat-page ul li p,
+#private-message-page ul li p {
     margin: 0;
 }
 
@@ -176,12 +180,14 @@ button.accent {
     word-wrap: break-word;
 }
 
-#chat-page .chat-message {
+#chat-page .chat-message,
+#private-message-page .chat-message {
     padding-left: 68px;
     position: relative;
 }
 
-#chat-page .chat-message i {
+#chat-page .chat-message i,
+#private-message-page .chat-message i {
     position: absolute;
     width: 42px;
     height: 42px;
@@ -198,39 +204,47 @@ button.accent {
     text-transform: uppercase;
 }
 
-#chat-page .chat-message span {
+
+#chat-page .chat-message span,
+#private-message-page .chat-message span {
     color: #333;
     font-weight: 600;
 }
 
-#chat-page .chat-message p {
+#chat-page .chat-message p,
+#private-message-page .chat-message p {
     color: #43464b;
 }
 
-#messageForm .input-group input {
+#messageForm .input-group input,
+#privateMessageForm .input-group input {
     float: left;
     width: calc(100% - 85px);
 }
 
-#messageForm .input-group button {
+#messageForm .input-group button,
+#privateMessageForm .input-group button {
     float: left;
     width: 80px;
     height: 38px;
     margin-left: 5px;
 }
 
-.chat-header {
+#chat-page .chat-header,
+#private-message-page .chat-header {
     text-align: center;
     padding: 15px;
     border-bottom: 1px solid #ececec;
 }
 
-.chat-header h2 {
+#chat-page .chat-header h2,
+#private-message-page .chat-header h2 {
     margin: 0;
     font-weight: 500;
 }
 
-.connecting {
+#chat-page .connecting,
+#private-message-page .connecting {
     padding-top: 5px;
     text-align: center;
     color: #777;

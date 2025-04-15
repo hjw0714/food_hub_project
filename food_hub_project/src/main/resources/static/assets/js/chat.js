@@ -100,6 +100,7 @@ function onMessageReceived(payload) {
 
     messageElement.appendChild(textElement);
 
+	console.log(messageArea);
     messageArea.appendChild(messageElement);
     messageArea.scrollTop = messageArea.scrollHeight;
 }
@@ -117,6 +118,24 @@ function getAvatarColor(messageSender) {
 usernameForm.addEventListener('submit', connect, true)
 messageForm.addEventListener('submit', sendMessage, true)
 
+let leaveSent = false;
+
+$("#backFromPublicChatBtn").on("click", function () {
+    if (stompClient && stompClient.connected && !leaveSent) {
+        leaveSent = true;
+        stompClient.send("/app/chat.sendMessage", {}, JSON.stringify({
+            sender: username,
+            type: 'LEAVE'
+        }));
+        stompClient.disconnect(() => {
+            $("#chat-page").addClass("hidden");
+            $("#username-page").removeClass("hidden");
+            $("#messageArea").empty();
+            leaveSent = false; // 다음에 다시 입장 가능하도록 초기화
+        });
+    }
+});
+
 document.querySelectorAll('.username-submit')[1].addEventListener('click', function (e) {
     e.preventDefault();
     document.getElementById("username-page").classList.add("hidden");
@@ -126,32 +145,136 @@ document.querySelectorAll('.username-submit')[1].addEventListener('click', funct
 
 function loadMyPrivateChatRooms() {
     $.ajax({
-        url: "/chat/private/list",
+        url: "/foodhub/chat/private/list",
         method: "GET",
         success: function(data) {
             const list = $('#myChatRoomList');
             list.empty();
             data.forEach(room => {
-                list.append(`<li><button onclick="enterChatRoom(${room.roomId})">${room.otherUserNickname}</button></li>`);
+                 list.append(`<li><button onclick="enterChatRoom(${room.roomId})">${room.otherUserNickname}님과의 대화방</button></li>`);
             });
         }
     });
 }
 
-
+// ===== 비공개 채팅방 생성 요청 =====
 $('#searchBtn').on('click', function () {
     const nickname = $('#searchNickname').val();
     $.ajax({
-        url: "/chat/private/create",
+        url: "/foodhub/chat/private/create",
         method: "POST",
         contentType: "application/json",
-        data: JSON.stringify({nickname: nickname}),
-        success: function(data) {
+        data: JSON.stringify({ nickname: nickname }),
+        success: function (data) {
             enterChatRoom(data.roomId);
         }
     });
 });
 
+// ===== 비공개 채팅방 입장 =====
 function enterChatRoom(roomId) {
-    location.href = `/chat/private/room/${roomId}`;
+    $('#username-page').addClass('hidden');
+    $('#private-chat-page').addClass('hidden');
+    $('#private-message-page').removeClass('hidden');
+
+    $.ajax({
+        url: `/chat/private/messages/${roomId}`,
+        method: "GET",
+        success: function (messages) {
+            const area = $('#privateMessageArea');
+            area.empty();
+
+            messages.forEach(message => {
+                const messageElement = document.createElement('li');
+                messageElement.classList.add('chat-message');
+
+                const avatarElement = document.createElement('i');
+                const avatarText = document.createTextNode(message.sender?.charAt(0) || '?');
+                avatarElement.appendChild(avatarText);
+                avatarElement.style['background-color'] = getAvatarColor(message.sender);
+
+                const usernameElement = document.createElement('span');
+                usernameElement.appendChild(document.createTextNode(message.sender));
+
+                const textElement = document.createElement('p');
+                textElement.appendChild(document.createTextNode(message.chatContent));
+
+                messageElement.appendChild(avatarElement);
+                messageElement.appendChild(usernameElement);
+                messageElement.appendChild(textElement);
+
+                area.append(messageElement);
+            });
+
+            area[0].scrollTop = area[0].scrollHeight;
+        }
+    });
+
+    const socket = new SockJS('/ws');
+    stompClient = Stomp.over(socket);
+
+    stompClient.connect({}, function () {
+        stompClient.subscribe(`/topic/private.${roomId}`, onPrivateMessageReceived);
+
+        $('#privateSendBtn').off('click').on('click', function () {
+            const messageContent = $('#privateMessageInput').val().trim();
+            if (messageContent) {
+                const chatMessage = {
+                    sender: $('#userId').val(),
+                    content: messageContent,
+                    type: 'CHAT'
+                };
+                stompClient.send(`/app/chat.private.${roomId}`, {}, JSON.stringify(chatMessage));
+                $('#privateMessageInput').val('');
+            }
+        });
+    });
 }
+
+// ===== 비공개 채팅 메시지 수신 =====
+function onPrivateMessageReceived(payload) {
+    const message = JSON.parse(payload.body);
+    const messageElement = document.createElement('li');
+    messageElement.classList.add('chat-message');
+
+    const avatarElement = document.createElement('i');
+    const avatarText = document.createTextNode(message.sender[0]);
+    avatarElement.appendChild(avatarText);
+    avatarElement.style['background-color'] = getAvatarColor(message.sender);
+
+    const usernameElement = document.createElement('span');
+    usernameElement.appendChild(document.createTextNode(message.sender));
+
+    const textElement = document.createElement('p');
+    textElement.appendChild(document.createTextNode(message.content));
+
+    messageElement.appendChild(avatarElement);
+    messageElement.appendChild(usernameElement);
+    messageElement.appendChild(textElement);
+
+    $('#privateMessageArea').append(messageElement);
+    document.getElementById("privateMessageArea").scrollTop = document.getElementById("privateMessageArea").scrollHeight;
+}
+
+   // 비공개 채팅방에서 돌아가기
+$("#backFromPrivateChatBtn").on("click", function () {
+       $("#private-message-page").addClass("hidden");
+       $("#username-page").removeClass("hidden");
+   });
+   
+  // 비공개 채팅방 리스트 → 초기화면
+$("#backFromPrivateListBtn").on("click", function () {
+          $("#private-chat-page").addClass("hidden");
+          $("#username-page").removeClass("hidden");
+  	});
+
+$("#backFromPublicChatBtn").on("click", function () {
+       $("#chat-page").addClass("hidden");
+       $("#username-page").removeClass("hidden");
+   });
+
+   
+   
+$("#goToMainBtn").on("click", function () {
+	        window.location.href = "/foodhub";  // 메인 페이지 주소
+	});

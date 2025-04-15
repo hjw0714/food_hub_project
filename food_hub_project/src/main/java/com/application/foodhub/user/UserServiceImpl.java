@@ -192,4 +192,11 @@ public class UserServiceImpl implements UserService {
 		return userDAO.findNicknameByUserId(userId); 
 	}
 
+	
+	
+	 @Override
+	    public UserDTO findByNickname(String nickname) {
+	        return userDAO.findByNickname(nickname);
+	    }
+
 }
