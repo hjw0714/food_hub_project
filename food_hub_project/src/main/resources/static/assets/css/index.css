@@ -222,6 +222,15 @@
         display: flex;
         justify-content: space-between;
     }
+    
+    /* 배너 클릭 영역 */
+	.slide-link {
+	  position: absolute;
+	  inset: 0; /* top, right, bottom, left 전부 0 */
+	  z-index: 2;
+	  text-indent: -9999px;  /* 혹시 링크에 텍스트 있어도 안 보이게 처리 */
+	  cursor: pointer;
+	}
    
       /* 🔹 반응형 - 화면 크기가 작아질 경우 검색창 너비 자동 조정 */
    @media (max-width: 768px) {
