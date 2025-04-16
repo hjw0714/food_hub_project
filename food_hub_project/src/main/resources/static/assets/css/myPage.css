@@ -160,3 +160,38 @@ body {
 .pagination button:hover {
 	background-color: var(--accent-hover);
 }
+
+.admin-only-section {
+  margin-top: 30px;
+  padding: 10px 0;
+  text-align: center;
+}
+
+.admin-only-section h4 {
+  font-size: 18px;
+  color: var(--text-color);
+  font-weight: 600;
+}
+
+.admin-only-section .admin-box {
+  background: #fdfdfd;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 10px 20px;
+}
+
+.admin-only-section .admin-link button {
+  padding: 10px 20px;
+  background-color: var(--accent-color);
+  color: white;
+  font-size: 15px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.admin-only-section .admin-link button:hover {
+  background-color: var(--accent-hover);
+}

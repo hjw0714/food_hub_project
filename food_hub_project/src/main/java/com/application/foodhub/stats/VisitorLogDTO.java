@@ -10,7 +10,6 @@ import lombok.Data;
 public class VisitorLogDTO {
 	private Long visitorId;
 	private String ipAddress;
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private LocalDateTime lastVisit;
+	private LocalDateTime visitTime;
 	private String userId;
 }

@@ -68,70 +68,48 @@ document.addEventListener("DOMContentLoaded", function () {
 	<!-- Slider Section -->
 	<section id="slider" class="slider section dark-background">
 	  <div class="container" data-aos="fade-up" data-aos-delay="100">
-	  	<div>
-	  		<p>오늘의 방문자 수: <span th:text="${visitorCount}"></span>명</p>
-	  	</div>
 	    <div class="swiper init-swiper">
 	      <script type="application/json" class="swiper-config">
         {
-          "loop": true,
-          "speed": 600,
-          "autoplay": {
-            "delay": 5000
-          },
-          "slidesPerView": "auto",
-          "centeredSlides": true,
-          "pagination": {
-            "el": ".swiper-pagination",
-            "type": "bullets",
-            "clickable": true
-          },
-          "navigation": {
-            "nextEl": ".swiper-button-next",
-            "prevEl": ".swiper-button-prev"
-          }
-        }
+  "loop": [[${#lists.size(banners) > 2}]],
+  "speed": 600,
+  "autoplay": {
+    "delay": 5000
+  },
+  "slidesPerView": "auto",
+  "centeredSlides": true,
+  "pagination": {
+    "el": ".swiper-pagination",
+    "type": "bullets",
+    "clickable": true
+  },
+  "navigation": {
+    "nextEl": ".swiper-button-next",
+    "prevEl": ".swiper-button-prev"
+  }
+}
       </script>
 	
-	      <div class="swiper-wrapper">
-	      
-	        <div class="swiper-slide" style="background-image: url('/assets/img/banner-2.jpg');">
-	          <div class="content">
-	            <h3>
-				  <a th:if="${not #lists.isEmpty(topLikedPosts)}" 
-				     th:href="@{/foodhub/post/postDetail(postId=${topLikedPosts[0]['POST_ID']})}" 
-				     style="color: #fff;">
-				     [베스트 글] 이번주 가장 많은 추천을 받은 게시글!
-				  </a>
-				  <span th:if="${#lists.isEmpty(topLikedPosts)}" style="color: #fff;">
-				     현재 인기 게시글이 없습니다.
-				  </span>
-				</h3>
-	            <p>Food Hub 유저들이 추천하는 핫한 주제 TOP 5!</p>
-	          </div>
-	        </div>
-	        
-	        <div class="swiper-slide" style="background-image: url('/assets/img/banner-1.jpg');">
-	          <div class="content">
-	            <h3><a href="event.html" style="color: #fff;">[이벤트] 신규 가입자 30% 할인 쿠폰 증정!</a></h3>
-	            <p>지금 가입하고 할인 혜택을 받아보세요.</p>
-	          </div>
-	        </div>
-	
-	        <div class="swiper-slide" style="background-image: url('/assets/img/banner-3.jpg');">
-	          <div class="content">
-	            <h3><a href="store-promo.html" style="color: #fff;">[매장 홍보] 특별 할인 진행 중!</a></h3>
-	            <p>지금 방문하면 추가 할인 혜택까지!</p>
-	          </div>
-	        </div>
-	      </div>
-	
+      	<div class="swiper-wrapper">
+			 <div class="swiper-slide" th:each="banner : ${banners}"
+			     th:style="|background-image: url('/foodhub/user/thumbnails?fileName=${banner.bannerUuid}');|">
+			  <div class="slide-overlay">
+			    <h3 th:text="${banner.title}"></h3>
+			    <p th:text="${banner.description}"></p>
+			  </div>
+			</div>
+		</div>
+
 	      <div class="swiper-button-next"></div>
 	      <div class="swiper-button-prev"></div>
 	      <div class="swiper-pagination"></div>
 	    </div>
 	  </div>
 	</section>
+	<div>
+  		<p>오늘의 방문자 수: <span th:text="${visitorCnt}"></span>명</p>
+  		<p>전체 방문자 수: <span th:text="${totalVisitorCnt}"></span>명</p>
+  	</div>
 	 <!-- 🔹 검색창 -->
 	<div class="container" data-aos="fade-up" data-aos-delay="100">
 	    <div class="index-search-container">
