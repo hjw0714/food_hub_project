@@ -91,12 +91,14 @@ document.addEventListener("DOMContentLoaded", function () {
       </script>
 	
       	<div class="swiper-wrapper">
+
 		  <div class="swiper-slide" th:each="banner : ${banners}"
 		       th:style="|background-image: url('/foodhub/user/thumbnails?fileName=${banner.bannerUuid}');|">
 		
 		    <!-- 배너 전체를 클릭 영역으로 만드는 링크 -->
 		    <a th:href="${banner.link}" target="_blank" class="slide-link"></a>
 		  </div>
+
 		</div>
 	      <div class="swiper-button-next"></div>
 	      <div class="swiper-button-prev"></div>
@@ -104,6 +106,13 @@ document.addEventListener("DOMContentLoaded", function () {
 	    </div>
 	  </div>
 	</section>
+	<!-- 🔹 방문자 수 -->
+	<div class="visitor-stats-unique" data-aos="fade-up" data-aos-delay="100">
+  		<span>오늘의 방문자 수: </span>
+  		<p th:text="${visitorCnt}">명</p>
+  		<span>전체 방문자 수: </span>
+  		<p th:text="${totalVisitorCnt}">명</p>
+  	</div>
 	 <!-- 🔹 검색창 -->
 	<div class="container" data-aos="fade-up" data-aos-delay="100">
 	    <div class="index-search-container">
