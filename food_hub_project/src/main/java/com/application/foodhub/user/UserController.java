@@ -51,7 +51,7 @@ public class UserController {
 
 	@Autowired
 	private BookmarkService bookmarkService;
-	
+
 	@Autowired
 	private StatsService statsService;
 
@@ -60,7 +60,6 @@ public class UserController {
 		return "foodhub/user/login";
 	}
 
-	
 //	@PostMapping("/login")	// 로그인
 //	@ResponseBody
 //	public String login(@RequestBody UserDTO userDTO , HttpServletRequest request) {
@@ -85,40 +84,35 @@ public class UserController {
 //	    }
 //		return isValidUser;
 //	}
-	
+
 	@PostMapping("/login")
 	@ResponseBody
-	public Map<String, String> login(@RequestBody UserDTO userDTO , HttpServletRequest request) {
-	    Map<String, String> result = new HashMap<>();
+	public Map<String, String> login(@RequestBody UserDTO userDTO, HttpServletRequest request) {
+		Map<String, String> result = new HashMap<>();
 
-	    if (userService.login(userDTO)) {
-	        HttpSession session = request.getSession();
-	        session.setAttribute("userId", userDTO.getUserId());
+		if (userService.login(userDTO)) {
+			HttpSession session = request.getSession();
+			session.setAttribute("userId", userDTO.getUserId());
 
+			// 닉네임을 DB에서 가져와서 세션에 저장
+			String nickname = userService.findNicknameByUserId(userDTO.getUserId());
+			session.setAttribute("nickname", nickname);
 
+			// 유저 정보 조회하여 membershipType 가져오기
+			UserDTO userInfo = userService.getUserDetail(userDTO.getUserId()); // DB에서 전체 정보 가져오기
+			String membershipType = userInfo.getMembershipType(); // DB에서 가져온 값 사용
+			session.setAttribute("membershipType", membershipType); // 세션에 저장
+			session.setAttribute("userDTO", userInfo);
 
+//	        System.out.println("로그인 성공 - UserId: " + userDTO.getUserId() + ", 닉네임: " + nickname + ", 회원 타입: " + membershipType + userInfo);
 
-	        
-	        // 닉네임을 DB에서 가져와서 세션에 저장
-	        String nickname = userService.findNicknameByUserId(userDTO.getUserId());
-	        session.setAttribute("nickname", nickname);
-	        
-	        // 유저 정보 조회하여 membershipType 가져오기
-	        UserDTO userInfo = userService.getUserDetail(userDTO.getUserId()); // DB에서 전체 정보 가져오기
-	        String membershipType = userInfo.getMembershipType(); // DB에서 가져온 값 사용
-	        session.setAttribute("membershipType", membershipType); // 세션에 저장
-	        session.setAttribute("userDTO", userInfo);
+			result.put("status", "success");
+			result.put("membershipType", membershipType); // 클라이언트로도 전달
+		} else {
+			result.put("status", "fail");
+		}
 
-	        System.out.println("로그인 성공 - UserId: " + userDTO.getUserId() + ", 닉네임: " + nickname + ", 회원 타입: " + membershipType + userInfo);
-
-
-	        result.put("status", "success");
-	        result.put("membershipType", membershipType); // 클라이언트로도 전달
-	    } else {
-	        result.put("status", "fail");
-	    }
-
-	    return result;
+		return result;
 
 	}
 
@@ -178,7 +172,7 @@ public class UserController {
 		if (userId == null) {
 			return "redirect:/foodhub/user/login"; // 세션 정보가 없으면 로그인 페이지로 이동
 		}
-		
+
 		// 사용자 방문 횟수
 		Long userVisitCnt = statsService.getUserVisitCnt(userId);
 		model.addAttribute("userVisitCnt", userVisitCnt);
@@ -244,42 +238,44 @@ public class UserController {
 	}
 
 	@PostMapping("/updateUser")
-	   @ResponseBody
-	   public String updateUser(HttpServletRequest request,
-	           @RequestParam(value = "uploadProfile", required = false) MultipartFile uploadProfile,
-	           @RequestParam("existingProfileImage") String existingProfileImage,
-	           @ModelAttribute UserDTO userDTO) throws IllegalStateException, IOException {
+	@ResponseBody
+	public String updateUser(HttpServletRequest request,
+			@RequestParam(value = "uploadProfile", required = false) MultipartFile uploadProfile,
+			@RequestParam("existingProfileImage") String existingProfileImage, @ModelAttribute UserDTO userDTO)
+			throws IllegalStateException, IOException {
 
-	       // 새 이미지가 업로드되지 않았으면 기존 프로필 이미지 유지
-	       if (uploadProfile == null || uploadProfile.isEmpty()) {
-	           userDTO.setProfileUUID(existingProfileImage);
-	       }
+		// 새 이미지가 업로드되지 않았으면 기존 프로필 이미지 유지
+		if (uploadProfile == null || uploadProfile.isEmpty()) {
+			userDTO.setProfileUUID(existingProfileImage);
+		}
 
-	      
-	       userService.updateUser(uploadProfile, userDTO);
-	       HttpSession session = request.getSession();
-	       UserDTO userInfo = userService.getUserDetail(userDTO.getUserId());
-	       // ✅ 세션에 최신 정보 반영
-	       session.setAttribute("userId", userDTO.getUserId());
-	       session.setAttribute("nickname", userDTO.getNickname());
-	       session.setAttribute("profileUUID", userDTO.getProfileUUID());
-	       session.setAttribute("userDTO", userInfo);
+		userService.updateUser(uploadProfile, userDTO);
+		HttpSession session = request.getSession();
+		UserDTO userInfo = userService.getUserDetail(userDTO.getUserId());
+		// ✅ 세션에 최신 정보 반영
+		session.setAttribute("userId", userDTO.getUserId());
+		session.setAttribute("nickname", userDTO.getNickname());
+		session.setAttribute("profileUUID", userDTO.getProfileUUID());
+		session.setAttribute("userDTO", userInfo);
 
-	       String jsScript = """
-	               <script>
-	                   alert('수정 되었습니다.');
-	                   location.href = '/foodhub/user/myPage';
-	               </script>""";
+		String jsScript = """
+				<script>
+				    alert('수정 되었습니다.');
+				    location.href = '/foodhub/user/myPage';
+				</script>""";
 
-	       return jsScript;
-	   }
-	
+		return jsScript;
+	}
 
 	@GetMapping("/logout") // 로그아웃
 	@ResponseBody
 	public String logout(HttpServletRequest request) {
 
 		HttpSession session = request.getSession(); // 세션 객체 생성
+
+		// 로그아웃 요청 시 방문자 기록 (카운트 증가 방지)
+		String userId = (String) session.getAttribute("userId");
+		statsService.recordVisitor(request, userId);
 
 		session.invalidate(); // 세션 삭제
 
