@@ -13,7 +13,6 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 @RequiredArgsConstructor
 public class WebSocketEventListener {
 
-    private final SimpMessageSendingOperations messagingTemplate;
 
     @EventListener
     public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
@@ -21,11 +20,6 @@ public class WebSocketEventListener {
         String username = (String) headerAccessor.getSessionAttributes().get("username");
         if (username != null) {
             log.info("user disconnected: {}", username);
-            var chatMessage = com.application.foodhub.chat.ChatMessage.builder()
-                    .type(com.application.foodhub.chat.MessageType.LEAVE)
-                    .sender(username)
-                    .build();
-            messagingTemplate.convertAndSend("/topic/public", chatMessage);
         }
     }
 
