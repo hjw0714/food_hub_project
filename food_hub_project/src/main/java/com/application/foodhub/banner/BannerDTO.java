@@ -10,6 +10,7 @@ public class BannerDTO {
 	private Long bannerId;
     private String title;
     private String description;
+    private String link;
     private String bannerOriginalName;
     private String bannerUuid;
     private LocalDateTime createdAt;

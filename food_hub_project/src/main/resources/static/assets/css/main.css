@@ -918,17 +918,38 @@ section,
   border-radius: 10px;
   color: #fff;
   max-width: 50%;
+  word-break: break-word;        /* 긴 영어도 줄바꿈 */
+  overflow-wrap: break-word;     /* 줄바꿈 보조 */
 }
 
+/* 제목: 1줄까지만 보이고 30자 넘어가면 ... */
 .slide-overlay h3 {
   font-size: 1.5rem;
   font-weight: bold;
   margin-bottom: 10px;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* 15자 x 2줄 = 30자 */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  word-break: break-word;
+  line-height: 1.4;
 }
 
+/* 설명: 2줄까지만 보이고 50자 넘어가면 ... */
 .slide-overlay p {
   font-size: 1rem;
   line-height: 1.4;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* 15자 x 3줄 = 45자~50자 */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  word-break: break-word;
 }
 
 /* ✅ 회색 내비게이션 버튼 스타일 */
