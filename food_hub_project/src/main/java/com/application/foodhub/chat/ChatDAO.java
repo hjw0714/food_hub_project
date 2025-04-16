@@ -19,6 +19,8 @@ public interface ChatDAO {
 	public List<ChatMessageDTO> getMessagesByRoomId(Long roomId);
 
 	public ChatRoomDTO findRoomById(Long roomId);
+
+	public void updateChatRoomStatusToDeleted(Long roomId);
 	
 
 }

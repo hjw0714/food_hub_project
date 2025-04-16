@@ -299,3 +299,88 @@ button.accent {
         font-size: 1.1em;
     }
 }
+
+/* 🔷 비공개 채팅방 리스트 영역 스타일 */
+#private-chat-page .chat-container {
+	max-height: 600px; /* 필요 시 조정 가능 */
+    overflow-y: auto;
+    max-width: 700px;
+    margin: 30px auto;
+    background-color: #fff;
+    box-shadow: 0 1px 11px rgba(0, 0, 0, 0.27);
+    height: auto;
+    padding: 20px;
+    border-radius: 8px;
+}
+/* 헤더 정렬 및 버튼 정리 */
+#private-chat-page .chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0 20px;
+    border-bottom: 1px solid #ececec;
+}
+
+#private-chat-page .chat-header h2 {
+    margin: 0;
+    font-size: 1.5em;
+    font-weight: 500;
+}
+
+/* 검색 영역 */
+#private-chat-page .form-group {
+    display: flex;
+    gap: 10px;
+    margin: 15px 0 25px;
+}
+
+#searchNickname {
+    flex: 1;
+    padding: 8px 12px;
+    font-size: 14px;
+    border: 1px solid #c8c8c8;
+    border-radius: 4px;
+}
+
+#searchBtn {
+    background-color: #6db33f;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    font-size: 14px;
+    border-radius: 4px;
+}
+
+/* 리스트 스타일 */
+#myChatRoomList {
+	 max-height: 400px;  /* 보여줄 최대 높이 설정 */
+    overflow-y: auto;
+    overflow-x: hidden;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border: 1px solid #eee;
+    background-color: #fafafa;
+    border-radius: 4px;
+}
+
+#myChatRoomList li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ececec;
+    padding: 12px 0;
+}
+
+#myChatRoomList li button {
+    margin-left: 8px;
+}
+
+#myChatRoomList li .delete-btn {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+}
