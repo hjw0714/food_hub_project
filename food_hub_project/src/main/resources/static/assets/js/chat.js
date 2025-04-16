@@ -118,23 +118,7 @@ function getAvatarColor(messageSender) {
 usernameForm.addEventListener('submit', connect, true)
 messageForm.addEventListener('submit', sendMessage, true)
 
-let leaveSent = false;
 
-$("#backFromPublicChatBtn").on("click", function () {
-    if (stompClient && stompClient.connected && !leaveSent) {
-        leaveSent = true;
-        stompClient.send("/app/chat.sendMessage", {}, JSON.stringify({
-            sender: username,
-            type: 'LEAVE'
-        }));
-        stompClient.disconnect(() => {
-            $("#chat-page").addClass("hidden");
-            $("#username-page").removeClass("hidden");
-            $("#messageArea").empty();
-            leaveSent = false; // 다음에 다시 입장 가능하도록 초기화
-        });
-    }
-});
 
 document.querySelectorAll('.username-submit')[1].addEventListener('click', function (e) {
     e.preventDefault();
@@ -151,11 +135,18 @@ function loadMyPrivateChatRooms() {
             const list = $('#myChatRoomList');
             list.empty();
             data.forEach(room => {
-                 list.append(`<li><button onclick="enterChatRoom(${room.roomId})">${room.otherUserNickname}님과의 대화방</button></li>`);
+                const listItem = $(`
+                    <li>
+                        <button onclick="enterChatRoom(${room.roomId})">${room.otherUserNickname}님과의 대화방</button>
+						<button onclick="deleteChatRoom('${room.roomId}')" class="delete-btn">삭제</button>
+                    </li>
+                `);
+                list.append(listItem);
             });
         }
     });
 }
+
 
 // ===== 비공개 채팅방 생성 요청 =====
 $('#searchBtn').on('click', function () {
@@ -220,7 +211,8 @@ function enterChatRoom(roomId) {
             const messageContent = $('#privateMessageInput').val().trim();
             if (messageContent) {
                 const chatMessage = {
-                    sender: $('#userId').val(),
+					sender: $('#userId').val(),         // 서버에서 쓸 userId
+				    senderNickname: $('#name').val(),   // 화면 표시용
                     content: messageContent,
                     type: 'CHAT'
                 };
@@ -242,8 +234,8 @@ function onPrivateMessageReceived(payload) {
     avatarElement.appendChild(avatarText);
     avatarElement.style['background-color'] = getAvatarColor(message.sender);
 
-    const usernameElement = document.createElement('span');
-    usernameElement.appendChild(document.createTextNode(message.sender));
+	const usernameElement = document.createElement('span');
+	usernameElement.appendChild(document.createTextNode(message.senderNickname || message.sender));
 
     const textElement = document.createElement('p');
     textElement.appendChild(document.createTextNode(message.content));
@@ -256,11 +248,45 @@ function onPrivateMessageReceived(payload) {
     document.getElementById("privateMessageArea").scrollTop = document.getElementById("privateMessageArea").scrollHeight;
 }
 
+let leaveSent = false;
+
+$("#backFromPublicChatBtn").on("click", function () {
+    if (stompClient && stompClient.connected && !leaveSent) {
+        leaveSent = true;
+        stompClient.send("/app/chat.sendMessage", {}, JSON.stringify({
+            sender: username,
+            type: 'LEAVE'
+        }));
+        stompClient.disconnect(() => {
+            $("#chat-page").addClass("hidden");
+            $("#username-page").removeClass("hidden");
+            $("#messageArea").empty();
+            leaveSent = false; // 다음에 다시 입장 가능하도록 초기화
+        });
+    }
+});
+
    // 비공개 채팅방에서 돌아가기
-$("#backFromPrivateChatBtn").on("click", function () {
-       $("#private-message-page").addClass("hidden");
-       $("#username-page").removeClass("hidden");
+   $("#backFromPrivateChatBtn").on("click", function () {
+       // 채팅 메시지 영역 비우기
+       $("#privateMessageArea").empty();
+
+       // stompClient 연결 종료 및 객체 해제
+       if (stompClient && stompClient.connected) {
+           stompClient.disconnect(() => {
+               console.log("Disconnected from private chat room");
+           });
+           stompClient = null;
+       }
+
+       // 화면 전환
+	   $("#private-message-page").addClass("hidden");
+	   $("#private-chat-page").removeClass("hidden");
+	   
+	   // 리스트 다시 로드 (선택 사항)
+	      loadMyPrivateChatRooms(); 
    });
+
    
   // 비공개 채팅방 리스트 → 초기화면
 $("#backFromPrivateListBtn").on("click", function () {
@@ -272,6 +298,24 @@ $("#backFromPublicChatBtn").on("click", function () {
        $("#chat-page").addClass("hidden");
        $("#username-page").removeClass("hidden");
    });
+	
+   
+// 대화방 삭제
+function deleteChatRoom(roomId) {
+       if (!confirm("정말로 이 대화방을 삭제하시겠습니까?")) return;
+
+       $.ajax({
+           url: `/foodhub/chat/private/delete/${roomId}`,
+           method: "POST",
+           success: function() {
+               alert("대화방이 삭제되었습니다.");
+               loadMyPrivateChatRooms();
+           },
+           error: function() {
+               alert("삭제 중 오류가 발생했습니다.");
+           }
+       });
+   }
 
    
    
