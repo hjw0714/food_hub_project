@@ -26,16 +26,17 @@
     
       <!-- 두 유저 사이의 채팅방 존재 여부 확인 -->
     <select id="findRoomBetweenUsers" resultType="ChatRoomDTO">
-        SELECT *
-        FROM CHAT_ROOM
-        WHERE STATUS = 'ACTIVE'
-          AND (
-                (PRTCP_USER1 = #{userId1} AND PRTCP_USER2 = #{userId2})
-                OR
-                (PRTCP_USER1 = #{userId2} AND PRTCP_USER2 = #{userId1})
-              )
-        LIMIT 1
-    </select>
+    SELECT *
+    FROM CHAT_ROOM
+    WHERE STATUS = 'ACTIVE'
+      AND (
+        (PRTCP_USER1 = #{userId1} AND PRTCP_USER2 = #{userId2})
+        OR
+        (PRTCP_USER1 = #{userId2} AND PRTCP_USER2 = #{userId1})
+      )
+    LIMIT 1
+</select>
+
 
     <!-- 새로운 채팅방 생성 -->
     <insert id="insertRoom">
@@ -51,21 +52,30 @@
 
 <select id="getMessagesByRoomId" resultType="ChatMessageDTO">
     SELECT
-        ROOM_ID,
-        SENDER_ID AS senderId,
-        SENDER_ID AS sender,
-        RECEIVE_ID AS receiver,
-        CHAT_CONTENT AS chatContent,
-        CREATED_AT AS createdAt
-    FROM CHAT_MESSAGE
-    WHERE ROOM_ID = #{roomId}
-    ORDER BY CREATED_AT ASC
+        m.ROOM_ID,
+        m.SENDER_ID AS senderId,
+        m.RECEIVE_ID AS receiveId,
+        m.CHAT_CONTENT AS chatContent,
+        m.CREATED_AT AS createdAt,
+        u.NICKNAME AS sender
+    FROM CHAT_MESSAGE m
+    JOIN USER u ON m.SENDER_ID = u.USER_ID
+    WHERE m.ROOM_ID = #{roomId}
+    ORDER BY m.CREATED_AT ASC
 </select>
 
 	
 	<select id="findRoomById" resultType="ChatRoomDTO">
     	SELECT * FROM CHAT_ROOM WHERE ROOM_ID = #{roomId}
 	</select>
+	
+	
+	<update id="updateChatRoomStatusToDeleted">
+    UPDATE CHAT_ROOM
+    SET STATUS = 'DELETED',
+        DELETED_AT = NOW()
+    WHERE ROOM_ID = #{roomId}
+</update>
 	
 	
 
