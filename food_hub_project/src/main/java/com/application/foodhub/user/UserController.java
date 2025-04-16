@@ -27,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.application.foodhub.bookmark.BookmarkDTO;
 import com.application.foodhub.bookmark.BookmarkService;
 import com.application.foodhub.comment.CommentService;
+import com.application.foodhub.config.JwtUtil;
 import com.application.foodhub.post.PostService;
 import com.application.foodhub.stats.StatsService;
 
@@ -54,6 +55,9 @@ public class UserController {
 
 	@Autowired
 	private StatsService statsService;
+	
+	@Autowired
+	private JwtUtil jwtUtil;
 
 	@GetMapping("/login") // 로그인
 	public String login() {
@@ -108,6 +112,13 @@ public class UserController {
 
 			result.put("status", "success");
 			result.put("membershipType", membershipType); // 클라이언트로도 전달
+			
+			// 멤버쉽 타입이 관리자일 경우 토큰도 포함해서 보냄
+			if (membershipType.equals("ADMIN")) {
+				String token = jwtUtil.generateToken(userDTO.getUserId(), membershipType);
+				result.put("token", token);
+				System.out.println("발행된 토큰: " + token);
+			} 
 		} else {
 			result.put("status", "fail");
 		}

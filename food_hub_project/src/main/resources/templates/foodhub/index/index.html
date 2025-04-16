@@ -91,17 +91,13 @@ document.addEventListener("DOMContentLoaded", function () {
       </script>
 	
       	<div class="swiper-wrapper">
-		  	<div class="swiper-slide" th:each="banner : ${banners}"
-			     th:style="|background-image: url('/foodhub/user/thumbnails?fileName=${banner.bannerUuid}');|">
-			  <div class="slide-overlay">
-			    <a th:href="${banner.link}" target="_blank" style="color: inherit; text-decoration: none;">
-			      <h3 th:text="${banner.title}"></h3>
-			      <p th:text="${banner.description}"></p>
-			    </a>
-			  </div>
-			</div>
+		  <div class="swiper-slide" th:each="banner : ${banners}"
+		       th:style="|background-image: url('/foodhub/user/thumbnails?fileName=${banner.bannerUuid}');|">
+		
+		    <!-- 배너 전체를 클릭 영역으로 만드는 링크 -->
+		    <a th:href="${banner.link}" target="_blank" class="slide-link"></a>
+		  </div>
 		</div>
-
 	      <div class="swiper-button-next"></div>
 	      <div class="swiper-button-prev"></div>
 	      <div class="swiper-pagination"></div>
