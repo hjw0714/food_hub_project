@@ -221,6 +221,14 @@ function enterChatRoom(roomId) {
             }
         });
     });
+	
+	
+	$('#privateMessageInput').off('keypress').on('keypress', function (e) {
+	        if (e.which === 13) {
+	            e.preventDefault();
+	            $('#privateSendBtn').click();
+	        }
+	    });
 }
 
 // ===== 비공개 채팅 메시지 수신 =====

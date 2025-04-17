@@ -3,7 +3,7 @@
 
 <mapper namespace="com.application.foodhub.chat.ChatDAO">
 
-	<select id="findPrivateRoomsByUser" resultType="ChatRoomDTO">
+<select id="findPrivateRoomsByUser" resultType="ChatRoomDTO">
     SELECT 
         c.ROOM_ID,
         c.PRTCP_USER1,
@@ -15,13 +15,18 @@
         CASE
             WHEN c.PRTCP_USER1 = #{userId} THEN u2.NICKNAME
             ELSE u1.NICKNAME
-        END AS otherUserNickname
+        END AS otherUserNickname,
+        CASE
+            WHEN c.PRTCP_USER1 = #{userId} THEN u2.USER_ID
+            ELSE u1.USER_ID
+        END AS otherUserId
     FROM CHAT_ROOM c
     JOIN USER u1 ON u1.USER_ID = c.PRTCP_USER1
     JOIN USER u2 ON u2.USER_ID = c.PRTCP_USER2
     WHERE (c.PRTCP_USER1 = #{userId} OR c.PRTCP_USER2 = #{userId})
       AND c.STATUS = 'ACTIVE'
 </select>
+
 
     
       <!-- 두 유저 사이의 채팅방 존재 여부 확인 -->
