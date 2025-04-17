@@ -19,11 +19,14 @@
 		import org.springframework.web.bind.annotation.RequestParam;
 		import org.springframework.web.bind.annotation.ResponseBody;
 		import org.springframework.web.bind.annotation.SessionAttribute;
-		
-		import com.application.foodhub.user.UserDTO;
+
+import com.application.foodhub.config.JwtUtil;
+import com.application.foodhub.user.UserDTO;
 		import com.application.foodhub.user.UserService;
-		
-		import jakarta.servlet.http.HttpSession;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 		
 		
 		@Controller
@@ -38,6 +41,8 @@
 			@Autowired
 			private SimpMessageSendingOperations messagingTemplate;
 		
+			@Autowired
+			private JwtUtil jwtUtil;
 			
 			@GetMapping("/foodhub/chat/chat")
 			public String chatRoom(Model model, @SessionAttribute(name = "userDTO", required = false) UserDTO userDTO) {
@@ -73,8 +78,11 @@
 		                                   @Payload ChatMessage message) {
 		        String senderId = message.getSender();
 		        Long roomIdLong = Long.parseLong(roomId);
-
+		        System.out.println(senderId);
+		        System.out.println(roomIdLong);
+		        
 		        String receiverId = chatRoomService.findOtherUserId(roomIdLong, senderId);
+		        System.out.println(receiverId);
 		        if (receiverId == null) {
 		            System.err.println("❌ 수신자를 찾을 수 없습니다.");
 		            return;
@@ -104,12 +112,17 @@
 		    public List<ChatRoomDTO> getMyPrivateChatRoomList(
 		            @SessionAttribute(name = "userDTO", required = false) UserDTO userDTO
 		    ) {
-		        if (userDTO == null) {
+		        if (userDTO == null) {		   
 		            return List.of(); // 로그인 안 된 경우 빈 리스트 반환
 		        }
-		
-		        return chatRoomService.getMyPrivateRooms(userDTO.getUserId());
+		        List<ChatRoomDTO> roomList = chatRoomService.getMyPrivateRooms(userDTO.getUserId());
+		        for (ChatRoomDTO chatRoomDTO : roomList) {
+					System.out.println(chatRoomDTO);
+				}
+		        return roomList;
 		    }
+		    
+		    
 		    
 		    @PostMapping("/foodhub/chat/private/create")
 		    @ResponseBody
@@ -163,15 +176,109 @@
 		        return chatRoomService.getChatMessages(roomId);
 		    }
 		    
-		    @PostMapping("/foodhub/chat/private/delete/{roomId}")
+		    @PostMapping("/foodhub/chat/private/delete/{roomId}") // 채팅방 삭제
 		    @ResponseBody
 		    public String deletePrivateChatRoom(@PathVariable("roomId") Long roomId, HttpSession session) {
 		        String userId = (String) session.getAttribute("userId");
 		        chatRoomService.deleteChatRoomForUser(roomId, userId);
 		        return "ok";
 		    }
+		    
+		   
+		    
+		    @GetMapping("/foodhub/admin/chat/private/list") // 관리자 화면 채팅방 리스트
+		    @ResponseBody
+		    public List<ChatRoomDTO> getMyPrivateChatRoomListForAdmin (HttpServletRequest request) {
+		    	
+		    	String header = request.getHeader("Authorization");
+		    	 if (header == null || !header.startsWith("Bearer ")) {
+		    		 throw new RuntimeException("요청 정보가 부족합니다.");
+		         }
+		    	String token = header.substring(7);
+		    	System.out.println("header : " + header);
+		    	System.out.println("token : " + token);
 
+		        try {
+		            
+		        	String adminId = jwtUtil.validateToken(token); 
+		        	System.out.println("adminId : " + adminId);
+		        	
+		            List<ChatRoomDTO> roomList = chatRoomService.getMyPrivateRooms(adminId);
+		            for (ChatRoomDTO chatRoomDTO : roomList) {
+		                System.out.println(chatRoomDTO);
+		            }
 
+		            return roomList;
+
+		        } catch (Exception e) {
+		            throw new RuntimeException("인증 실패: " + e.getMessage());
+		        } 
+		    
+		    }
+		    
+		    
+		    @GetMapping("/foodhub/admin/chat/private/messages/{roomId}") // 관리자 화면에서 채팅내역 불러오기
+		    @ResponseBody
+		    public List<ChatMessageDTO> getMessagesForAdmin(@PathVariable("roomId") Long roomId, HttpServletRequest request) {
+		    	
+		    	String header = request.getHeader("Authorization");
+		    	 if (header == null || !header.startsWith("Bearer ")) {
+		    		 throw new RuntimeException("요청 정보가 부족합니다.");
+		         }
+		    	String token = header.substring(7);
+
+		    	  try {
+			        	String adminId = jwtUtil.validateToken(token); 
+			        	System.out.println("adminId : " + adminId);
+
+			            return chatRoomService.getChatMessages(roomId);
+
+			        } catch (Exception e) {
+			            throw new RuntimeException("인증 실패: " + e.getMessage());
+			        } 
+		       
+		    }
+		    /*
+		    @PostMapping("/foodhub/admin/chat/private/send/{roomId}")
+		    @ResponseBody
+		    public String sendPrivateMessageByAdmin(@PathVariable("roomId") Long roomId,
+		    										@RequestBody ChatMessage message, 
+	    											HttpServletRequest request) {
+		    	String header = request.getHeader("Authorization");
+		    	 if (header == null || !header.startsWith("Bearer ")) {
+		    		 throw new RuntimeException("요청 정보가 부족합니다.");
+		         }
+		    	String token = header.substring(7);
+		    	
+		    	try {
+		            String adminId = jwtUtil.validateToken(token);
+
+		            String receiverId = chatRoomService.findOtherUserId(roomId, adminId);
+		            if (receiverId == null) {
+		                throw new RuntimeException("수신자를 찾을 수 없습니다.");
+		            }
+
+		            String senderNickname = userService.findNicknameByUserId(adminId);
+		            message.setSenderNickname(senderNickname);
+		            message.setReceiver(receiverId);
+
+		            ChatMessageDTO dto = new ChatMessageDTO();
+		            dto.setRoomId(roomId);
+		            dto.setSenderId(adminId);
+		            dto.setReceiveId(receiverId);
+		            dto.setChatContent(message.getContent());
+		            chatRoomService.saveMessage(dto);
+
+		            messagingTemplate.convertAndSend("/topic/private." + roomId, message);
+
+		            return "success";
+
+		        } catch (Exception e) {
+		            throw new RuntimeException("인증 실패 또는 처리 오류: " + e.getMessage());
+		        }
+		    }*/
+		    
+		    
 		    
 }
 		    

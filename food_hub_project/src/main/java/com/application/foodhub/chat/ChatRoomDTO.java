@@ -16,4 +16,5 @@ public class ChatRoomDTO {
 	private LocalDateTime deletedAt; // 삭제일 (nullable)
 
 	private String otherUserNickname;
+	private String otherUserId;
 }
