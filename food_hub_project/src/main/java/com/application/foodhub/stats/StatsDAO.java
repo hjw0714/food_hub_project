@@ -22,5 +22,23 @@ public interface StatsDAO {
     
     // 전체 기간 방문자 수 조회
     public Long getTotalVisitorCnt();
+    
+    // 오늘 날짜 게시글 신고 통계 조회
+    public Long getPostReportCnt(@Param("categoryId") int categoryId, @Param("statDate") String statDate);
+    
+    // 새로운 통계 기록 삽입
+    public void insertPostReport(@Param("categoryId") int categoryId, @Param("statDate") String statDate);
+    
+    // 게시글 신고 수 증가
+    public void increasePostReportCnt(@Param("categoryId") int categoryId, @Param("statDate") String statDate);
+    
+    // 오늘 날짜 댓글 신고 통계 조회
+    public Long getCommentReportCnt(@Param("categoryId") int categoryId, @Param("statDate") String statDate);
+    
+    // 새로운 통계 기록 삽입
+    public void insertCommentReport(@Param("categoryId") int categoryId, @Param("statDate") String statDate);
+    
+    // 댓글 신고 수 증가
+    public void increaseCommentReportCnt(@Param("categoryId") int categoryId, @Param("statDate") String statDate);
 
 }
