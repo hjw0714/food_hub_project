@@ -19,7 +19,7 @@ public class StatsServiceImpl implements StatsService {
     @Autowired
     private StatsDAO statsDAO;
 
-    private static final int VISITOR_CATEGORY_ID = 7;     // 방문자 통계용 CATEGORY_ID
+    private static final int VISITOR_CATEGORY_ID = 14;     // 방문자 통계용 CATEGORY_ID
     private static final long VISIT_TIMEOUT_MINUTES = 1;  // 테스트 타임아웃 (1분) -> 추후 수정
 
     @Override
