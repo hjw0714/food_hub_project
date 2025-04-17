@@ -16,6 +16,7 @@ import java.time.temporal.ChronoUnit;
 @Transactional
 public class StatsServiceImpl implements StatsService {
 
+
     @Autowired
     private StatsDAO statsDAO;
 
@@ -175,4 +176,5 @@ public class StatsServiceImpl implements StatsService {
         return ip;
     }
     
+
 }

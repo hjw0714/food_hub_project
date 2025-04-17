@@ -150,7 +150,6 @@ body {
 	margin-bottom: 5px !important; /* 검색창 아래 여백 최소화 */
 	padding-top: 5px !important; /* 검색창 위 패딩 최소화 */
 	padding-bottom: 5px !important; /* 검색창 아래 패딩 최소화 */
-	padding-right: 20px; /* 오른쪽 여백 유지 */
 }
 
 /* 🔹 검색창 박스 크기 확장 */
@@ -204,36 +203,36 @@ body {
 	background-color: #0056b3;
 }
 
-/* 🔹 방문자 수 박스 스타일 */
-.visitor-stats-unique {
-    display: flex;
-    justify-content: flex-end; /* 검색창과 동일하게 오른쪽 정렬 */
-    align-items: center;
-    margin-top: 5px; /* 슬라이더와의 간격 최소화 */
-    margin-bottom: 5px; /* 검색창과의 간격 최소화 */
-    padding-left: 20px; /* 검색창과 동일한 오른쪽 여백 */
+.visitor-box {
+	display: flex;
+	align-items: center;
+	padding: 6px 12px; /* 검색창과 유사한 패딩 */
+	background: #fff;
+	border-radius: 8px;
+	border: 1px solid #ddd;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+	font-family: 'Noto Sans KR', sans-serif;
+	font-size: 16px; /* 검색창 input과 동일하게 */
+	color: #333;
+	height: auto; /* 고정 height 제거 */
 }
 
-.visitor-stats-unique div {
-    background: #fff; /* 게시판 박스와 동일한 배경색 */
-    padding: 10px 20px; /* 적당한 패딩 */
-    border-radius: 8px; /* 검색창과 유사한 둥근 테두리 */
-    border: 1px solid #ddd; /* 게시판 박스와 동일한 테두리 */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 검색창과 유사한 부드러운 그림자 */
-    font-family: 'Noto Sans KR', sans-serif; /* 홈페이지 기본 폰트 */
-    font-size: 0.9rem; /* 게시판 글씨 크기와 유사 */
-    color: #333; /* 기본 텍스트 색상 */
-    display: flex;
-    gap: 15px; /* 오늘/전체 방문자 수 사이 간격 */
+.visitor-content {
+	display: flex;
+	align-items: center;
+	gap: 8px; /* 🔽 기존 16px → 더 자연스럽게 */
+	line-height: 42px;
 }
 
-.visitor-stats-unique p {
-    margin: 0; /* 기본 마진 제거 */
+.visitor-content p {
+	margin: 0;
+	line-height: inherit;
 }
 
-.visitor-stats-unique span {
-    font-weight: 700; /* 숫자 강조 */
-    color: #465367; /* --accent-color 사용 */
+.visitor-content span {
+	font-weight: bold;
+	color: #465367;
+	line-height: inherit;
 }
 
 .index-post-meta {
@@ -241,6 +240,59 @@ body {
 	color: #666;
 	display: flex;
 	justify-content: space-between;
+}
+
+.visitor-divider {
+	width: 1px;
+	height: 22px;
+	background-color: #ccc;
+	margin: 0 8px; /* 🔽 좌우 여백 줄이기 */
+}
+
+@media ( max-width : 768px) {
+	.container.d-flex {
+		flex-direction: column;
+		align-items: stretch;
+		gap: 10px;
+	}
+	.visitor-box, .index-search-container {
+		width: 100%;
+	}
+	.visitor-content {
+		justify-content: space-around;
+		flex-wrap: wrap;
+	}
+}
+
+/* 🔹 반응형 - 화면 크기가 작아질 경우 검색창 너비 자동 조정 */
+@media ( max-width : 768px) {
+	.index-search-container {
+		justify-content: center; /* 작은 화면에서는 중앙 정렬 */
+		padding-right: 0;
+	}
+	.index-search-box {
+		width: 90%; /* 작은 화면에서 너비 자동 조정 */
+	}
+	.index-search-box input {
+		width: 60% !important; /* 모바일에서 검색 입력창 크기 조정 */
+	}
+	.visitor-stats-unique {
+		justify-content: center; /* 작은 화면에서 중앙 정렬 */
+		padding-right: 0;
+	}
+	.visitor-stats-unique div {
+		width: 90%; /* 작은 화면에서 너비 조정 */
+		justify-content: center; /* 내용 중앙 정렬 */
+	}
+}
+
+/* 배너 클릭 영역 */
+.slide-link {
+	position: absolute;
+	inset: 0; /* top, right, bottom, left 전부 0 */
+	z-index: 2;
+	text-indent: -9999px; /* 혹시 링크에 텍스트 있어도 안 보이게 처리 */
+	cursor: pointer;
 }
 
 /* 🔹 반응형 - 화면 크기가 작아질 경우 검색창 너비 자동 조정 */
@@ -256,41 +308,4 @@ body {
 		width: 60% !important; /* 모바일에서 검색 입력창 크기 조정 */
 	}
 	
-	.visitor-stats-unique {
-        justify-content: center; /* 작은 화면에서 중앙 정렬 */
-        padding-right: 0;
-    }
-
-    .visitor-stats-unique div {
-        width: 90%; /* 작은 화면에서 너비 조정 */
-        justify-content: center; /* 내용 중앙 정렬 */
-    }
-
 }
-
-    
-    /* 배너 클릭 영역 */
-	.slide-link {
-	  position: absolute;
-	  inset: 0; /* top, right, bottom, left 전부 0 */
-	  z-index: 2;
-	  text-indent: -9999px;  /* 혹시 링크에 텍스트 있어도 안 보이게 처리 */
-	  cursor: pointer;
-	}
-   
-      /* 🔹 반응형 - 화면 크기가 작아질 경우 검색창 너비 자동 조정 */
-   @media (max-width: 768px) {
-       .index-search-container {
-           justify-content: center; /* 작은 화면에서는 중앙 정렬 */
-           padding-right: 0;
-       }
-   
-       .index-search-box {
-           width: 90%; /* 작은 화면에서 너비 자동 조정 */
-       }
-   
-       .index-search-box input {
-           width: 60% !important; /* 모바일에서 검색 입력창 크기 조정 */
-       }
-   }
-
