@@ -75,5 +75,99 @@
         SELECT 	COUNT(*)
         FROM 	VISITOR_LOG
     </select>
+    
+    <!-- 오늘 날짜 게시글 신고 통계 조회 -->
+    <select id="getPostReportCnt" resultType="Long">
+        SELECT	STAT_CNT
+        FROM 	STATS
+        WHERE 	CATEGORY_ID = #{categoryId}
+        AND 	STAT_DATE = #{statDate}
+    </select>
+    
+    <!-- 새로운 통계 기록 삽입 -->
+    <insert id="insertPostReport">
+        INSERT INTO STATS (
+            CATEGORY_ID,
+            STAT_DATE,
+            STAT_CNT,
+            CREATED_AT,
+            UPDATED_AT
+        )
+        VALUES (
+            #{categoryId},
+            #{statDate},
+            1,
+            NOW(),
+            NOW()
+        )
+    </insert>
+    
+    <!-- 게시글 신고 수 증가 -->
+    <update id="increasePostReportCnt">
+        INSERT INTO STATS (
+            CATEGORY_ID,
+            STAT_DATE,
+            STAT_CNT,
+            CREATED_AT,
+            UPDATED_AT
+        )
+        VALUES (
+            #{categoryId},
+            #{statDate},
+            1,
+            NOW(),
+            NOW()
+        )
+        ON DUPLICATE KEY UPDATE
+        STAT_CNT 	= STAT_CNT + 1,
+        UPDATED_AT 	= NOW()
+    </update>
+    
+    <!-- 오늘 날짜 댓글 신고 통계 조회 -->
+    <select id="getCommentReportCnt" resultType="Long">
+        SELECT	STAT_CNT
+        FROM 	STATS
+        WHERE 	CATEGORY_ID = #{categoryId}
+        AND 	STAT_DATE = #{statDate}
+    </select>
+    
+    <!-- 새로운 통계 기록 삽입 -->
+    <insert id="insertCommentReport">
+        INSERT INTO STATS (
+            CATEGORY_ID,
+            STAT_DATE,
+            STAT_CNT,
+            CREATED_AT,
+            UPDATED_AT
+        )
+        VALUES (
+            #{categoryId},
+            #{statDate},
+            1,
+            NOW(),
+            NOW()
+        )
+    </insert>
+    
+    <!-- 댓글 신고 수 증가 -->
+    <update id="increaseCommentReportCnt">
+        INSERT INTO STATS (
+            CATEGORY_ID,
+            STAT_DATE,
+            STAT_CNT,
+            CREATED_AT,
+            UPDATED_AT
+        )
+        VALUES (
+            #{categoryId},
+            #{statDate},
+            1,
+            NOW(),
+            NOW()
+        )
+        ON DUPLICATE KEY UPDATE
+        STAT_CNT 	= STAT_CNT + 1,
+        UPDATED_AT 	= NOW()
+    </update>
 
 </mapper>
