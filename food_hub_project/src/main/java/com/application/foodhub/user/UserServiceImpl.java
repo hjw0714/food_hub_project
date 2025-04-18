@@ -171,13 +171,14 @@ public class UserServiceImpl implements UserService {
 		userDAO.softDeleteUser(userId);
 		
 		int deleteCategoryId = 2;
-		int totalCategoryId = 1;
+		int totalCategoryId = 3;
+		int joinCategoryId = 1;
 		
 		String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 		
 		Long deleteCount = statsDAO.getDeleteUserCnt(deleteCategoryId, today);
 		Long totalCount = statsDAO.getTotalUserCnt(totalCategoryId, today);
-		Long allTotalCount = statsDAO.getAllTotalCount(totalCategoryId);
+		Long allTotalCount = statsDAO.getAllTotalCount(joinCategoryId);
 		
 		if(deleteCount == null) {
 			statsDAO.insertDeleteUser(deleteCategoryId, today);
