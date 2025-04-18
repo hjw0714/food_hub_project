@@ -32,10 +32,12 @@ public class StatsServiceImpl implements StatsService {
 
 	    // 오늘 통계 없으면 삽입
 	    Long count = statsDAO.getVisitorCnt(VISITOR_CATEGORY_ID, today);
+	    
 	    System.out.println("[통계 조회] 날짜: " + today + ", 카운트: " + (count != null ? count : "null"));
 
 	    if (count == null) {
 	        statsDAO.insertVisitorStats(VISITOR_CATEGORY_ID, today);
+	        
 	        System.out.println("[통계 초기화] " + today + " 방문자 통계 생성");
 	    }
 
@@ -59,6 +61,7 @@ public class StatsServiceImpl implements StatsService {
 	            // 최초 방문
 	            shouldIncrement = true;
 	            session.setAttribute(sessionIpKey, now);
+	            
 	            System.out.println("[비로그인 최초 방문] IP: " + ipAddress + ", 카운트 증가");
 	        } else {
 	            // 이전 방문 있음: 타임아웃 체크
@@ -66,6 +69,7 @@ public class StatsServiceImpl implements StatsService {
 	            if (timeSinceLastVisit >= VISIT_TIMEOUT_MINUTES) {
 	                shouldIncrement = true;
 	                session.setAttribute(sessionIpKey, now);
+	                
 	                System.out.println("[비로그인 재방문] IP: " + ipAddress + ", 타임아웃 경과, 카운트 증가");
 	            } else {
 	                System.out.println("[비로그인 재방문] IP: " + ipAddress + ", 타임아웃 미경과, 카운트 증가 안 함");
@@ -75,31 +79,47 @@ public class StatsServiceImpl implements StatsService {
 	        // 로그인 상태
 	        LocalDateTime lastIpVisit = (LocalDateTime) session.getAttribute(sessionIpKey);
 	        Boolean hasVisited = (Boolean) session.getAttribute(sessionUserKey);
+	        String lastLoggedInUserId = (String) session.getAttribute("lastLoggedInUserId");
 
 	        System.out.println("[로그인 상태] 사용자: " + userId + ", lastIpVisit: " + lastIpVisit + ", hasVisited: " + hasVisited);
 
 	        // 첫 로그인 시 비로그인 방문 후 타임아웃 내인지 체크
 	        if (lastIpVisit != null && (hasVisited == null || !hasVisited)) {
-	            long timeSinceLastIpVisit = ChronoUnit.MINUTES.between(lastIpVisit, now);
-	            if (timeSinceLastIpVisit < VISIT_TIMEOUT_MINUTES) {
-	                shouldIncrement = false;
-	                session.setAttribute(sessionUserKey, true);
-	                System.out.println("[로그인] 사용자: " + userId + ", 비로그인 방문 후 타임아웃 미경과, 카운트 증가 안 함");
-	            } else {
-	                shouldIncrement = true;
-	                session.setAttribute(sessionUserKey, true);
-	                System.out.println("[로그인] 사용자: " + userId + ", 비로그인 방문 후 타임아웃 경과, 카운트 증가");
-	            }
+	        	// 다른 사용자인지 확인
+	        	if (lastLoggedInUserId != null && !lastLoggedInUserId.equals(userId)) {
+					shouldIncrement = true;
+					session.setAttribute(sessionUserKey, true);
+					
+					System.out.println("[로그인] 사용자:" + userId + ", 다른 사용자 로그인, 카운트 증가");
+				} else {
+					long timeSinceLastIpVisit = ChronoUnit.MINUTES.between(lastIpVisit, now);
+					if (timeSinceLastIpVisit < VISIT_TIMEOUT_MINUTES) {
+						shouldIncrement = false;
+						session.setAttribute(sessionUserKey, true);
+						
+						System.out.println("[로그인] 사용자: " + userId + ", 비로그인 방문 후 타임아웃 미경과, 카운트 증가 안 함");
+					} else {
+						shouldIncrement = true;
+						session.setAttribute(sessionUserKey, true);
+						
+						System.out.println("[로그인] 사용자: " + userId + ", 비로그인 방문 후 타임아웃 경과, 카운트 증가");
+					}
+				}
 	        } else if (hasVisited != null && hasVisited) {
 	            // 동일 사용자 재로그인: 타임아웃 여부와 관계없이 카운트 증가 안 함
 	            shouldIncrement = false;
+	            
 	            System.out.println("[로그인] 사용자: " + userId + ", 이미 방문한 사용자, 카운트 증가 안 함");
 	        } else {
-	            // 다른 사용자 또는 최초 로그인
+	            // 최초 로그인 (lastIpVisit == null)
 	            shouldIncrement = true;
 	            session.setAttribute(sessionUserKey, true);
+	            
 	            System.out.println("[로그인] 사용자: " + userId + ", 최초 로그인 또는 다른 사용자, 카운트 증가");
 	        }
+	        
+	        // 현재 사용자 ID를 lastLoggedUseId로 업데이트
+	        session.setAttribute("lastLoggedInUserId", userId);
 
 	        // lastIpVisit 업데이트
 	        session.setAttribute(sessionIpKey, now);
@@ -107,14 +127,16 @@ public class StatsServiceImpl implements StatsService {
 
 	    // 조건 충족 시 방문 로그 삽입 및 카운트 증가
 	    if (shouldIncrement) {
+	    	System.out.println("[DEBUG] incrementVisitorCnt 호출 전 카운트: " 
+	    		+ statsDAO.getVisitorCnt(VISITOR_CATEGORY_ID, today));
 	        statsDAO.insertVisitorLog(visitorLogDTO);
 	        statsDAO.incrementVisitorCnt(VISITOR_CATEGORY_ID, today);
 	        Long updatedCount = statsDAO.getVisitorCnt(VISITOR_CATEGORY_ID, today); // 디버깅용
-	        System.out.println("[카운트 증가] IP: " + ipAddress + ", 사용자: " + (userId != null ? userId : "없음") 
-	                + ", 방문자 카운트 증가 완료, 업데이트 후 카운트: " + updatedCount);
+	        System.out.println("[카운트 증가] IP: " + ipAddress + ", 사용자: " + (userId != null ? userId : "없음")
+                + ", 방문자 카운트 증가 완료, 업데이트 후 카운트: " + updatedCount);
 	    } else {
-	        System.out.println("[카운트 미증가] IP: " + ipAddress + ", 사용자: " + (userId != null ? userId : "없음") 
-	                + ", 방문자 카운트 증가 안 함");
+	        System.out.println("[카운트 미증가] IP: " + ipAddress + ", 사용자: " + (userId != null ? userId : "없음")
+                + ", 방문자 카운트 증가 안 함");
 	    }
 	}
 
