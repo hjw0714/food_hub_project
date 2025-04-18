@@ -2,6 +2,8 @@ package com.application.foodhub.user;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -13,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.application.foodhub.stats.StatsDAO;
+
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -22,6 +26,9 @@ public class UserServiceImpl implements UserService {
 	private UserDAO userDAO;
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private StatsDAO statsDAO;
 
 	@Override	// 회원 가입
 	public void register(UserDTO userDTO) {
@@ -34,6 +41,32 @@ public class UserServiceImpl implements UserService {
 		userDTO.setPasswd(passwordEncoder.encode(userDTO.getPasswd()));
 		userDTO.setStatus("ACTIVE");
 		userDAO.register(userDTO);
+		
+		int totalCategoryId = 3;
+		int joinCategoryId = 1;
+		
+		String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+		
+		Long totalCount = statsDAO.getTotalUserCnt(totalCategoryId, today);
+		Long joinCount = statsDAO.getJoinUserCnt(joinCategoryId, today);
+		
+		Long allTotalCount = statsDAO.getAllTotalCount(totalCategoryId);
+		System.out.println("allTotalCount: " + allTotalCount);
+		
+		if(totalCount == null) {
+			statsDAO.insertTotalUser(totalCategoryId, today, allTotalCount);
+	    }
+	    else {
+	    	statsDAO.increaseTotalUserCnt(totalCategoryId, today);
+	    }
+		
+		if(joinCount == null) {
+			statsDAO.insertJoinUser(joinCategoryId, today);
+		}
+		else {
+			statsDAO.increaseJoinUserCnt(joinCategoryId, today);
+		}
+		
 	}
 
 	@Override // 아이디 중복확인
@@ -136,6 +169,30 @@ public class UserServiceImpl implements UserService {
 		//String deleteProfile = userDAO.getDeleteUserProfile(userId);
 		//new File(fileRepositoryPath + deleteProfile).delete();
 		userDAO.softDeleteUser(userId);
+		
+		int deleteCategoryId = 2;
+		int totalCategoryId = 3;
+		
+		String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+		
+		Long deleteCount = statsDAO.getDeleteUserCnt(deleteCategoryId, today);
+		Long totalCount = statsDAO.getTotalUserCnt(totalCategoryId, today);
+		Long allTotalCount = statsDAO.getAllTotalCount(totalCategoryId);
+		
+		if(deleteCount == null) {
+			statsDAO.insertDeleteUser(deleteCategoryId, today);
+		}
+		else {
+			statsDAO.increaseDeleteUserCnt(deleteCategoryId, today);
+		}
+		
+		if(totalCount == null) {
+			statsDAO.insertTotalUser(totalCategoryId, today, allTotalCount - 1);
+		}
+		else {
+			statsDAO.decreaseTotalUser(totalCategoryId, today);
+		}
+		
 	}
 
 	@Override	// 아이디 찾기

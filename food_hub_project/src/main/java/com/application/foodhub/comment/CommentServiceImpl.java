@@ -1,5 +1,7 @@
 package com.application.foodhub.comment;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,11 +9,16 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.application.foodhub.stats.StatsDAO;
+
 @Service
 public class CommentServiceImpl implements CommentService {
 
 	@Autowired
 	private CommentDAO commentDAO;
+	
+	@Autowired
+	private StatsDAO statsDAO;
 
 	// 특정 게시글의 모든 댓글 조회 (원댓글 + 대댓글 포함)
 	@Override
@@ -44,6 +51,19 @@ public class CommentServiceImpl implements CommentService {
 	@Override
 	public void insertComment(CommentDTO commentDTO) {
 		commentDAO.insertComment(commentDTO);
+		
+		int categoryId = 13;
+		String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+		
+		Long count = statsDAO.getCommentCnt(categoryId, today);
+	    
+	    if (count == null) {
+            statsDAO.insertComment(categoryId, today);
+	    }
+	    else {
+	    	statsDAO.increaseCommentCnt(categoryId, today);
+	    }
+		
 	}
 
 	// 댓글 수정
