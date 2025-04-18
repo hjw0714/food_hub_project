@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService {
 		Long totalCount = statsDAO.getTotalUserCnt(totalCategoryId, today);
 		Long joinCount = statsDAO.getJoinUserCnt(joinCategoryId, today);
 		
-		Long allTotalCount = statsDAO.getAllTotalCount(totalCategoryId);
+		Long allTotalCount = statsDAO.getAllTotalCount(joinCategoryId);
 		System.out.println("allTotalCount: " + allTotalCount);
 		
 		if(totalCount == null) {
@@ -171,7 +171,7 @@ public class UserServiceImpl implements UserService {
 		userDAO.softDeleteUser(userId);
 		
 		int deleteCategoryId = 2;
-		int totalCategoryId = 3;
+		int totalCategoryId = 1;
 		
 		String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 		
