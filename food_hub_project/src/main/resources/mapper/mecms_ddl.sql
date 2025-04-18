@@ -24,7 +24,7 @@ CREATE TABLE USER (
 
 CREATE TABLE STATS (
 	STATS_ID		BIGINT		AUTO_INCREMENT PRIMARY KEY,		-- 통계 아이디
-	CATEGORY_ID		INT 		NOT NULL, 						-- 1) 가입한 유저 통계 , 2) 탈퇴한 유저 통계 , 3) 총 유저 통계 , 4) 총 게시글 통계 , 5) 카테고리별 게시글 , 6) 댓글 통계 , 7) 방문자 통계
+	CATEGORY_ID		INT 		NOT NULL, 						-- 1) 가입한 유저 통계 , 2) 탈퇴한 유저 통계 , 3) 총 유저 통계 , 4) 총 게시글 통계 , 5~12) 카테고리별 게시글 , 13) 댓글 통계 , 14) 방문자 통계
 	STAT_DATE		DATE 		NOT NULL,  						-- 통계 기간 
 	STAT_CNT		BIGINT 		DEFAULT 0,		  				-- 통계 수
 	CREATED_AT		TIMESTAMP 	DEFAULT NOW(),					-- 테이블 생성시간
