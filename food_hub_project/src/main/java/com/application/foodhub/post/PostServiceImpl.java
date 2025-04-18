@@ -1,5 +1,7 @@
 package com.application.foodhub.post;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -8,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.application.foodhub.comment.CommentService;
 import com.application.foodhub.postLike.PostLikeService;
+import com.application.foodhub.stats.StatsDAO;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -20,6 +23,9 @@ public class PostServiceImpl implements PostService {
 	
 	@Autowired
 	private CommentService commentService;
+	
+	@Autowired
+	private StatsDAO statsDAO;
 
 	
 	@Override
@@ -50,6 +56,28 @@ public class PostServiceImpl implements PostService {
 	@Override
 	public Long createPost(PostDTO postDTO) {
 		postDAO.createPost(postDTO);
+		
+		int categoryId = 4;
+		int postCategoryId = postDTO.getCategoryId().intValue() + 5;
+		String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+		
+		Long count = statsDAO.getTotalPostCnt(categoryId, today);
+		Long postCount = statsDAO.getCategoryPostCnt(postCategoryId, today);
+		
+		if(count == null) {
+			statsDAO.insertTotalPost(categoryId, today);
+	    }
+	    else {
+	    	statsDAO.increaseTotalPostCnt(categoryId, today);
+	    }
+		
+		if(postCount == null) {
+			statsDAO.insertCategoryPost(postCategoryId, today);
+		}
+		else {
+			statsDAO.increaseCategoryPostCnt(postCategoryId, today);
+		}
+		
 		return postDTO.getPostId();
 	}
 
