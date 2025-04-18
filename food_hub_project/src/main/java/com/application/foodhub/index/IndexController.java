@@ -56,12 +56,22 @@ public class IndexController {
 	}
 
 	@GetMapping("/foodhub")
-	public String foodhub(HttpServletRequest request, Model model) {
+	public String foodhub(HttpServletRequest request,
+						  @RequestParam(value = "recentLogout", defaultValue = "false") boolean recentLogout,
+						  Model model) {
 		HttpSession session = request.getSession();
 		String userId = (String) session.getAttribute("userId");
+		
+		System.out.println("[foodhub] recentLogout 파라미터: " + recentLogout);
+		System.out.println("[foodhub] 세션 ID: " + session.getId());
+		// 로그아웃 직후 요청이면 방문자 기록 스킵
+		if (!recentLogout) {
+			// 방문자 기록
+			statsService.recordVisitor(request, userId);			
+		} else {
+			System.out.println("[foodhub] 로그아웃 직후 요청, 방문자 기록 스킵");
+		}
 
-		// 방문자 기록
-		statsService.recordVisitor(request, userId);
 
 		// 오늘 방문자 수
 		String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));

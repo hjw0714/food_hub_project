@@ -3,6 +3,7 @@ package com.application.foodhub.user;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.HashMap;
@@ -55,7 +56,7 @@ public class UserController {
 
 	@Autowired
 	private StatsService statsService;
-	
+
 	@Autowired
 	private JwtUtil jwtUtil;
 
@@ -112,13 +113,13 @@ public class UserController {
 
 			result.put("status", "success");
 			result.put("membershipType", membershipType); // 클라이언트로도 전달
-			
+
 			// 멤버쉽 타입이 관리자일 경우 토큰도 포함해서 보냄
 			if (membershipType.equals("ADMIN")) {
 				String token = jwtUtil.generateToken(userDTO.getUserId(), membershipType);
 				result.put("token", token);
 				System.out.println("발행된 토큰: " + token);
-			} 
+			}
 		} else {
 			result.put("status", "fail");
 		}
@@ -283,17 +284,18 @@ public class UserController {
 	public String logout(HttpServletRequest request) {
 
 		HttpSession session = request.getSession(); // 세션 객체 생성
-
-		// 로그아웃 요청 시 방문자 기록 (카운트 증가 방지)
 		String userId = (String) session.getAttribute("userId");
-		statsService.recordVisitor(request, userId);
+
+		// 로그아웃 시간과 사용자 ID 저장
+		session.setAttribute("lastLogoutTime", LocalDateTime.now());
+		session.setAttribute("lastLoggedOutUserId", userId);
 
 		session.invalidate(); // 세션 삭제
-
+		
 		String jsScript = """
 				<script>
 					alert('로그아웃 되었습니다.');
-					location.href = '/foodhub';
+					location.href = '/foodhub?recentLogout=true';
 				</script>""";
 
 		return jsScript;
