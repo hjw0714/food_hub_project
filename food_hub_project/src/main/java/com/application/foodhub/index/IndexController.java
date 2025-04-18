@@ -1,10 +1,7 @@
 package com.application.foodhub.index;
 
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-
-
 
 import java.net.MalformedURLException;
 
@@ -31,7 +28,6 @@ import com.application.foodhub.stats.StatsService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
-
 @Controller
 public class IndexController {
 
@@ -40,12 +36,12 @@ public class IndexController {
 
 	@Autowired
 	private PostService postService;
-	
+
 	@Autowired
 	private BannerService bannerService;
-	
-	@Value("${file.repo.path}")       
-    private String fileRepositoryPath;
+
+	@Value("${file.repo.path}")
+	private String fileRepositoryPath;
 
 	@Autowired
 	private StatsService statsService;
@@ -56,22 +52,14 @@ public class IndexController {
 	}
 
 	@GetMapping("/foodhub")
-	public String foodhub(HttpServletRequest request,
-						  @RequestParam(value = "recentLogout", defaultValue = "false") boolean recentLogout,
-						  Model model) {
+	public String foodhub(HttpServletRequest request, Model model) {
 		HttpSession session = request.getSession();
 		String userId = (String) session.getAttribute("userId");
-		
-		System.out.println("[foodhub] recentLogout 파라미터: " + recentLogout);
-		System.out.println("[foodhub] 세션 ID: " + session.getId());
-		// 로그아웃 직후 요청이면 방문자 기록 스킵
-		if (!recentLogout) {
-			// 방문자 기록
-			statsService.recordVisitor(request, userId);			
-		} else {
-			System.out.println("[foodhub] 로그아웃 직후 요청, 방문자 기록 스킵");
-		}
 
+		System.out.println("[foodhub] 세션 ID: " + session.getId());
+
+		// 방문자 기록
+		statsService.recordVisitor(request, userId);
 
 		// 오늘 방문자 수
 		String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
@@ -129,11 +117,11 @@ public class IndexController {
 
 		return "foodhub/index/index";
 	}
-	
+
 	@GetMapping("/foodhub/banner/image")
-    @ResponseBody
-    public Resource getBannerImage(@RequestParam("fileName") String fileName) throws MalformedURLException {
-        return new UrlResource("file:" + fileRepositoryPath + fileName);
-    }
+	@ResponseBody
+	public Resource getBannerImage(@RequestParam("fileName") String fileName) throws MalformedURLException {
+		return new UrlResource("file:" + fileRepositoryPath + fileName);
+	}
 
 }

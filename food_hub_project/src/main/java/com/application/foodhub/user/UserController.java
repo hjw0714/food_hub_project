@@ -282,20 +282,18 @@ public class UserController {
 	@GetMapping("/logout") // 로그아웃
 	@ResponseBody
 	public String logout(HttpServletRequest request) {
-
 		HttpSession session = request.getSession(); // 세션 객체 생성
 		String userId = (String) session.getAttribute("userId");
 
-		// 로그아웃 시간과 사용자 ID 저장
-		session.setAttribute("lastLogoutTime", LocalDateTime.now());
-		session.setAttribute("lastLoggedOutUserId", userId);
-
-		session.invalidate(); // 세션 삭제
+		// 로그아웃 시 방문자 기록
+		statsService.recordVisitor(request, userId);
 		
+		session.invalidate(); // 세션 삭제
+
 		String jsScript = """
 				<script>
 					alert('로그아웃 되었습니다.');
-					location.href = '/foodhub?recentLogout=true';
+					location.href = '/foodhub';
 				</script>""";
 
 		return jsScript;
