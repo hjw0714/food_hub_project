@@ -181,6 +181,16 @@ import jakarta.servlet.http.HttpSession;
 		    public String deletePrivateChatRoom(@PathVariable("roomId") Long roomId, HttpSession session) {
 		        String userId = (String) session.getAttribute("userId");
 		        chatRoomService.deleteChatRoomForUser(roomId, userId);
+		        
+		        String nickname = userService.findNicknameByUserId(userId); // 닉네임 조회
+		        ChatMessage systemMessage = new ChatMessage();
+		        systemMessage.setSender("SYSTEM");
+		        systemMessage.setType(MessageType.LEAVE);
+		        systemMessage.setContent(nickname + " 님이 채팅방에서 나갔습니다.");
+
+		        messagingTemplate.convertAndSend("/topic/private." + roomId, systemMessage);
+
+		        
 		        return "ok";
 		    }
 		    
@@ -238,12 +248,42 @@ import jakarta.servlet.http.HttpSession;
 			        } 
 		       
 		    }
-		    /*
-		    @PostMapping("/foodhub/admin/chat/private/send/{roomId}")
+		    
+		    
+		    @PostMapping("/foodhub/admin/chat/private/delete/{roomId}") // 관리자 화면 채팅방 삭제
 		    @ResponseBody
-		    public String sendPrivateMessageByAdmin(@PathVariable("roomId") Long roomId,
-		    										@RequestBody ChatMessage message, 
-	    											HttpServletRequest request) {
+		    public String deletePrivateChatRoomAdmin(@PathVariable("roomId") Long roomId, HttpServletRequest request) {
+		    	String header = request.getHeader("Authorization");
+		    	 if (header == null || !header.startsWith("Bearer ")) {
+		    		 throw new RuntimeException("요청 정보가 부족합니다.");
+		         }
+		    	String token = header.substring(7);
+
+		    	  try {
+			        	String userId = jwtUtil.validateToken(token); 
+			        	chatRoomService.deleteChatRoomForUser(roomId, userId);
+			        	
+			        	 // ✅ 시스템 메시지 전송
+			            String nickname = userService.findNicknameByUserId(userId);
+			            ChatMessage systemMessage = new ChatMessage();
+			            systemMessage.setSender("SYSTEM");
+			            systemMessage.setType(MessageType.LEAVE);
+			            systemMessage.setContent(nickname + " 님이 채팅방에서 나갔습니다.");
+
+			            messagingTemplate.convertAndSend("/topic/private." + roomId, systemMessage);
+			        	return "ok";
+		    	  } catch (Exception e) {
+		    		  throw new RuntimeException("인증 실패: " + e.getMessage());
+		    	  }
+		    }
+		    
+		    
+		    
+		    @PostMapping("/foodhub/admin/chat/private/create")
+		    @ResponseBody
+		    public ChatRoomDTO createPrivateChatRoom(@RequestBody Map<String, String> map,
+		    										 HttpServletRequest request) {
+		      
 		    	String header = request.getHeader("Authorization");
 		    	 if (header == null || !header.startsWith("Bearer ")) {
 		    		 throw new RuntimeException("요청 정보가 부족합니다.");
@@ -251,33 +291,24 @@ import jakarta.servlet.http.HttpSession;
 		    	String token = header.substring(7);
 		    	
 		    	try {
-		            String adminId = jwtUtil.validateToken(token);
-
-		            String receiverId = chatRoomService.findOtherUserId(roomId, adminId);
-		            if (receiverId == null) {
-		                throw new RuntimeException("수신자를 찾을 수 없습니다.");
-		            }
-
-		            String senderNickname = userService.findNicknameByUserId(adminId);
-		            message.setSenderNickname(senderNickname);
-		            message.setReceiver(receiverId);
-
-		            ChatMessageDTO dto = new ChatMessageDTO();
-		            dto.setRoomId(roomId);
-		            dto.setSenderId(adminId);
-		            dto.setReceiveId(receiverId);
-		            dto.setChatContent(message.getContent());
-		            chatRoomService.saveMessage(dto);
-
-		            messagingTemplate.convertAndSend("/topic/private." + roomId, message);
-
-		            return "success";
-
-		        } catch (Exception e) {
-		            throw new RuntimeException("인증 실패 또는 처리 오류: " + e.getMessage());
-		        }
-		    }*/
-		    
+		    		String userId = jwtUtil.validateToken(token); 
+		    		
+		    		String targetNickname = map.get("nickname");
+		    		UserDTO targetUser = userService.findByNickname(targetNickname);
+		    		
+		    		if (targetUser == null) {
+		    			throw new IllegalArgumentException("해당 닉네임을 가진 유저를 찾을 수 없습니다.");
+		    		}
+		    		 if (targetUser.getUserId().equals(userId)) {
+				            throw new IllegalArgumentException("자기 자신과 채팅방을 생성할 수 없습니다.");
+				        }
+		    		 return chatRoomService.createPrivateRoom(userId, targetUser.getUserId());
+					
+				} catch (Exception e) {
+					 throw new RuntimeException("인증 실패: " + e.getMessage());
+				}
+		       
+		    }
 		    
 		    
 }

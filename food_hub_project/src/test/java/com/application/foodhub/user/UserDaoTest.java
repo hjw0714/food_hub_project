@@ -35,12 +35,12 @@ public class UserDaoTest {
 	void setUpTestData() {
 		
 		userDTO = new UserDTO();
-		userDTO.setUserId("admin");
+		userDTO.setUserId("admin1");
 		userDTO.setProfileOriginal("404.png");
 		userDTO.setProfileUUID("qwer-asdf-zxcv");
-		userDTO.setNickname("yocasu1");
+		userDTO.setNickname("yocasu2");
 		userDTO.setPasswd(passwordEncoder.encode("1111"));
-		userDTO.setEmail("qwerasdf@gmail.com");
+		userDTO.setEmail("qwerasdf@gmail.com1");
 		userDTO.setTel("010-1111-1111");
 		userDTO.setGender("M");
 		userDTO.setBirthday(new Date());
