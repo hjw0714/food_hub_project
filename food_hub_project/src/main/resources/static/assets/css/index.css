@@ -160,8 +160,8 @@ body {
 	border-radius: 8px;
 	background-color: #ffffff;
 	padding: 6px;
-	width: 600px; /* 🔹 가로 길이 확장 */
-	max-width: 100%;
+	width: 100%;
+	max-width: 600px; /* ✅ 최대 600px까지만 허용 */
 	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 효과 */
 }
 
@@ -220,8 +220,10 @@ body {
 .visitor-content {
 	display: flex;
 	align-items: center;
-	gap: 8px; /* 🔽 기존 16px → 더 자연스럽게 */
+	gap: 8px;
 	line-height: 42px;
+	white-space: nowrap; /* 🔹 줄바꿈 방지 */
+	flex-wrap: nowrap; /* 🔹 flex 항목 한 줄 유지 */
 }
 
 .visitor-content p {
@@ -235,23 +237,45 @@ body {
 	line-height: inherit;
 }
 
-.index-post-meta {
-	font-size: 0.9rem;
-	color: #666;
-	display: flex;
-	justify-content: space-between;
+.visitor-divider {
+  width: 2px;
+  height: 22px;
+  background-color: #0056b3;
+  margin: 0 8px;
 }
 
-.visitor-divider {
-	width: 1px;
-	height: 22px;
-	background-color: #ccc;
-	margin: 0 8px; /* 🔽 좌우 여백 줄이기 */
+@media (max-width: 768px) {
+	.visitor-box {
+		font-size: 14px; /* 🔹 글씨 크기 줄이기 */
+	}
+	.visitor-content {
+		flex-wrap: wrap; /* 좁을 땐 줄바꿈 허용 */
+		justify-content: center;
+		text-align: center;
+	}
+	.visitor-divider {
+		display: none; /* 너무 좁을 경우 선 제거 */
+	}
+
+	.index-post-meta {
+		font-size: 0.9rem;
+		color: #666;
+		display: flex;
+		justify-content: space-between;
+	}
+	
+	.visitor-divider {
+		width: 1px;
+		height: 22px;
+		background-color: #ccc;
+		margin: 0 8px; /* 🔽 좌우 여백 줄이기 */
+	}
 }
 
 @media ( max-width : 768px) {
 	.container.d-flex {
 		flex-direction: column;
+		flex-wrap: wrap; /* ✅ 줄바꿈 허용 */
 		align-items: stretch;
 		gap: 10px;
 	}
@@ -308,4 +332,34 @@ body {
 		width: 60% !important; /* 모바일에서 검색 입력창 크기 조정 */
 	}
 	
+}
+
+@media (max-width: 1024px) {
+  .container.d-flex {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .visitor-box,
+  .index-search-container {
+    width: 100%;
+  }
+
+  .index-search-box {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .index-search-box input {
+    width: 100% !important;
+  }
+
+  .index-search-box select {
+    flex-shrink: 0; /* 줄어들지 않게 */
+  }
+
+  .index-search-box button {
+    flex-shrink: 0;
+  }
 }
