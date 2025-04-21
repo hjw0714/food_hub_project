@@ -40,17 +40,6 @@ public class CommentReportServiceImpl implements CommentReportService{
 	        commentReportDAO.reportComment(commentId, userId, content);
 	        commentReportDTO.setSuccess(true);
 	        
-	        int categoryId = 16;
-		    String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-		    
-		    Long count = statsDAO.getCommentReportCnt(categoryId, today);
-		    
-		    if (count == null) {
-	            statsDAO.insertCommentReport(categoryId, today);
-		    }
-		    else {
-		    	statsDAO.increaseCommentReportCnt(categoryId, today);
-		    }
 	        
 	        commentReportDTO.setMessage("댓글이 신고되었습니다.");
 	    }

@@ -47,26 +47,6 @@ public class UserServiceImpl implements UserService {
 		
 		String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 		
-		Long totalCount = statsDAO.getTotalUserCnt(totalCategoryId, today);
-		Long joinCount = statsDAO.getJoinUserCnt(joinCategoryId, today);
-		
-		Long allTotalCount = statsDAO.getAllTotalCount(joinCategoryId);
-		System.out.println("allTotalCount: " + allTotalCount);
-		
-		if(totalCount == null) {
-			statsDAO.insertTotalUser(totalCategoryId, today, allTotalCount);
-	    }
-	    else {
-	    	statsDAO.increaseTotalUserCnt(totalCategoryId, today);
-	    }
-		
-		if(joinCount == null) {
-			statsDAO.insertJoinUser(joinCategoryId, today);
-		}
-		else {
-			statsDAO.increaseJoinUserCnt(joinCategoryId, today);
-		}
-		
 	}
 
 	@Override // 아이디 중복확인
@@ -170,29 +150,8 @@ public class UserServiceImpl implements UserService {
 		//new File(fileRepositoryPath + deleteProfile).delete();
 		userDAO.softDeleteUser(userId);
 		
-		int deleteCategoryId = 2;
-		int totalCategoryId = 3;
-		int joinCategoryId = 1;
-		
 		String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 		
-		Long deleteCount = statsDAO.getDeleteUserCnt(deleteCategoryId, today);
-		Long totalCount = statsDAO.getTotalUserCnt(totalCategoryId, today);
-		Long allTotalCount = statsDAO.getAllTotalCount(joinCategoryId);
-		
-		if(deleteCount == null) {
-			statsDAO.insertDeleteUser(deleteCategoryId, today);
-		}
-		else {
-			statsDAO.increaseDeleteUserCnt(deleteCategoryId, today);
-		}
-		
-		if(totalCount == null) {
-			statsDAO.insertTotalUser(totalCategoryId, today, allTotalCount - 1);
-		}
-		else {
-			statsDAO.decreaseTotalUser(totalCategoryId, today);
-		}
 		
 	}
 
