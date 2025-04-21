@@ -52,17 +52,6 @@ public class CommentServiceImpl implements CommentService {
 	public void insertComment(CommentDTO commentDTO) {
 		commentDAO.insertComment(commentDTO);
 		
-		int categoryId = 13;
-		String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-		
-		Long count = statsDAO.getCommentCnt(categoryId, today);
-	    
-	    if (count == null) {
-            statsDAO.insertComment(categoryId, today);
-	    }
-	    else {
-	    	statsDAO.increaseCommentCnt(categoryId, today);
-	    }
 		
 	}
 
