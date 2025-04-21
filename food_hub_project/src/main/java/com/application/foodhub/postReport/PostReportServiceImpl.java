@@ -28,14 +28,6 @@ public class PostReportServiceImpl implements PostReportService{
 	    int categoryId = 15;
 	    String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 	    
-	    Long count = statsDAO.getPostReportCnt(categoryId, today);
-	    
-	    if (count == null) {
-            statsDAO.insertPostReport(categoryId, today);
-	    }
-	    else {
-	    	statsDAO.increasePostReportCnt(categoryId, today);
-	    }
 	    
 	    return true;  // ✅ 신고 성공 시 true 반환
 	}

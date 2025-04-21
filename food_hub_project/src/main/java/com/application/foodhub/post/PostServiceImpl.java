@@ -61,23 +61,6 @@ public class PostServiceImpl implements PostService {
 		int postCategoryId = postDTO.getCategoryId().intValue() + 5;
 		String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 		
-		Long count = statsDAO.getTotalPostCnt(categoryId, today);
-		Long postCount = statsDAO.getCategoryPostCnt(postCategoryId, today);
-		
-		if(count == null) {
-			statsDAO.insertTotalPost(categoryId, today);
-	    }
-	    else {
-	    	statsDAO.increaseTotalPostCnt(categoryId, today);
-	    }
-		
-		if(postCount == null) {
-			statsDAO.insertCategoryPost(postCategoryId, today);
-		}
-		else {
-			statsDAO.increaseCategoryPostCnt(postCategoryId, today);
-		}
-		
 		return postDTO.getPostId();
 	}
 
