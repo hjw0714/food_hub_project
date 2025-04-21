@@ -4,10 +4,10 @@
 
     <!-- 오늘 날짜의 방문자 통계 조회 -->
     <select id="getVisitorCnt" resultType="Long">
-        SELECT	STAT_CNT
-        FROM 	STATS
-        WHERE 	CATEGORY_ID = #{categoryId}
-        AND 	STAT_DATE = #{statDate}
+        SELECT   STAT_CNT
+        FROM    STATS
+        WHERE    CATEGORY_ID = #{categoryId}
+        AND    STAT_DATE = #{statDate}
     </select>
 
     <!-- 방문자 수 증가 -->
@@ -27,8 +27,8 @@
             NOW()
         )
         ON DUPLICATE KEY UPDATE
-        STAT_CNT 	= STAT_CNT + 1,
-        UPDATED_AT 	= NOW()
+        STAT_CNT    = STAT_CNT + 1,
+        UPDATED_AT    = NOW()
     </update>
 
     <!-- 새로운 통계 기록 삽입 -->
@@ -52,40 +52,37 @@
     <!-- 방문자 로그 삽입 -->
     <insert id="insertVisitorLog" parameterType="com.application.foodhub.stats.VisitorLogDTO">
         INSERT INTO VISITOR_LOG (
-        	IP_ADDRESS, 
-        	USER_ID,
-        	VISIT_TIME 
-       	)
+           IP_ADDRESS, 
+           USER_ID,
+           VISIT_TIME 
+          )
         VALUES (
-        	#{ipAddress},
-        	#{userId},
-        	#{visitTime}
-       	)
+           #{ipAddress},
+           #{userId},
+           #{visitTime}
+          )
     </insert>
 
     <!-- 사용자별 방문 횟수 조회 -->
     <select id="getUserVisitCnt" resultType="Long">
-        SELECT 	COUNT(*)
-        FROM 	VISITOR_LOG
-        WHERE 	USER_ID = #{userId}
+        SELECT    COUNT(*)
+        FROM    VISITOR_LOG
+        WHERE    USER_ID = #{userId}
     </select>
 
     <!-- 전체 기간 방문자 수 조회 -->
     <select id="getTotalVisitorCnt" resultType="Long">
-        SELECT 	COUNT(*)
-        FROM 	VISITOR_LOG
+        SELECT    COUNT(*)
+        FROM    VISITOR_LOG
     </select>
     
-
-
     <!-- 사용자별 마지막 방문 시간 조회 -->
     <select id="getLastVisitTimeByUserId" parameterType="string" resultType="java.time.LocalDateTime">
-    	SELECT	 MAX(VISIT_TIME)
-    	FROM	 VISITOR_LOG
-    	WHERE	 USER_ID = #{userId}
+       SELECT    MAX(VISIT_TIME)
+       FROM    VISITOR_LOG
+       WHERE    USER_ID = #{userId}
     </select>
     
-
-    
+ 
 
 </mapper>
