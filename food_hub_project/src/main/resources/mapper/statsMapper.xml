@@ -43,7 +43,7 @@
         VALUES (
             #{categoryId},
             #{statDate},
-            1,
+            0,
             NOW(),
             NOW()
         )
@@ -53,13 +53,13 @@
     <insert id="insertVisitorLog" parameterType="com.application.foodhub.stats.VisitorLogDTO">
         INSERT INTO VISITOR_LOG (
         	IP_ADDRESS, 
-        	VISIT_TIME, 
-        	USER_ID
+        	USER_ID,
+        	VISIT_TIME 
        	)
         VALUES (
-        	#{ipAddress}, 
-        	NOW(), 
-        	#{userId}
+        	#{ipAddress},
+        	#{userId},
+        	#{visitTime}
        	)
     </insert>
 
@@ -74,6 +74,13 @@
     <select id="getTotalVisitorCnt" resultType="Long">
         SELECT 	COUNT(*)
         FROM 	VISITOR_LOG
+    </select>
+    
+    <!-- 사용자별 마지막 방문 시간 조회 -->
+    <select id="getLastVisitTimeByUserId" parameterType="string" resultType="java.time.LocalDateTime">
+    	SELECT	 MAX(VISIT_TIME)
+    	FROM	 VISITOR_LOG
+    	WHERE	 USER_ID = #{userId}
     </select>
     
     <!-- 오늘 날짜 게시글 신고 통계 조회 -->
