@@ -1,13 +1,9 @@
 package com.application.foodhub.commentReport;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.application.foodhub.comment.CommentDAO;
-import com.application.foodhub.stats.StatsDAO;
 
 @Service
 public class CommentReportServiceImpl implements CommentReportService{
@@ -18,9 +14,6 @@ public class CommentReportServiceImpl implements CommentReportService{
 	@Autowired
 	private CommentDAO commentDAO;
 	
-	@Autowired
-	private StatsDAO statsDAO;
-
 	@Override
 	public CommentReportDTO reportComment(CommentReportDTO commentReportDTO) {
 	    long commentId = commentReportDTO.getCommentId();

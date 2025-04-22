@@ -2,9 +2,6 @@ package com.application.foodhub.user;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +27,7 @@ import com.application.foodhub.bookmark.BookmarkService;
 import com.application.foodhub.comment.CommentService;
 import com.application.foodhub.config.JwtUtil;
 import com.application.foodhub.post.PostService;
-import com.application.foodhub.stats.StatsService;
+import com.application.foodhub.visitorLog.VisitorLogService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -55,7 +52,7 @@ public class UserController {
 	private BookmarkService bookmarkService;
 
 	@Autowired
-	private StatsService statsService;
+	private VisitorLogService visitorLogService;
 
 	@Autowired
 	private JwtUtil jwtUtil;
@@ -64,31 +61,6 @@ public class UserController {
 	public String login() {
 		return "foodhub/user/login";
 	}
-
-//	@PostMapping("/login")	// 로그인
-//	@ResponseBody
-//	public String login(@RequestBody UserDTO userDTO , HttpServletRequest request) {
-//		String isValidUser = "n"; // 유저 중복 검사
-//		
-//		if (userService.login(userDTO)) {
-//	        HttpSession session = request.getSession();
-//	        session.setAttribute("userId", userDTO.getUserId());
-//
-//	        // 닉네임을 DB에서 가져와서 세션에 저장
-//	        String nickname = userService.findNicknameByUserId(userDTO.getUserId());
-//	        session.setAttribute("nickname", nickname);
-//	        
-//	        // 유저 정보 조회하여 membershipType 가져오기
-//	        UserDTO userInfo = userService.getUserDetail(userDTO.getUserId()); // DB에서 전체 정보 가져오기
-//	        String membershipType = userInfo.getMembershipType(); // DB에서 가져온 값 사용
-//	        session.setAttribute("membershipType", membershipType); // 세션에 저장
-//
-//	        System.out.println("로그인 성공 - UserId: " + userDTO.getUserId() + ", 닉네임: " + nickname + ", 회원 타입: " + membershipType);
-//
-//	        isValidUser = "y";
-//	    }
-//		return isValidUser;
-//	}
 
 	@PostMapping("/login")
 	@ResponseBody
@@ -108,8 +80,6 @@ public class UserController {
 			String membershipType = userInfo.getMembershipType(); // DB에서 가져온 값 사용
 			session.setAttribute("membershipType", membershipType); // 세션에 저장
 			session.setAttribute("userDTO", userInfo);
-
-//	        System.out.println("로그인 성공 - UserId: " + userDTO.getUserId() + ", 닉네임: " + nickname + ", 회원 타입: " + membershipType + userInfo);
 
 			result.put("status", "success");
 			result.put("membershipType", membershipType); // 클라이언트로도 전달
@@ -186,7 +156,7 @@ public class UserController {
 		}
 
 		// 사용자 방문 횟수
-		Long userVisitCnt = statsService.getUserVisitCnt(userId);
+		Long userVisitCnt = visitorLogService.getUserVisitCnt(userId);
 		model.addAttribute("userVisitCnt", userVisitCnt);
 
 		// 로그인한 유저가 쓴 전체 게시글 가져오기
@@ -283,11 +253,7 @@ public class UserController {
 	@ResponseBody
 	public String logout(HttpServletRequest request) {
 		HttpSession session = request.getSession(); // 세션 객체 생성
-		String userId = (String) session.getAttribute("userId");
 
-		// 로그아웃 시 방문자 기록
-		statsService.recordVisitor(request, userId);
-		
 		session.invalidate(); // 세션 삭제
 
 		String jsScript = """
