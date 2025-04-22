@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.application.foodhub.visitorLog.VisitorLogDAO">
+
+    <!-- 오늘 날짜의 방문자 통계 조회 -->
+    <select id="getVisitorCnt" resultType="Long">
+       SELECT COUNT(*)
+    FROM VISITOR_LOG
+    WHERE DATE(VISIT_TIME) = #{visitDate}
+    </select>
+
+   
+    <!-- 방문자 로그 삽입 -->
+    <insert id="insertVisitorLog" parameterType="com.application.foodhub.visitorLog.VisitorLogDTO">
+        INSERT INTO VISITOR_LOG (
+           IP_ADDRESS, 
+           USER_ID,
+           VISIT_TIME 
+          )
+        VALUES (
+           #{ipAddress},
+           #{userId},
+           #{visitTime}
+          )
+    </insert>
+    
+    <!-- 같은 날짜에 이미 userId로 기록이 있는지 확인 -->
+<select id="existsUserVisitToday" resultType="boolean">
+    SELECT EXISTS (
+        SELECT 1
+        FROM VISITOR_LOG
+        WHERE USER_ID = #{userId}
+          AND DATE(VISIT_TIME) = CURDATE()
+    )
+</select>
+
+<!-- 같은 날짜에 이미 ipAddress로 기록이 있는지 확인 -->
+<select id="existsIpVisitToday" resultType="boolean">
+    SELECT EXISTS (
+        SELECT 1
+        FROM VISITOR_LOG
+        WHERE IP_ADDRESS = #{ipAddress}
+          AND USER_ID IS NULL
+          AND DATE(VISIT_TIME) = CURDATE()
+    )
+</select>
+
+<!-- 오늘 날짜 기준 userId의 마지막 방문 시간 -->
+<select id="getLastVisitTimeTodayByUserId" parameterType="string" resultType="java.time.LocalDateTime">
+    SELECT MAX(VISIT_TIME)
+    FROM VISITOR_LOG
+    WHERE USER_ID = #{userId}
+      AND DATE(VISIT_TIME) = CURDATE()
+</select>
+
+<!-- 오늘 날짜 기준 ipAddress의 마지막 방문 시간 (비로그인 유저) -->
+<select id="getLastVisitTimeTodayByIp" parameterType="string" resultType="java.time.LocalDateTime">
+    SELECT MAX(VISIT_TIME)
+    FROM VISITOR_LOG
+    WHERE USER_ID IS NULL
+      AND IP_ADDRESS = #{ipAddress}
+      AND DATE(VISIT_TIME) = CURDATE()
+</select>
+
+
+    <!-- 사용자별 방문 횟수 조회 -->
+    <select id="getUserVisitCnt" resultType="Long">
+        SELECT    COUNT(*)
+        FROM    VISITOR_LOG
+        WHERE    USER_ID = #{userId}
+    </select>
+
+    <!-- 전체 기간 방문자 수 조회 -->
+    <select id="getTotalVisitorCnt" resultType="Long">
+        SELECT    COUNT(*)
+        FROM    VISITOR_LOG
+    </select>
+    
+    <!-- 사용자별 마지막 방문 시간 조회 -->
+    <select id="getLastVisitTimeByUserId" parameterType="string" resultType="java.time.LocalDateTime">
+       SELECT    MAX(VISIT_TIME)
+       FROM    VISITOR_LOG
+       WHERE    USER_ID = #{userId}
+    </select>
+    
+ 
+
+</mapper>

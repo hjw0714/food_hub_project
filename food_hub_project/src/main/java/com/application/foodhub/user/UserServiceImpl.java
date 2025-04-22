@@ -15,8 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.application.foodhub.stats.StatsDAO;
-
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -27,9 +25,6 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
-	@Autowired
-	private StatsDAO statsDAO;
-
 	@Override	// 회원 가입
 	public void register(UserDTO userDTO) {
 		

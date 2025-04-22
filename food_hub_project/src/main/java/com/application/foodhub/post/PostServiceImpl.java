@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import com.application.foodhub.comment.CommentService;
 import com.application.foodhub.postLike.PostLikeService;
-import com.application.foodhub.stats.StatsDAO;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -24,8 +23,6 @@ public class PostServiceImpl implements PostService {
 	@Autowired
 	private CommentService commentService;
 	
-	@Autowired
-	private StatsDAO statsDAO;
 
 	
 	@Override

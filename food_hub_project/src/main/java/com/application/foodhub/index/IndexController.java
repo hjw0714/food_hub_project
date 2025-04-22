@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.application.foodhub.banner.BannerService;
 import com.application.foodhub.post.PostService;
 import com.application.foodhub.postLike.PostLikeService;
-import com.application.foodhub.stats.StatsService;
+import com.application.foodhub.visitorLog.VisitorLogService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -40,11 +40,12 @@ public class IndexController {
 	@Autowired
 	private BannerService bannerService;
 
+	@Autowired
+	private VisitorLogService visitorLogService;
+	
 	@Value("${file.repo.path}")
 	private String fileRepositoryPath;
 
-	@Autowired
-	private StatsService statsService;
 
 	@GetMapping
 	public String index() {
@@ -59,15 +60,15 @@ public class IndexController {
 		System.out.println("[foodhub] 세션 ID: " + session.getId());
 
 		// 방문자 기록
-		statsService.recordVisitor(request, userId);
+		visitorLogService.recordVisitor(request, userId);
 
 		// 오늘 방문자 수
 		String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-		Long visitorCnt = statsService.getVisitorCnt(today);
+		Long visitorCnt = visitorLogService.getVisitorCnt(today);
 		model.addAttribute("visitorCnt", visitorCnt);
 
 		// 전체 방문자 수
-		Long totalVisitorCnt = statsService.getTotalVisitorCnt();
+		Long totalVisitorCnt = visitorLogService.getTotalVisitorCnt();
 		model.addAttribute("totalVisitorCnt", totalVisitorCnt);
 
 		List<Map<String, Object>> topLikedPosts = postLikeService.getTopLikedPosts();

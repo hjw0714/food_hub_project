@@ -1,12 +1,15 @@
-package com.application.foodhub.stats;
+package com.application.foodhub.visitorLog;
 
 import jakarta.servlet.http.HttpServletRequest;
 
-public interface StatsService {
-	
+public interface VisitorLogService {
+
 	public void recordVisitor(HttpServletRequest request, String userId);
+
 	public Long getVisitorCnt(String statDate);
+
 	public Long getTotalVisitorCnt();
-    public Long getUserVisitCnt(String userId);
+
+	public Long getUserVisitCnt(String userId);
 
 }
