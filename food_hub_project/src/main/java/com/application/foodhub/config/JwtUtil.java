@@ -22,10 +22,11 @@ public class JwtUtil {
     }
 
     // JWT 생성
-    public String generateToken(String userId , String membershipType) {
+    public String generateToken(String userId , String membershipType , String nickname) {
         return Jwts.builder()
                 .setSubject(userId)
                 .claim("membershipType", membershipType) // 토큰에 권한(ADMIN or USER) 정보 추가
+                .claim("nickname", nickname)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(key, SignatureAlgorithm.HS256)

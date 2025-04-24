@@ -86,8 +86,8 @@ public class UserController {
 
 			// 멤버쉽 타입이 관리자일 경우 토큰도 포함해서 보냄
 			if (membershipType.equals("ADMIN")) {
-				String token = jwtUtil.generateToken(userDTO.getUserId(), membershipType);
-				result.put("token", token);
+				String token = jwtUtil.generateToken(userDTO.getUserId(), membershipType, nickname); // ✅ nickname 포함
+	            result.put("token", token);
 				System.out.println("발행된 토큰: " + token);
 			}
 		} else {
