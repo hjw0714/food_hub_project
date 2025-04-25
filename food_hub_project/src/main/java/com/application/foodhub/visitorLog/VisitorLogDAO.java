@@ -30,5 +30,11 @@ public interface VisitorLogDAO {
 
 	// 전체 기간 방문자 수 조회
 	public Long getTotalVisitorCnt();
+	
+	public void insertVisitorLogDetail(VisitorLogDetailDTO visitorLogDetailDTO);
+	
+	LocalDateTime getLastDetailLogTime(@Param("ipAddress") String ipAddress, @Param("userId") String userId);
+
+
 
 }

@@ -74,4 +74,35 @@ public class VisitorLogServiceImpl implements VisitorLogService {
            if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) ip = request.getRemoteAddr();
            return ip;
        }
+       
+       @Override
+       public void recordVisitorDetail(HttpServletRequest request, String userId) {
+           String ipAddress = getClientIp(request);
+           String userAgent = request.getHeader("User-Agent");
+           String referer = request.getHeader("Referer");
+           LocalDateTime now = LocalDateTime.now();
+
+           // 최근 기록된 시간 조회
+           LocalDateTime lastLogTime = visitorLogDAO.getLastDetailLogTime(ipAddress, userId);
+           if (lastLogTime != null && lastLogTime.plusMinutes(1).isAfter(now)) {
+               return;
+           }
+           
+           // 방문 상세 로그 객체 생성
+           VisitorLogDetailDTO detailDTO = new VisitorLogDetailDTO();
+           detailDTO.setIpAddress(ipAddress);
+           detailDTO.setUserId(userId);
+           detailDTO.setVisitTime(now);
+           detailDTO.setUserAgent(userAgent);
+           detailDTO.setReferer(referer);
+
+           visitorLogDAO.insertVisitorLogDetail(detailDTO);
+
+           System.out.println("[상세 방문 기록 완료] IP: " + ipAddress +
+               ", USER_ID: " + userId +
+               ", TIME: " + now +
+               ", AGENT: " + userAgent +
+               ", REFERER: " + referer);
+       }
+
    }
