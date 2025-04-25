@@ -38,9 +38,9 @@ public class UserDaoTest {
 		userDTO.setUserId("admin1");
 		userDTO.setProfileOriginal("404.png");
 		userDTO.setProfileUUID("qwer-asdf-zxcv");
-		userDTO.setNickname("yocasu2");
+		userDTO.setNickname("가나");
 		userDTO.setPasswd(passwordEncoder.encode("1111"));
-		userDTO.setEmail("qwerasdf@gmail.com1");
+		userDTO.setEmail("qwerasdf@gmail.com121");
 		userDTO.setTel("010-1111-1111");
 		userDTO.setGender("M");
 		userDTO.setBirthday(new Date());

@@ -61,6 +61,7 @@ public class IndexController {
 
 		// 방문자 기록
 		visitorLogService.recordVisitor(request, userId);
+		visitorLogService.recordVisitorDetail(request, userId);
 
 		// 오늘 방문자 수
 		String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));

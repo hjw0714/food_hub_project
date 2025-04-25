@@ -11,5 +11,7 @@ public interface VisitorLogService {
 	public Long getTotalVisitorCnt();
 
 	public Long getUserVisitCnt(String userId);
+	
+	public void recordVisitorDetail(HttpServletRequest request, String userId);
 
 }

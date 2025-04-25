@@ -83,6 +83,24 @@
        WHERE    USER_ID = #{userId}
     </select>
     
+    <!-- 유저 로그 추적 -->
+    <insert id="insertVisitorLogDetail" parameterType="VisitorLogDetailDTO">
+    INSERT INTO VISITOR_LOG_DETAIL (
+        IP_ADDRESS, USER_ID, VISIT_TIME, USER_AGENT, REFERER
+    ) VALUES (
+        #{ipAddress}, #{userId}, #{visitTime}, #{userAgent}, #{referer}
+    )
+</insert>
+
+<!-- 특정 IP, UserId 조합의 가장 최근 기록 시간 조회 -->
+<select id="getLastDetailLogTime" resultType="java.time.LocalDateTime">
+    SELECT MAX(VISIT_TIME)
+    FROM VISITOR_LOG_DETAIL
+    WHERE IP_ADDRESS = #{ipAddress}
+      AND (USER_ID = #{userId} OR (USER_ID IS NULL AND #{userId} IS NULL))
+</select>
+    
+    
  
 
 </mapper>
